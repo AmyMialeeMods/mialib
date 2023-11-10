@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@SuppressWarnings("unused")
 public interface MText {
 	static Text withColor(@NotNull Text text, int color) {
 		return repack(text.getWithStyle(text.getStyle().withColor(color)));

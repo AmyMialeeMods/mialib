@@ -33,7 +33,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-@SuppressWarnings("unused")
 public abstract class MDataGen implements DataGeneratorEntrypoint {
 	public static final Model SPAWN_EGG = new Model(Optional.of(new Identifier("item/template_spawn_egg")), Optional.empty());
 

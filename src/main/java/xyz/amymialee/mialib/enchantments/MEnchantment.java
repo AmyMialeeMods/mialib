@@ -14,7 +14,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@SuppressWarnings("unused")
 public class MEnchantment extends Enchantment {
 	private Supplier<Integer> minLevel = super::getMinLevel;
 	private Supplier<Integer> maxLevel = super::getMaxLevel;

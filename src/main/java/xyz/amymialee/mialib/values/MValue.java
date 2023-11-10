@@ -3,7 +3,7 @@ package xyz.amymialee.mialib.values;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
-public class MValue<T> {
+public abstract class MValue<T> {
     private final Text name;
     private final Text tooltip;
     private final ItemStack stack;

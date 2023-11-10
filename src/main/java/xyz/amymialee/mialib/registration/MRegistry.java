@@ -1,6 +1,7 @@
 package xyz.amymialee.mialib.registration;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.particle.Particle;
@@ -42,7 +43,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("unused")
 public class MRegistry {
 	private static final Map<Class<?>, Registry<?>> DEFAULT_REGISTRIES = new HashMap<>();
 	public static final List<MRegistry> REGISTRIES = new ArrayList<>();
@@ -87,9 +87,10 @@ public class MRegistry {
 		return this.registerEntity(path, entity, attributes, null);
 	}
 
+	@SuppressWarnings("DataFlowIssue")
 	public <T extends MobEntity> EntityType<T> registerEntity(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer attributes, @Nullable EggData eggData) {
 		if (attributes != null) {
-//			DefaultAttributeRegistry.DEFAULT_ATTRIBUTE_REGISTRY.put(entity, attributes);
+			FabricDefaultAttributeRegistry.register(entity, attributes);
 		}
 		if (eggData != null) {
 			var egg = new SpawnEggItem(entity, eggData.primaryColor, eggData.secondaryColor, new FabricItemSettings());

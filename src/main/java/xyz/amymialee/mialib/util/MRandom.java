@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-@SuppressWarnings("unused")
 public interface MRandom {
 	Random RANDOM = new Random();
 

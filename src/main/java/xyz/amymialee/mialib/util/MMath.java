@@ -1,6 +1,5 @@
 package xyz.amymialee.mialib.util;
 
-@SuppressWarnings("unused")
 public interface MMath {
 	static int lerp(int a, int b, double t) {
 		return (int) Math.round(a + (b - a) * t);
