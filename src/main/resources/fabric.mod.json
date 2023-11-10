@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "id": "mialib",
+  "version": "${version}",
+  "accessWidener" : "mialib.accesswidener",
+  "name": "mialib",
+  "description": "Library for AmyMialee Mods",
+  "authors": [
+    "AmyMialee"
+  ],
+  "contact": {
+    "website": "http://amymialee.xyz/",
+    "repo": "https://github.com/AmyMialeeMods/mialib"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/mialib/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "xyz.amymialee.mialib.MiaLibClient"
+    ],
+    "main": [
+      "xyz.amymialee.mialib.MiaLib"
+    ],
+    "cardinal-components-entity": [
+      "xyz.amymialee.mialib.MiaLib"
+    ],
+    "cardinal-components-scoreboard": [
+      "xyz.amymialee.mialib.MiaLib"
+    ],
+    "fabric-datagen": [
+    ]
+  },
+  "mixins": [
+    "mialib.mixins.json"
+  ],
+  "custom": {
+    "cardinal-components": [
+      "mialib:identifier_cooldown"
+    ]
+  },
+  "depends": {
+    "fabric": "*"
+  }
+}
