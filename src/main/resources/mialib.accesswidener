@@ -3,7 +3,7 @@ accessWidener v1 named
 accessible method net/minecraft/client/render/entity/EntityRenderDispatcher renderHitbox (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;Lnet/minecraft/entity/Entity;F)V
 accessible field net/minecraft/world/GameRules rules Ljava/util/Map;
 accessible method net/minecraft/world/GameRules$Rule deserialize (Ljava/lang/String;)V
-
+accessible class net/minecraft/client/option/SimpleOption$Callbacks
 
 
 
