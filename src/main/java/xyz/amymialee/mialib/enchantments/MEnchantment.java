@@ -8,7 +8,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemStack;
-import org.apache.logging.log4j.util.TriConsumer;
+import xyz.amymialee.mialib.util.TriConsumer;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;

@@ -19,7 +19,7 @@ public abstract class ClientPlayerEntityMixin {
 	private void mialib$raycasting(CallbackInfo ci) {
 		var player = (ClientPlayerEntity) (Object) this;
 		if (this.client.player == player) {
-			MiaLibClient.raycastedEntities = MRaycasting.raycast((ClientPlayerEntity) (Object) this, 128f, (playerEntity, entity) -> playerEntity != entity, 99, 1);
+//			MiaLibClient.raycastedEntities = MRaycasting.raycast((ClientPlayerEntity) (Object) this, 128f, (playerEntity, entity) -> playerEntity != entity, 99, 1);
 		}
 	}
 }

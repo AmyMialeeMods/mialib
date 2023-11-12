@@ -8,14 +8,9 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.screen.world.EditGameRulesScreen;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.entity.Entity;
 import net.minecraft.world.GameRules;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MiaLibClient implements ClientModInitializer {
-    public static List<Entity> raycastedEntities = new ArrayList<>();
     public static ModelTransformationMode currentMode = ModelTransformationMode.NONE;
 
     @Override

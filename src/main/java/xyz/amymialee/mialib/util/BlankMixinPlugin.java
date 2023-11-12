@@ -7,31 +7,31 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import java.util.List;
 import java.util.Set;
 
-public class BlankMixinPlugin implements IMixinConfigPlugin {
+public interface BlankMixinPlugin extends IMixinConfigPlugin {
     @Override
-    public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+    default void onLoad(String mixinPackage) {}
+
+    @Override
+    default String getRefMapperConfig() {
+        return null;
+    }
+
+    @Override
+    default boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         return true;
     }
 
     @Override
-    public String getRefMapperConfig() {
+    default void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {}
+
+    @Override
+    default List<String> getMixins() {
         return null;
     }
 
     @Override
-    public List<String> getMixins() {
-        return null;
-    }
-
-	@Override
-	public void onLoad(String mixinPackage) {}
-
-	@Override
-	public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {}
+    default void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
 
     @Override
-    public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
-
-    @Override
-    public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
+    default void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
 }

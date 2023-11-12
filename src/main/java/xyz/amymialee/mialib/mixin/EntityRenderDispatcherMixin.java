@@ -20,9 +20,9 @@ public abstract class EntityRenderDispatcherMixin {
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/GameOptions;getEntityShadows()Lnet/minecraft/client/option/SimpleOption;"))
 	private <E extends Entity> void mialib$rayHit(E entity, double x, double y, double z, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
 		if (!(this.renderHitboxes && !entity.isInvisible() && !MinecraftClient.getInstance().hasReducedDebugInfo())) {
-			if (MiaLibClient.raycastedEntities.contains(entity)) {
-				EntityRenderDispatcher.renderHitbox(matrices, vertexConsumers.getBuffer(RenderLayer.getLines()), entity, tickDelta);
-			}
+//			if (MiaLibClient.raycastedEntities.contains(entity)) {
+//				EntityRenderDispatcher.renderHitbox(matrices, vertexConsumers.getBuffer(RenderLayer.getLines()), entity, tickDelta);
+//			}
 		}
 	}
 }

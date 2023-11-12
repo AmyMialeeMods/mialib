@@ -27,24 +27,26 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
     @Override
     public void onInitialize() {
         ServerPlayNetworking.registerGlobalReceiver(id("gamerule"), ((server, player, handler, buf, responseSender) -> {
-            var name = buf.readString();
-            var category = buf.readString();
-            var value = buf.readString();
-            server.execute(() -> new GameRules.Visitor() {
-                @Override
-                public <T extends GameRules.Rule<T>> void visit(GameRules.Key<T> key, GameRules.Type<T> type) {
-                    if (Objects.equals(key.getName(), name) && Objects.equals(key.getCategory().getCategory(), category)) {
-                        var rule = server.getGameRules().get(key);
-                        rule.deserialize(value);
+            if (server.getPermissionLevel(player.getGameProfile()) >= 2) {
+                var name = buf.readString();
+                var category = buf.readString();
+                var value = buf.readString();
+                server.execute(() -> new GameRules.Visitor() {
+                    @Override
+                    public <T extends GameRules.Rule<T>> void visit(GameRules.Key<T> key, GameRules.Type<T> type) {
+                        if (Objects.equals(key.getName(), name) && Objects.equals(key.getCategory().getCategory(), category)) {
+                            var rule = server.getGameRules().get(key);
+                            rule.deserialize(value);
+                        }
                     }
-                }
-            });
+                });
+            }
         }));
     }
 
     @Override
     public void registerEntityComponentFactories(@NotNull EntityComponentFactoryRegistry registry) {
-        registry.registerFor(PlayerEntity.class, ID_COOLDOWN_COMPONENT, (p) -> new IdCooldownComponent());
+        registry.registerFor(PlayerEntity.class, ID_COOLDOWN_COMPONENT, IdCooldownComponent::new);
     }
 
     @Override

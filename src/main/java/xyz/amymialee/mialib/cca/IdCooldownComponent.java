@@ -12,12 +12,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingComponent {
+	private final PlayerEntity player;
 	private final Map<Identifier, Integer> cooldowns = new HashMap<>();
 
-	public IdCooldownComponent() {}
+	public IdCooldownComponent(PlayerEntity player) {
+		this.player = player;
+	}
 
 	public static @NotNull IdCooldownComponent get(PlayerEntity player) {
 		return MiaLib.ID_COOLDOWN_COMPONENT.get(player);
+	}
+
+	public static void sync(PlayerEntity player) {
+		MiaLib.ID_COOLDOWN_COMPONENT.sync(player);
 	}
 
 	@Override
@@ -26,6 +33,7 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 			var value = this.cooldowns.get(id) - 1;
 			if (value <= 0) {
                 this.cooldowns.remove(id);
+				sync(this.player);
 			} else {
                 this.cooldowns.put(id, value);
 			}
@@ -38,10 +46,13 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 
 	public void setCooldown(Identifier id, int ticks) {
 		if (ticks <= 0) {
-            this.cooldowns.remove(id);
+            if (this.cooldowns.remove(id) != null) {
+				sync(this.player);
+			}
 			return;
 		}
         this.cooldowns.put(id, ticks);
+		sync(this.player);
 	}
 
 	public int getCooldown(Identifier id) {

@@ -35,19 +35,19 @@ public interface MRaycasting {
 		return raycast(entity.getWorld(), entity.getEyePos(), anglesToVector(entity.getPitch(1.0f), entity.getYaw(1.0f)), distance, (e) -> filter.test(entity, e), rayRadius, maxHits);
 	}
 
-	static @NotNull List<Entity> raycast(@NotNull World world, @NotNull Vec3d startPos, Vec3d angle, double distance) {
+	static @NotNull List<Entity> raycast(@NotNull World world, @NotNull Vec3d startPos, @NotNull Vec3d angle, double distance) {
 		return raycast(world, startPos, angle, distance, ANY_ENTITY);
 	}
 
-	static @NotNull List<Entity> raycast(@NotNull World world, @NotNull Vec3d startPos, Vec3d angle, double distance, @NotNull Predicate<Entity> filter) {
+	static @NotNull List<Entity> raycast(@NotNull World world, @NotNull Vec3d startPos, @NotNull Vec3d angle, double distance, @NotNull Predicate<Entity> filter) {
 		return raycast(world, startPos, angle, distance, filter, 0);
 	}
 
-	static @NotNull List<Entity> raycast(@NotNull World world, @NotNull Vec3d startPos, Vec3d angle, double distance, @NotNull Predicate<Entity> filter, double rayRadius) {
+	static @NotNull List<Entity> raycast(@NotNull World world, @NotNull Vec3d startPos, @NotNull Vec3d angle, double distance, @NotNull Predicate<Entity> filter, double rayRadius) {
 		return raycast(world, startPos, angle, distance, filter, rayRadius, 0);
 	}
 
-	static @NotNull List<Entity> raycast(@NotNull World world, @NotNull Vec3d startPos, Vec3d angle, double distance, @NotNull Predicate<Entity> filter, double rayRadius, int maxHits) {
+	static @NotNull List<Entity> raycast(@NotNull World world, @NotNull Vec3d startPos, @NotNull Vec3d angle, double distance, @NotNull Predicate<Entity> filter, double rayRadius, int maxHits) {
 		var endPosition = startPos.add(angle.multiply(distance));
 		List<Entity> hitEntities = new ArrayList<>();
 		for (var target : world.getOtherEntities(null, Box.of(startPos, 0.1, 0.1, 0.1).expand(distance, distance, distance), filter)) {

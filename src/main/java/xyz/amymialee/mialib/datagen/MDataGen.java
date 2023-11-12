@@ -38,17 +38,18 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 
 	@Override
 	public void onInitializeDataGenerator(@NotNull FabricDataGenerator generator) {
-//		generator.addProvider((dataGenerator) -> new MAdvancementProvider(this, dataGenerator));
-//		generator.addProvider((dataGenerator) -> new MBlockLootTableProvider(this, dataGenerator));
-//		generator.addProvider((dataGenerator) -> new MLanguageProvider(this, dataGenerator));
-//		generator.addProvider((dataGenerator) -> new MLootTableProvider(this, dataGenerator));
-//		generator.addProvider((dataGenerator) -> new MModelProvider(this, dataGenerator));
-//		generator.addProvider((dataGenerator) -> new MRecipeProvider(this, dataGenerator));
-//		generator.addProvider((dataGenerator) -> new MBlockTagProvider(this, dataGenerator));
-//		generator.addProvider((dataGenerator) -> new MItemTagProvider(this, dataGenerator));
-//		generator.addProvider((dataGenerator) -> new MFluidTagProvider(this, dataGenerator));
-//		generator.addProvider((dataGenerator) -> new MEntityTypeTagProvider(this, dataGenerator));
-//		generator.addProvider((dataGenerator) -> new MGameEventTagProvider(this, dataGenerator));
+		var pack = generator.createPack();
+		pack.addProvider((dataOutput, future) -> new MAdvancementProvider(this, dataOutput));
+		pack.addProvider((dataOutput, future) -> new MBlockLootTableProvider(this, dataOutput));
+		pack.addProvider((dataOutput, future) -> new MLanguageProvider(this, dataOutput));
+		pack.addProvider((dataOutput, future) -> new MLootTableProvider(this, dataOutput));
+		pack.addProvider((dataOutput, future) -> new MModelProvider(this, dataOutput));
+		pack.addProvider((dataOutput, future) -> new MRecipeProvider(this, dataOutput));
+		pack.addProvider((dataOutput, future) -> new MBlockTagProvider(this, dataOutput, future));
+		pack.addProvider((dataOutput, future) -> new MItemTagProvider(this, dataOutput, future));
+		pack.addProvider((dataOutput, future) -> new MFluidTagProvider(this, dataOutput, future));
+		pack.addProvider((dataOutput, future) -> new MEntityTypeTagProvider(this, dataOutput, future));
+		pack.addProvider((dataOutput, future) -> new MGameEventTagProvider(this, dataOutput, future));
 	}
 
 	protected void generateAdvancements(Consumer<AdvancementEntry> consumer) {}
