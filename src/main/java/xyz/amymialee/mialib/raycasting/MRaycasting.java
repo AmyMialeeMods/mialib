@@ -77,20 +77,26 @@ public interface MRaycasting {
 	}
 
 	static boolean intersects(Vec3d start, @NotNull Vec3d end, @NotNull Entity entity, double rayRadius) {
-		var direction = end.subtract(start).normalize();
 		var entityMin = entity.getPos().subtract(entity.getWidth() / 2 + rayRadius, rayRadius, entity.getWidth() / 2 + rayRadius);
 		var entityMax = entity.getPos().add(entity.getWidth() / 2 + rayRadius, entity.getHeight() + rayRadius, entity.getWidth() / 2 + rayRadius);
+		return intersects(start, end, new Box(entityMin, entityMax), rayRadius);
+	}
+
+	static boolean intersects(Vec3d start, @NotNull Vec3d end, @NotNull Box box, double rayRadius) {
+		var direction = end.subtract(start).normalize();
+		var boxMin = new Vec3d(box.minX - rayRadius, box.minY - rayRadius, box.minZ - rayRadius);
+		var boxMax = new Vec3d(box.maxX + rayRadius, box.maxY + rayRadius, box.maxZ + rayRadius);
 		var tMin = 0d;
 		var tMax = Double.MAX_VALUE;
 		for (var axis : Direction.Axis.values()) {
 			if (Math.abs(direction.getComponentAlongAxis(axis)) < 1e-8) {
-				if (start.getComponentAlongAxis(axis) < entityMin.getComponentAlongAxis(axis) || start.getComponentAlongAxis(axis) > entityMax.getComponentAlongAxis(axis)) {
+				if (start.getComponentAlongAxis(axis) < boxMin.getComponentAlongAxis(axis) || start.getComponentAlongAxis(axis) > boxMax.getComponentAlongAxis(axis)) {
 					return false;
 				}
 			} else {
 				var ood = 1.0 / direction.getComponentAlongAxis(axis);
-				var t1 = (entityMin.getComponentAlongAxis(axis) - start.getComponentAlongAxis(axis)) * ood;
-				var t2 = (entityMax.getComponentAlongAxis(axis) - start.getComponentAlongAxis(axis)) * ood;
+				var t1 = (boxMin.getComponentAlongAxis(axis) - start.getComponentAlongAxis(axis)) * ood;
+				var t2 = (boxMax.getComponentAlongAxis(axis) - start.getComponentAlongAxis(axis)) * ood;
 				if (t1 > t2) {
 					var temp = t1;
 					t1 = t2;

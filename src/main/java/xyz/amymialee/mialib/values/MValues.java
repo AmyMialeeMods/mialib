@@ -27,18 +27,30 @@ public class MValues {
 		VALUES.put(id, mValue);
 	}
 
+	public static int size() {
+		return VALUES.size();
+	}
+
+	public static boolean isFrozen() {
+		return frozen;
+	}
+
 	public static void freeze() {
 		frozen = true;
 	}
 
 	public static void loadConfig() {
+		MiaLib.LOGGER.info("Loading %d MValues from config".formatted(MValues.size()));
 		var gson = new GsonBuilder().setPrettyPrinting().create();
 		try {
-			var json = gson.<JsonObject>fromJson(new JsonReader(new FileReader(FabricLoader.getInstance().getConfigDir().resolve("mialibvalues.json").toFile())), JsonObject.class);
-			for (var entry : VALUES.entrySet()) {
-				var id = entry.getKey();
-				var value = entry.getValue();
-				value.readFromJson(json, id);
+			var file = FabricLoader.getInstance().getConfigDir().resolve("mialibvalues.json").toFile();
+			if (file.exists()) {
+				var json = gson.<JsonObject>fromJson(new JsonReader(new FileReader(FabricLoader.getInstance().getConfigDir().resolve("mialibvalues.json").toFile())), JsonObject.class);
+				for (var entry : VALUES.entrySet()) {
+					var id = entry.getKey();
+					var value = entry.getValue();
+					value.readFromJson(json, id);
+				}
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -46,6 +58,7 @@ public class MValues {
 	}
 
 	public static void saveConfig() {
+		MiaLib.LOGGER.info("Saving %d MValues to config".formatted(MValues.size()));
 		var gson = new GsonBuilder().setPrettyPrinting().create();
 		var json = new JsonObject();
 		for (var entry : VALUES.entrySet()) {

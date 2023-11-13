@@ -17,9 +17,9 @@ public abstract class ClientPlayerEntityMixin {
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	private void mialib$raycasting(CallbackInfo ci) {
-		var player = (ClientPlayerEntity) (Object) this;
-		if (this.client.player == player) {
+//		var player = (ClientPlayerEntity) (Object) this;
+//		if (this.client.player == player) {
 //			MiaLibClient.raycastedEntities = MRaycasting.raycast((ClientPlayerEntity) (Object) this, 128f, (playerEntity, entity) -> playerEntity != entity, 99, 1);
-		}
+//		}
 	}
 }

@@ -26,6 +26,7 @@ import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
+import xyz.amymialee.mialib.registration.MRegistry;
 
 import java.util.Map;
 import java.util.Optional;
@@ -38,6 +39,7 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 
 	@Override
 	public void onInitializeDataGenerator(@NotNull FabricDataGenerator generator) {
+		MRegistry.REGISTRIES.forEach(MRegistry::build);
 		var pack = generator.createPack();
 		pack.addProvider((dataOutput, future) -> new MAdvancementProvider(this, dataOutput));
 		pack.addProvider((dataOutput, future) -> new MBlockLootTableProvider(this, dataOutput));

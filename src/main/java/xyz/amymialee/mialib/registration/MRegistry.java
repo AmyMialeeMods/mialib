@@ -4,10 +4,13 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.command.argument.serialize.ArgumentSerializer;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.brain.Activity;
+import net.minecraft.entity.ai.brain.MemoryModuleType;
+import net.minecraft.entity.ai.brain.Schedule;
+import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.decoration.painting.PaintingVariant;
@@ -17,6 +20,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.SpawnEggItem;
+import net.minecraft.particle.ParticleType;
 import net.minecraft.potion.Potion;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
@@ -27,6 +31,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.StatType;
 import net.minecraft.structure.rule.PosRuleTestType;
 import net.minecraft.structure.rule.RuleTestType;
+import net.minecraft.structure.rule.blockentity.RuleBlockEntityModifierType;
 import net.minecraft.util.Identifier;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.village.VillagerType;
@@ -142,12 +147,13 @@ public class MRegistry {
 		DEFAULT_REGISTRIES.put(EntityType.class, Registries.ENTITY_TYPE);
 		DEFAULT_REGISTRIES.put(Item.class, Registries.ITEM);
 		DEFAULT_REGISTRIES.put(Potion.class, Registries.POTION);
-		DEFAULT_REGISTRIES.put(Particle.class, Registries.PARTICLE_TYPE);
+		DEFAULT_REGISTRIES.put(ParticleType.class, Registries.PARTICLE_TYPE);
 		DEFAULT_REGISTRIES.put(BlockEntityType.class, Registries.BLOCK_ENTITY_TYPE);
 		DEFAULT_REGISTRIES.put(PaintingVariant.class, Registries.PAINTING_VARIANT);
 		DEFAULT_REGISTRIES.put(Identifier.class, Registries.CUSTOM_STAT);
 		DEFAULT_REGISTRIES.put(ChunkStatus.class, Registries.CHUNK_STATUS);
 		DEFAULT_REGISTRIES.put(RuleTestType.class, Registries.RULE_TEST);
+		DEFAULT_REGISTRIES.put(RuleBlockEntityModifierType.class, Registries.RULE_BLOCK_ENTITY_MODIFIER);
 		DEFAULT_REGISTRIES.put(PosRuleTestType.class, Registries.POS_RULE_TEST);
 		DEFAULT_REGISTRIES.put(ScreenHandlerType.class, Registries.SCREEN_HANDLER);
 		DEFAULT_REGISTRIES.put(RecipeType.class, Registries.RECIPE_TYPE);
@@ -159,6 +165,10 @@ public class MRegistry {
 		DEFAULT_REGISTRIES.put(VillagerType.class, Registries.VILLAGER_TYPE);
 		DEFAULT_REGISTRIES.put(VillagerProfession.class, Registries.VILLAGER_PROFESSION);
 		DEFAULT_REGISTRIES.put(PointOfInterestType.class, Registries.POINT_OF_INTEREST_TYPE);
+		DEFAULT_REGISTRIES.put(MemoryModuleType.class, Registries.MEMORY_MODULE_TYPE);
+		DEFAULT_REGISTRIES.put(SensorType.class, Registries.SENSOR_TYPE);
+		DEFAULT_REGISTRIES.put(Schedule.class, Registries.SCHEDULE);
+		DEFAULT_REGISTRIES.put(Activity.class, Registries.ACTIVITY);
 	}
 
 	public record EggData(int primaryColor, int secondaryColor) {

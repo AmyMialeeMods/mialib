@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import xyz.amymialee.mialib.MiaLib;
 import xyz.amymialee.mialib.util.TriConsumer;
 
 import java.util.function.BiFunction;
@@ -33,6 +34,16 @@ public class MValue<T> {
 
     public T getValue() {
         return this.option.getValue();
+    }
+
+    public void setValue(T value) {
+        if (!MValues.isFrozen()) {
+            var error = new RuntimeException("MValue: Tried to set value before config load");
+            MiaLib.LOGGER.error("MValue: Tried to set value before config load", error);
+            throw error;
+        }
+        this.option.setValue(value);
+        MValues.saveConfig();
     }
 
     public ItemStack getDisplayStack() {
