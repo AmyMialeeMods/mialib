@@ -6,12 +6,13 @@
   "mixins": [
     "BootstrapMixin",
     "LivingEntityMixin",
-    "RegistriesMixin"
+    "MinecraftServerMixin"
   ],
   "client": [
     "ClientPlayerEntityMixin",
     "EntityRenderDispatcherMixin",
-    "ItemRendererMixin"
+    "ItemRendererMixin",
+    "MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1
