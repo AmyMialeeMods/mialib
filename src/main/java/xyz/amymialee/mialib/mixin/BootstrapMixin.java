@@ -5,8 +5,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.amymialee.mialib.MiaLib;
-import xyz.amymialee.mialib.registration.MRegistry;
 import xyz.amymialee.mialib.values.MValues;
 
 @Mixin(Bootstrap.class)

@@ -13,7 +13,7 @@ import xyz.amymialee.mialib.registration.MRegistry;
 public class MinecraftClientMixin {
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/Window;setFramerateLimit(I)V", shift = At.Shift.BEFORE))
     private void mialib$clientInit(RunArgs args, CallbackInfo ci) {
-        MiaLib.LOGGER.info("Building %d MiaLib Registries".formatted(MRegistry.REGISTRIES.size()));
+        MiaLib.LOGGER.info("Building %d MiaLib Registr%s".formatted(MRegistry.REGISTRIES.size(), MRegistry.REGISTRIES.size() == 1 ? "y" : "ies"));
         MRegistry.REGISTRIES.forEach(MRegistry::build);
     }
 }

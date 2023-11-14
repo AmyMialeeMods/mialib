@@ -1,6 +1,7 @@
 package xyz.amymialee.mialib.registration;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
@@ -19,6 +20,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.potion.Potion;
@@ -39,6 +41,7 @@ import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.event.PositionSourceType;
 import net.minecraft.world.poi.PointOfInterestType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.amymialee.mialib.MiaLib;
 
@@ -46,12 +49,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class MRegistry {
 	private static final Map<Class<?>, Registry<?>> DEFAULT_REGISTRIES = new HashMap<>();
 	public static final List<MRegistry> REGISTRIES = new ArrayList<>();
 	private final String namespace;
 	private final Map<Registry<?>, Map<Identifier, Object>> objects;
+	private final List<Runnable> itemGroupRegistrations = new ArrayList<>();
 	public final Map<EntityType<?>, SpawnEggItem> spawnEggs = new HashMap<>();
 	private Map<Class<?>, Registry<?>> registries;
 	private boolean built = false;
@@ -72,11 +77,27 @@ public class MRegistry {
 		this.registries.put(clazz, registry);
 	}
 
+	public Item registerItem(String path, Item item, ItemGroup @NotNull ... groups) {
+		for (var group : groups) {
+			this.itemGroupRegistrations.add(() -> Registries.ITEM_GROUP.getKey(group).ifPresent(itemGroupRegistryKey -> ItemGroupEvents.modifyEntriesEvent(itemGroupRegistryKey).register(content -> content.add(item))));
+		}
+		return this.register(path, item);
+	}
+
+	@SafeVarargs
+	public final Item registerItem(String path, Item item, Consumer<Item> @NotNull ... groups) {
+		for (var group : groups) {
+			this.itemGroupRegistrations.add(() -> group.accept(item));
+		}
+		return this.register(path, item);
+	}
+
 	public Block registerBlock(String path, Block block, boolean registerItem) {
+		this.register(path, block);
 		if (registerItem) {
 			this.register(path, new BlockItem(block, new FabricItemSettings()));
 		}
-		return this.register(path, block);
+		return block;
 	}
 
 	public <T extends MobEntity> EntityType<T> registerEntity(String path, EntityType<T> entity) {
@@ -93,6 +114,7 @@ public class MRegistry {
 
 	@SuppressWarnings("DataFlowIssue")
 	public <T extends MobEntity> EntityType<T> registerEntity(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer attributes, @Nullable EggData eggData) {
+		this.register(path, entity);
 		if (attributes != null) {
 			FabricDefaultAttributeRegistry.register(entity, attributes);
 		}
@@ -101,7 +123,7 @@ public class MRegistry {
 			this.register(path + "_spawn_egg", egg);
 			this.spawnEggs.put(entity, egg);
 		}
-		return this.register(path, entity);
+		return entity;
 	}
 
 	public <T> T register(String path, T thing) {
@@ -109,6 +131,11 @@ public class MRegistry {
 	}
 
 	public <T> T register(Identifier id, T thing) {
+		if (this.built) {
+			var error = new IllegalStateException("Tried to register " + id + " to the " + this.namespace + " MRegistry after it was built!");
+			MiaLib.LOGGER.error("Failed to register " + id + " to the " + this.namespace + " MRegistry after it was built!", error);
+			throw error;
+		}
 		for (var registry : this.registries.entrySet()) {
 			if (registry.getKey().isInstance(thing)) {
 				this.objects.putIfAbsent(registry.getValue(), new HashMap<>());
@@ -135,6 +162,10 @@ public class MRegistry {
 				Registry.register(((Registry<T>) registry), entry.getKey(), (T) entry.getValue());
 			}
 		}
+		for (var itemGroupRegistration : this.itemGroupRegistrations) {
+			itemGroupRegistration.run();
+		}
+        this.itemGroupRegistrations.clear();
 	}
 
 	static {

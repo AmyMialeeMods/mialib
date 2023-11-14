@@ -40,7 +40,7 @@ public class MValues {
 	}
 
 	public static void loadConfig() {
-		MiaLib.LOGGER.info("Loading %d MValues from config".formatted(MValues.size()));
+		MiaLib.LOGGER.info("Loading %d MValue%s from config".formatted(MValues.size(), MValues.size() == 1 ? "" : "s"));
 		var gson = new GsonBuilder().setPrettyPrinting().create();
 		try {
 			var file = FabricLoader.getInstance().getConfigDir().resolve("mialibvalues.json").toFile();
@@ -58,7 +58,7 @@ public class MValues {
 	}
 
 	public static void saveConfig() {
-		MiaLib.LOGGER.info("Saving %d MValues to config".formatted(MValues.size()));
+		MiaLib.LOGGER.info("Saving %d MValue%s to config".formatted(MValues.size(), MValues.size() == 1 ? "" : "s"));
 		var gson = new GsonBuilder().setPrettyPrinting().create();
 		var json = new JsonObject();
 		for (var entry : VALUES.entrySet()) {

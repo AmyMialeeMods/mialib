@@ -5,11 +5,13 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BootstrapMixin",
+    "ItemGroupMixin",
     "LivingEntityMixin",
     "MinecraftServerMixin"
   ],
   "client": [
     "ClientPlayerEntityMixin",
+    "CreativeInventoryScreenMixin",
     "EntityRenderDispatcherMixin",
     "ItemRendererMixin",
     "MinecraftClientMixin"
