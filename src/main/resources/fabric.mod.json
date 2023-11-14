@@ -22,13 +22,14 @@
     "main": [
       "xyz.amymialee.mialib.MiaLib"
     ],
+    "server": [
+      "xyz.amymialee.mialib.MiaLibServer"
+    ],
     "cardinal-components-entity": [
       "xyz.amymialee.mialib.MiaLib"
     ],
     "cardinal-components-scoreboard": [
       "xyz.amymialee.mialib.MiaLib"
-    ],
-    "fabric-datagen": [
     ]
   },
   "mixins": [

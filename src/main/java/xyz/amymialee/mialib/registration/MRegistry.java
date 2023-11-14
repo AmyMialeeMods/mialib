@@ -136,6 +136,7 @@ public class MRegistry {
 			MiaLib.LOGGER.error("Failed to register " + id + " to the " + this.namespace + " MRegistry after it was built!", error);
 			throw error;
 		}
+		var registered = false;
 		for (var registry : this.registries.entrySet()) {
 			if (registry.getKey().isInstance(thing)) {
 				this.objects.putIfAbsent(registry.getValue(), new HashMap<>());
@@ -144,7 +145,14 @@ public class MRegistry {
 					throw new IllegalStateException("Failed to register " + id + " as it already exists in the " + registry.getValue() + " " + this.namespace + " MRegistry.");
 				}
 				map.put(id, thing);
+				registered = true;
+				break;
 			}
+		}
+		if (!registered) {
+			var error = new IllegalStateException("Failed to register " + id + " to the " + this.namespace + " MRegistry!");
+			MiaLib.LOGGER.error("Failed to register " + id + " to the " + this.namespace + " MRegistry!", error);
+			throw error;
 		}
 		return thing;
 	}

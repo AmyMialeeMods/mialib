@@ -6,15 +6,12 @@
   "mixins": [
     "BootstrapMixin",
     "ItemGroupMixin",
-    "LivingEntityMixin",
-    "MinecraftServerMixin"
+    "LivingEntityMixin"
   ],
   "client": [
     "ClientPlayerEntityMixin",
-    "CreativeInventoryScreenMixin",
     "EntityRenderDispatcherMixin",
-    "ItemRendererMixin",
-    "MinecraftClientMixin"
+    "ItemRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

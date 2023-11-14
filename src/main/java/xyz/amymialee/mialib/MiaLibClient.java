@@ -9,12 +9,15 @@ import net.minecraft.client.gui.screen.world.EditGameRulesScreen;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.world.GameRules;
+import xyz.amymialee.mialib.registration.MRegistry;
 
 public class MiaLibClient implements ClientModInitializer {
     public static ModelTransformationMode currentMode = ModelTransformationMode.NONE;
 
     @Override
     public void onInitializeClient() {
+        MiaLib.LOGGER.info("Building %d MiaLib Registr%s on Client".formatted(MRegistry.REGISTRIES.size(), MRegistry.REGISTRIES.size() == 1 ? "y" : "ies"));
+        MRegistry.REGISTRIES.forEach(MRegistry::build);
         ClientCommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess) -> dispatcher.register(ClientCommandManager.literal("mgamerules").executes(context -> {
             var client = context.getSource().getClient();
             client.execute(() -> {
