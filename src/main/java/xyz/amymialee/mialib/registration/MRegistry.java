@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BannerPattern;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.serialize.ArgumentSerializer;
 import net.minecraft.enchantment.Enchantment;
@@ -17,11 +18,20 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.decoration.painting.PaintingVariant;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.passive.CatVariant;
+import net.minecraft.entity.passive.FrogVariant;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Instrument;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.SpawnEggItem;
+import net.minecraft.loot.condition.LootConditionType;
+import net.minecraft.loot.entry.LootPoolEntryType;
+import net.minecraft.loot.function.LootFunctionType;
+import net.minecraft.loot.provider.nbt.LootNbtProviderType;
+import net.minecraft.loot.provider.number.LootNumberProviderType;
+import net.minecraft.loot.provider.score.LootScoreProviderType;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.potion.Potion;
 import net.minecraft.recipe.RecipeSerializer;
@@ -31,15 +41,33 @@ import net.minecraft.registry.Registry;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.StatType;
+import net.minecraft.structure.StructurePieceType;
+import net.minecraft.structure.pool.StructurePoolElementType;
+import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.structure.rule.PosRuleTestType;
 import net.minecraft.structure.rule.RuleTestType;
 import net.minecraft.structure.rule.blockentity.RuleBlockEntityModifierType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.floatprovider.FloatProviderType;
+import net.minecraft.util.math.intprovider.IntProviderType;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.village.VillagerType;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.event.PositionSourceType;
+import net.minecraft.world.gen.blockpredicate.BlockPredicateType;
+import net.minecraft.world.gen.carver.Carver;
+import net.minecraft.world.gen.chunk.placement.StructurePlacementType;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.size.FeatureSizeType;
+import net.minecraft.world.gen.foliage.FoliagePlacerType;
+import net.minecraft.world.gen.heightprovider.HeightProviderType;
+import net.minecraft.world.gen.placementmodifier.PlacementModifierType;
+import net.minecraft.world.gen.root.RootPlacerType;
+import net.minecraft.world.gen.stateprovider.BlockStateProviderType;
+import net.minecraft.world.gen.structure.StructureType;
+import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
+import net.minecraft.world.gen.trunk.TrunkPlacerType;
 import net.minecraft.world.poi.PointOfInterestType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -173,7 +201,7 @@ public class MRegistry {
 		for (var itemGroupRegistration : this.itemGroupRegistrations) {
 			itemGroupRegistration.run();
 		}
-        this.itemGroupRegistrations.clear();
+		this.itemGroupRegistrations.clear();
 	}
 
 	static {
@@ -208,6 +236,35 @@ public class MRegistry {
 		DEFAULT_REGISTRIES.put(SensorType.class, Registries.SENSOR_TYPE);
 		DEFAULT_REGISTRIES.put(Schedule.class, Registries.SCHEDULE);
 		DEFAULT_REGISTRIES.put(Activity.class, Registries.ACTIVITY);
+		DEFAULT_REGISTRIES.put(LootPoolEntryType.class, Registries.LOOT_POOL_ENTRY_TYPE);
+		DEFAULT_REGISTRIES.put(LootFunctionType.class, Registries.LOOT_FUNCTION_TYPE);
+		DEFAULT_REGISTRIES.put(LootConditionType.class, Registries.LOOT_CONDITION_TYPE);
+		DEFAULT_REGISTRIES.put(LootNumberProviderType.class, Registries.LOOT_NUMBER_PROVIDER_TYPE);
+		DEFAULT_REGISTRIES.put(LootNbtProviderType.class, Registries.LOOT_NBT_PROVIDER_TYPE);
+		DEFAULT_REGISTRIES.put(LootScoreProviderType.class, Registries.LOOT_SCORE_PROVIDER_TYPE);
+		DEFAULT_REGISTRIES.put(FloatProviderType.class, Registries.FLOAT_PROVIDER_TYPE);
+		DEFAULT_REGISTRIES.put(IntProviderType.class, Registries.INT_PROVIDER_TYPE);
+		DEFAULT_REGISTRIES.put(HeightProviderType.class, Registries.HEIGHT_PROVIDER_TYPE);
+		DEFAULT_REGISTRIES.put(BlockPredicateType.class, Registries.BLOCK_PREDICATE_TYPE);
+		DEFAULT_REGISTRIES.put(Carver.class, Registries.CARVER);
+		DEFAULT_REGISTRIES.put(Feature.class, Registries.FEATURE);
+		DEFAULT_REGISTRIES.put(StructurePlacementType.class, Registries.STRUCTURE_PLACEMENT);
+		DEFAULT_REGISTRIES.put(StructurePieceType.class, Registries.STRUCTURE_PIECE);
+		DEFAULT_REGISTRIES.put(StructureType.class, Registries.STRUCTURE_TYPE);
+		DEFAULT_REGISTRIES.put(PlacementModifierType.class, Registries.PLACEMENT_MODIFIER_TYPE);
+		DEFAULT_REGISTRIES.put(BlockStateProviderType.class, Registries.BLOCK_STATE_PROVIDER_TYPE);
+		DEFAULT_REGISTRIES.put(FoliagePlacerType.class, Registries.FOLIAGE_PLACER_TYPE);
+		DEFAULT_REGISTRIES.put(TrunkPlacerType.class, Registries.TRUNK_PLACER_TYPE);
+		DEFAULT_REGISTRIES.put(RootPlacerType.class, Registries.ROOT_PLACER_TYPE);
+		DEFAULT_REGISTRIES.put(TreeDecoratorType.class, Registries.TREE_DECORATOR_TYPE);
+		DEFAULT_REGISTRIES.put(FeatureSizeType.class, Registries.FEATURE_SIZE_TYPE);
+		DEFAULT_REGISTRIES.put(StructureProcessorType.class, Registries.STRUCTURE_PROCESSOR);
+		DEFAULT_REGISTRIES.put(StructurePoolElementType.class, Registries.STRUCTURE_POOL_ELEMENT);
+		DEFAULT_REGISTRIES.put(CatVariant.class, Registries.CAT_VARIANT);
+		DEFAULT_REGISTRIES.put(FrogVariant.class, Registries.FROG_VARIANT);
+		DEFAULT_REGISTRIES.put(BannerPattern.class, Registries.BANNER_PATTERN);
+		DEFAULT_REGISTRIES.put(Instrument.class, Registries.INSTRUMENT);
+		DEFAULT_REGISTRIES.put(ItemGroup.class, Registries.ITEM_GROUP);
 	}
 
 	public record EggData(int primaryColor, int secondaryColor) {
