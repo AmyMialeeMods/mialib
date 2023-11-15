@@ -9,6 +9,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.serialize.ArgumentSerializer;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.Schedule;
@@ -120,24 +121,30 @@ public class MRegistry {
 		return this.register(path, item);
 	}
 
-	public Block registerBlock(String path, Block block, boolean registerItem) {
+	public Block registerBlockWithItem(String path, Block block, ItemGroup @NotNull ... groups) {
 		this.register(path, block);
-		if (registerItem) {
-			this.register(path, new BlockItem(block, new FabricItemSettings()));
-		}
+		this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups);
 		return block;
 	}
 
-	public <T extends MobEntity> EntityType<T> registerEntity(String path, EntityType<T> entity) {
-		return this.registerEntity(path, entity, null, null);
+	@SafeVarargs
+	public final Block registerBlockWithItem(String path, Block block, Consumer<Item> @NotNull ... groups) {
+		this.register(path, block);
+		this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups);
+		return block;
 	}
 
 	public <T extends MobEntity> EntityType<T> registerEntity(String path, EntityType<T> entity, @Nullable EggData eggData) {
 		return this.registerEntity(path, entity, null, eggData);
 	}
 
-	public <T extends MobEntity> EntityType<T> registerEntity(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer attributes) {
-		return this.registerEntity(path, entity, attributes, null);
+	@SuppressWarnings("DataFlowIssue")
+	public <T extends LivingEntity> EntityType<T> registerEntity(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer attributes) {
+		this.register(path, entity);
+		if (attributes != null) {
+			FabricDefaultAttributeRegistry.register(entity, attributes);
+		}
+		return entity;
 	}
 
 	@SuppressWarnings("DataFlowIssue")
