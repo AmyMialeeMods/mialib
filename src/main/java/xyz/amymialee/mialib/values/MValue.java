@@ -22,7 +22,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 public abstract class MValue<T> {
-    private final Identifier id;
+    public final Identifier id;
     private final SimpleOption<T> option;
     public final ItemStack displayStack;
     private final TriConsumer<JsonObject, Identifier, T> addToJson;
