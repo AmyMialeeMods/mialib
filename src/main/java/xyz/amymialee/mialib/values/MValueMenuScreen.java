@@ -1,13 +1,9 @@
 package xyz.amymialee.mialib.values;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
-import java.util.Objects;
+import xyz.amymialee.mialib.values.old.MValueManager;
 
 public class MValueMenuScreen extends Screen {
     private int x;

@@ -22,69 +22,30 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class MValue<T> {
-    public final Identifier id;
-    public final Supplier<ItemStack> displayStack;
-    public final MValueType<T> type;
-    protected final Consumer<T> changedCallback = value -> {};
-    protected final T defaultValue;
-    protected T value;
-    @Environment(EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
+public class MClientValue<T> extends MValue<T> {
     protected BiFunction<MValue<T>, T, Text> tooltipFactory;
-    @Environment(EnvType.CLIENT)
     protected BiFunction<MValue<T>, T, Text> valueTextFactory;
-    @Environment(EnvType.CLIENT)
     protected SimpleOption<T> option;
-
-    public MValue(Identifier id, Supplier<ItemStack> displayStack, MValueType<T> type, T defaultValue) {
-        this.id = id;
-        this.displayStack = displayStack;
-        this.type = type;
-        this.defaultValue = defaultValue;
-        this.value = this.defaultValue;
-        MValueManager.register(id, this);
-    }
 
     public T getValue() {
         return this.value;
     }
 
-    public void setValue(T value) {
-        if (!MValueManager.isFrozen()) {
-            var error = new RuntimeException("MValue: Tried to set value before config load");
-            MiaLib.LOGGER.error("MValue: Tried to set value before config load", error);
-            throw error;
-        }
-        this.value = value;
-        if (MValueManager.INSTANCE.server != null) this.updateServerToClient(MValueManager.INSTANCE.server);
-    }
-
-    public void resetValue() {
-        this.setValue(this.defaultValue);
-    }
-
-    public String getTranslationKey() {
-        return "mvalue.%s.%s".formatted(this.id.getNamespace(), this.id.getPath());
-    }
-
-    @Environment(EnvType.CLIENT)
     public ClickableWidget createWidget(GameOptions options, int x, int y, int width) {
         return this.getOption().createWidget(options, x, y, width, value -> this.updateClientToServer());
     }
 
-    @Environment(EnvType.CLIENT)
     public ClickableWidget createWidget(GameOptions options, int x, int y, int width, @NotNull Consumer<T> changeCallback) {
         return this.getOption().createWidget(options, x, y, width, changeCallback.andThen(value -> this.updateClientToServer()));
     }
 
-    @Environment(EnvType.CLIENT)
     public void sendValue(T value) {
         var buf = PacketByteBufs.create();
         buf.writeNbt(this.type.addToNbt.apply(new NbtCompound(), this));
         ClientPlayNetworking.send(MiaLib.id("mvaluesync"), buf);
     }
 
-    @Environment(EnvType.CLIENT)
     public SimpleOption<T> getOption() {
         try {
             if (this.option == null) {

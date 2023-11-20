@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.values;
+package xyz.amymialee.mialib.values.old;
 
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
@@ -18,10 +18,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class MValueBuilder<T> {
-    private final Identifier id;
-    private String translationKey = "";
-    private SimpleOption.TooltipFactory<T> tooltip = SimpleOption.emptyTooltip();
-    private SimpleOption.ValueTextGetter<T> valueTextGetter = (optionText, value) -> GameOptions.getGenericValueText(Text.translatable(this.translationKey), Text.literal(String.valueOf(value)));
     private SimpleOption.Callbacks<T> callbacks = null;
     private Codec<T> codec;
     private T defaultValue;
@@ -32,67 +28,8 @@ public class MValueBuilder<T> {
     private Function<NbtCompound, T> readFromNbt;
     private Consumer<NbtCompound> writeToNbt;
 
-    protected MValueBuilder(Identifier id) {
-        this.id = id;
-    }
-
-    public MValueBuilder<T> translationKey(String translationKey) {
-        this.translationKey = translationKey;
-        return this;
-    }
-
-    public MValueBuilder<T> tooltip(SimpleOption.TooltipFactory<T> tooltip) {
-        this.tooltip = tooltip;
-        return this;
-    }
-
-    public MValueBuilder<T> valueTextGetter(SimpleOption.ValueTextGetter<T> valueTextGetter) {
-        this.valueTextGetter = valueTextGetter;
-        return this;
-    }
-
     public MValueBuilder<T> callbacks(SimpleOption.Callbacks<T> callbacks) {
         this.callbacks = callbacks;
-        return this;
-    }
-
-    public MValueBuilder<T> codec(Codec<T> codec) {
-        this.codec = codec;
-        return this;
-    }
-
-    public MValueBuilder<T> defaultValue(T defaultValue) {
-        this.defaultValue = defaultValue;
-        return this;
-    }
-
-    public MValueBuilder<T> changedCallback(@NotNull Consumer<T> changedCallback) {
-        this.changedCallback = changedCallback;
-        return this;
-    }
-
-    public MValueBuilder<T> displayStack(ItemStack displayStack) {
-        this.displayStack = displayStack;
-        return this;
-    }
-
-    public MValueBuilder<T> addToJson(TriConsumer<JsonObject, Identifier, T> addToJson) {
-        this.addToJson = addToJson;
-        return this;
-    }
-
-    public MValueBuilder<T> readFromJson(BiFunction<JsonObject, Identifier, T> readFromJson) {
-        this.readFromJson = readFromJson;
-        return this;
-    }
-
-    public MValueBuilder<T> readFromNbt(Function<NbtCompound, T> readFromNbt) {
-        this.readFromNbt = readFromNbt;
-        return this;
-    }
-
-    public MValueBuilder<T> writeToNbt(Consumer<NbtCompound> writeToNbt) {
-        this.writeToNbt = writeToNbt;
         return this;
     }
 
@@ -114,14 +51,6 @@ public class MValueBuilder<T> {
                 this.setValue(MValueBuilder.this.readFromNbt.apply(nbt));
             }
         };
-    }
-
-    public static MValueBuilder<Boolean> ofBooleanBuilder(Identifier id, boolean defaultValue) {
-        return ofBooleanBuilder(id, defaultValue, ItemStack.EMPTY);
-    }
-
-    public static MValueBuilder<Boolean> ofBooleanBuilder(Identifier id, boolean defaultValue, ItemStack displayStack) {
-        return ofBooleanBuilder(id, defaultValue, displayStack, value -> {});
     }
 
     public static MValueBuilder<Boolean> ofBooleanBuilder(@NotNull Identifier id, boolean defaultValue, ItemStack displayStack, Consumer<Boolean> changedCallback) {
@@ -147,14 +76,6 @@ public class MValueBuilder<T> {
                 .readFromNbt(nbt -> nbt.getBoolean("value"));
     }
 
-    public static MValueBuilder<Integer> ofIntegerBuilder(Identifier id, int defaultValue, int min, int max) {
-        return ofIntegerBuilder(id, defaultValue, min, max, ItemStack.EMPTY);
-    }
-
-    public static MValueBuilder<Integer> ofIntegerBuilder(Identifier id, int defaultValue, int min, int max, ItemStack displayStack) {
-        return ofIntegerBuilder(id, defaultValue, min, max, displayStack, value -> {});
-    }
-
     public static MValueBuilder<Integer> ofIntegerBuilder(@NotNull Identifier id, int defaultValue, int min, int max, ItemStack displayStack, Consumer<Integer> changedCallback) {
         var callbacks = new SimpleOption.ValidatingIntSliderCallbacks(min, max);
         var key = "mvalue.%s.%s".formatted(id.getNamespace(), id.getPath());
@@ -176,14 +97,6 @@ public class MValueBuilder<T> {
                 })
                 .writeToNbt(nbt -> nbt.putInt("value", defaultValue))
                 .readFromNbt(nbt -> nbt.getInt("value"));
-    }
-
-    public static MValueBuilder<Double> ofDoubleBuilder(Identifier id, double defaultValue) {
-        return ofDoubleBuilder(id, defaultValue, ItemStack.EMPTY);
-    }
-
-    public static MValueBuilder<Double> ofDoubleBuilder(Identifier id, double defaultValue, ItemStack displayStack) {
-        return ofDoubleBuilder(id, defaultValue, displayStack, value -> {});
     }
 
     public static MValueBuilder<Double> ofDoubleBuilder(@NotNull Identifier id, double defaultValue, ItemStack displayStack, Consumer<Double> changedCallback) {

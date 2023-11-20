@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.values;
+package xyz.amymialee.mialib.values.old;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -73,7 +73,7 @@ public class MValueManager implements AutoSyncedComponent {
 		return frozen;
 	}
 
-	protected static Map<Identifier, MValue<?>> getValues() {
+	public static Map<Identifier, MValue<?>> getValues() {
 		return VALUES;
 	}
 

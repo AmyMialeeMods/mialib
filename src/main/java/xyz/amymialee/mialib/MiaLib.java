@@ -9,7 +9,6 @@ import dev.onyxstudios.cca.api.v3.scoreboard.ScoreboardComponentInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -18,9 +17,9 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.amymialee.mialib.cca.IdCooldownComponent;
-import xyz.amymialee.mialib.values.MValue;
-import xyz.amymialee.mialib.values.MValueBuilder;
-import xyz.amymialee.mialib.values.MValueManager;
+import xyz.amymialee.mialib.values.old.MValue;
+import xyz.amymialee.mialib.values.old.MValueBuilder;
+import xyz.amymialee.mialib.values.old.MValueManager;
 
 import java.util.Objects;
 
