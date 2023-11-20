@@ -6,7 +6,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.scoreboard.Scoreboard;
@@ -24,22 +24,18 @@ import java.util.Map;
 public class MValueManager implements AutoSyncedComponent {
 	private static final Map<Identifier, MValue<?>> VALUES = new HashMap<>();
 	private static boolean frozen = false;
+	public static MValueManager INSTANCE;
 	private final Scoreboard scoreboard;
-	private final @Nullable MinecraftServer server;
+	protected final @Nullable MinecraftServer server;
 
 	public MValueManager(Scoreboard scoreboard, @Nullable MinecraftServer server) {
 		this.scoreboard = scoreboard;
 		this.server = server;
+		INSTANCE = this;
 	}
 
-	@Override
-	public void readFromNbt(NbtCompound tag) {
-
-	}
-
-	@Override
-	public void writeToNbt(NbtCompound tag) {
-
+	public void sync() {
+		MiaLib.MVALUE_MANAGER.sync(this.scoreboard);
 	}
 
 	protected static void register(Identifier id, MValue<?> mValue) {
@@ -51,24 +47,38 @@ public class MValueManager implements AutoSyncedComponent {
 		VALUES.put(id, mValue);
 	}
 
-	protected static Map<Identifier, MValue<?>> getValues() {
-		return VALUES;
+	@Override
+	public void readFromNbt(NbtCompound tag) {
+		if (!frozen) frozen = true;
+		for (var entry : VALUES.entrySet()) {
+			var id = entry.getKey();
+			var nbt = tag.getCompound(id.toString());
+			var value = entry.getValue();
+			value.readFromNbt(nbt);
+		}
 	}
 
-	public static int size() {
-		return VALUES.size();
+	@Override
+	public void writeToNbt(NbtCompound tag) {
+		for (var entry : VALUES.entrySet()) {
+			var id = entry.getKey();
+			var value = entry.getValue();
+			var nbt = new NbtCompound();
+			value.writeToNbt(nbt);
+			tag.put(id.toString(), nbt);
+		}
 	}
 
 	public static boolean isFrozen() {
 		return frozen;
 	}
 
-	public static void freeze() {
-		frozen = true;
+	protected static Map<Identifier, MValue<?>> getValues() {
+		return VALUES;
 	}
 
-	public static void loadConfig() {
-		MiaLib.LOGGER.info("Loading %d MValue%s from config".formatted(MValueManager.size(), MValueManager.size() == 1 ? "" : "s"));
+	public static void importConfig() {
+		MiaLib.LOGGER.info("Loading %d MValue%s from config".formatted(VALUES.size(), VALUES.size() == 1 ? "" : "s"));
 		var gson = new GsonBuilder().setPrettyPrinting().create();
 		try {
 			var file = FabricLoader.getInstance().getConfigDir().resolve("mialibvalues.json").toFile();
@@ -85,8 +95,8 @@ public class MValueManager implements AutoSyncedComponent {
 		}
 	}
 
-	public static void saveConfig() {
-		MiaLib.LOGGER.info("Saving %d MValue%s to config".formatted(MValueManager.size(), MValueManager.size() == 1 ? "" : "s"));
+	public static void exportConfig() {
+		MiaLib.LOGGER.info("Saving %d MValue%s to config".formatted(VALUES.size(), VALUES.size() == 1 ? "" : "s"));
 		var gson = new GsonBuilder().setPrettyPrinting().create();
 		var json = new JsonObject();
 		for (var entry : VALUES.entrySet()) {
@@ -102,25 +112,27 @@ public class MValueManager implements AutoSyncedComponent {
 	}
 
 	static {
-		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
-			MValueManager.loadConfig();
-			MValueManager.freeze();
-		});
-		ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
-			MValueManager.saveConfig();
-		});
-		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
-			for (var entry : VALUES.entrySet()) {
-				entry.getValue().updateServerToClient(player, entry.getKey());
-			}
-		});
 		ClientPlayNetworking.registerGlobalReceiver(MiaLib.id("mvaluesync"), (client, handler, buf, responseSender) -> {
 			var nbt = buf.readNbt();
 			if (nbt == null) return;
-			var value = VALUES.get(new Identifier(nbt.getString("id")));
-			if (value != null) {
-				value.readFromNbt(nbt);
-			}
+			client.execute(() -> {
+				var value = VALUES.get(new Identifier(nbt.getString("id")));
+				if (value != null) {
+					value.readFromNbt(nbt);
+				}
+			});
+		});
+		ServerPlayNetworking.registerGlobalReceiver(MiaLib.id("mvaluesync"), (server, player, handler, buf, responseSender) -> {
+			var nbt = buf.readNbt();
+			if (nbt == null) return;
+			server.execute(() -> {
+				if (player.hasPermissionLevel(2)) {
+					var value = VALUES.get(new Identifier(nbt.getString("id")));
+					if (value != null) {
+						value.readFromNbt(nbt);
+					}
+				}
+			});
 		});
 	}
 }

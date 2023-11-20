@@ -18,6 +18,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class MValueBuilder<T> {
+    private final Identifier id;
     private String translationKey = "";
     private SimpleOption.TooltipFactory<T> tooltip = SimpleOption.emptyTooltip();
     private SimpleOption.ValueTextGetter<T> valueTextGetter = (optionText, value) -> GameOptions.getGenericValueText(optionText, Text.translatable(this.translationKey));
@@ -31,7 +32,9 @@ public class MValueBuilder<T> {
     private Function<NbtCompound, T> readFromNbt;
     private Consumer<NbtCompound> writeToNbt;
 
-    protected MValueBuilder() {}
+    protected MValueBuilder(Identifier id) {
+        this.id = id;
+    }
 
     public MValueBuilder<T> translationKey(String translationKey) {
         this.translationKey = translationKey;
@@ -64,7 +67,7 @@ public class MValueBuilder<T> {
     }
 
     public MValueBuilder<T> changedCallback(@NotNull Consumer<T> changedCallback) {
-        this.changedCallback = changedCallback.andThen(((value) -> MValueManager.saveConfig()));
+        this.changedCallback = changedCallback;
         return this;
     }
 
@@ -93,14 +96,14 @@ public class MValueBuilder<T> {
         return this;
     }
 
-    public MValue<T> build(Identifier id) {
+    public MValue<T> build() {
         if (this.callbacks == null) {
             var exception = new RuntimeException("MValueBuilder: callbacks cannot be null");
             MiaLib.LOGGER.error("MValueBuilder: callbacks cannot be null", exception);
             throw exception;
         }
         var option = new SimpleOption<>(this.translationKey, this.tooltip, this.valueTextGetter, this.callbacks, this.codec, this.defaultValue, this.changedCallback);
-        return new MValue<>(id, option, this.displayStack, this.addToJson, this.readFromJson) {
+        return new MValue<>(this.id, option, this.displayStack, this.addToJson, this.readFromJson) {
             @Override
             public void writeToNbt(NbtCompound nbt) {
                 MValueBuilder.this.writeToNbt.accept(nbt);
@@ -113,19 +116,20 @@ public class MValueBuilder<T> {
         };
     }
 
-    public static MValueBuilder<Boolean> ofBooleanBuilder(String translationKey, boolean defaultValue) {
-        return ofBooleanBuilder(translationKey, defaultValue, ItemStack.EMPTY);
+    public static MValueBuilder<Boolean> ofBooleanBuilder(Identifier id, boolean defaultValue) {
+        return ofBooleanBuilder(id, defaultValue, ItemStack.EMPTY);
     }
 
-    public static MValueBuilder<Boolean> ofBooleanBuilder(String translationKey, boolean defaultValue, ItemStack displayStack) {
-        return ofBooleanBuilder(translationKey, defaultValue, displayStack, value -> {});
+    public static MValueBuilder<Boolean> ofBooleanBuilder(Identifier id, boolean defaultValue, ItemStack displayStack) {
+        return ofBooleanBuilder(id, defaultValue, displayStack, value -> {});
     }
 
-    public static MValueBuilder<Boolean> ofBooleanBuilder(String translationKey, boolean defaultValue, ItemStack displayStack, Consumer<Boolean> changedCallback) {
+    public static MValueBuilder<Boolean> ofBooleanBuilder(@NotNull Identifier id, boolean defaultValue, ItemStack displayStack, Consumer<Boolean> changedCallback) {
         var callbacks = SimpleOption.BOOLEAN;
-        return new MValueBuilder<Boolean>()
-                .translationKey(translationKey)
-                .valueTextGetter((optionText, value) -> getGenericValueText(optionText, Text.translatable(translationKey).append(": " + value)))
+        var key = "mvalue.%s.%s".formatted(id.getNamespace(), id.getPath());
+        return new MValueBuilder<Boolean>(id)
+                .translationKey(key)
+                .valueTextGetter((optionText, value) -> getGenericValueText(optionText, Text.translatable(key).append(": " + value)))
                 .callbacks(callbacks)
                 .codec(callbacks.codec())
                 .defaultValue(defaultValue)
@@ -143,19 +147,20 @@ public class MValueBuilder<T> {
                 .readFromNbt(nbt -> nbt.getBoolean("value"));
     }
 
-    public static MValueBuilder<Integer> ofIntegerBuilder(String translationKey, int defaultValue, int min, int max) {
-        return ofIntegerBuilder(translationKey, defaultValue, min, max, ItemStack.EMPTY);
+    public static MValueBuilder<Integer> ofIntegerBuilder(Identifier id, int defaultValue, int min, int max) {
+        return ofIntegerBuilder(id, defaultValue, min, max, ItemStack.EMPTY);
     }
 
-    public static MValueBuilder<Integer> ofIntegerBuilder(String translationKey, int defaultValue, int min, int max, ItemStack displayStack) {
-        return ofIntegerBuilder(translationKey, defaultValue, min, max, displayStack, value -> {});
+    public static MValueBuilder<Integer> ofIntegerBuilder(Identifier id, int defaultValue, int min, int max, ItemStack displayStack) {
+        return ofIntegerBuilder(id, defaultValue, min, max, displayStack, value -> {});
     }
 
-    public static MValueBuilder<Integer> ofIntegerBuilder(String translationKey, int defaultValue, int min, int max, ItemStack displayStack, Consumer<Integer> changedCallback) {
+    public static MValueBuilder<Integer> ofIntegerBuilder(@NotNull Identifier id, int defaultValue, int min, int max, ItemStack displayStack, Consumer<Integer> changedCallback) {
         var callbacks = new SimpleOption.ValidatingIntSliderCallbacks(min, max);
-        return new MValueBuilder<Integer>()
-                .translationKey(translationKey)
-                .valueTextGetter((optionText, value) -> getGenericValueText(optionText, Text.translatable(translationKey).append(": " + value)))
+        var key = "mvalue.%s.%s".formatted(id.getNamespace(), id.getPath());
+        return new MValueBuilder<Integer>(id)
+                .translationKey(key)
+                .valueTextGetter((optionText, value) -> getGenericValueText(optionText, Text.translatable(key).append(": " + value)))
                 .callbacks(callbacks)
                 .codec(callbacks.codec())
                 .defaultValue(defaultValue)
@@ -173,19 +178,20 @@ public class MValueBuilder<T> {
                 .readFromNbt(nbt -> nbt.getInt("value"));
     }
 
-    public static MValueBuilder<Double> ofDoubleBuilder(String translationKey, double defaultValue) {
-        return ofDoubleBuilder(translationKey, defaultValue, ItemStack.EMPTY);
+    public static MValueBuilder<Double> ofDoubleBuilder(Identifier id, double defaultValue) {
+        return ofDoubleBuilder(id, defaultValue, ItemStack.EMPTY);
     }
 
-    public static MValueBuilder<Double> ofDoubleBuilder(String translationKey, double defaultValue, ItemStack displayStack) {
-        return ofDoubleBuilder(translationKey, defaultValue, displayStack, value -> {});
+    public static MValueBuilder<Double> ofDoubleBuilder(Identifier id, double defaultValue, ItemStack displayStack) {
+        return ofDoubleBuilder(id, defaultValue, displayStack, value -> {});
     }
 
-    public static MValueBuilder<Double> ofDoubleBuilder(String translationKey, double defaultValue, ItemStack displayStack, Consumer<Double> changedCallback) {
+    public static MValueBuilder<Double> ofDoubleBuilder(@NotNull Identifier id, double defaultValue, ItemStack displayStack, Consumer<Double> changedCallback) {
         var callbacks = SimpleOption.DoubleSliderCallbacks.INSTANCE;
-        return new MValueBuilder<Double>()
-                .translationKey(translationKey)
-                .valueTextGetter((optionText, value) -> getGenericValueText(optionText, Text.translatable(translationKey).append(": " + value)))
+        var key = "mvalue.%s.%s".formatted(id.getNamespace(), id.getPath());
+        return new MValueBuilder<Double>(id)
+                .translationKey(key)
+                .valueTextGetter((optionText, value) -> getGenericValueText(optionText, Text.translatable(key).append(": " + value)))
                 .callbacks(callbacks)
                 .codec(callbacks.codec())
                 .defaultValue(defaultValue)
