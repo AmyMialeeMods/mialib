@@ -21,7 +21,7 @@ public class MValueBuilder<T> {
     private final Identifier id;
     private String translationKey = "";
     private SimpleOption.TooltipFactory<T> tooltip = SimpleOption.emptyTooltip();
-    private SimpleOption.ValueTextGetter<T> valueTextGetter = (optionText, value) -> GameOptions.getGenericValueText(optionText, Text.translatable(this.translationKey));
+    private SimpleOption.ValueTextGetter<T> valueTextGetter = (optionText, value) -> GameOptions.getGenericValueText(Text.translatable(this.translationKey), Text.literal(String.valueOf(value)));
     private SimpleOption.Callbacks<T> callbacks = null;
     private Codec<T> codec;
     private T defaultValue;

@@ -25,6 +25,9 @@
     "server": [
       "xyz.amymialee.mialib.MiaLibServer"
     ],
+    "fabric-datagen": [
+      "xyz.amymialee.mialib.MiaLibDataGen"
+    ],
     "cardinal-components-entity": [
       "xyz.amymialee.mialib.MiaLib"
     ],

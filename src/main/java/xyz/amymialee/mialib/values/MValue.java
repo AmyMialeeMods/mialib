@@ -23,10 +23,12 @@ import java.util.function.Consumer;
 
 public abstract class MValue<T> {
     public final Identifier id;
-    private final SimpleOption<T> option;
     public final ItemStack displayStack;
     private final TriConsumer<JsonObject, Identifier, T> addToJson;
     private final BiFunction<JsonObject, Identifier, T> readFromJson;
+
+    @Environment(EnvType.CLIENT)
+    private final SimpleOption<T> option;
 
     public MValue(Identifier id, SimpleOption<T> option, ItemStack displayStack, TriConsumer<JsonObject, Identifier, T> addToJson, BiFunction<JsonObject, Identifier, T> readFromJson) {
         this.id = id;
