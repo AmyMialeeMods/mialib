@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.amymialee.mialib.cca.IdCooldownComponent;
+import xyz.amymialee.mialib.values.MValueManager;
 
 import java.util.Objects;
 
@@ -23,6 +24,8 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     // Components
     public static final ComponentKey<IdCooldownComponent> ID_COOLDOWN_COMPONENT = ComponentRegistry.getOrCreate(id("identifier_cooldown"), IdCooldownComponent.class);
+    // Scoreboard Components
+    public static final ComponentKey<MValueManager> MVALUE_MANAGER = ComponentRegistry.getOrCreate(id("mvalue_manager"), MValueManager.class);
 
     @Override
     public void onInitialize() {
@@ -51,6 +54,7 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
 
     @Override
     public void registerScoreboardComponentFactories(ScoreboardComponentFactoryRegistry registry) {
+        registry.registerScoreboardComponent(MVALUE_MANAGER, MValueManager::new);
 
     }
 

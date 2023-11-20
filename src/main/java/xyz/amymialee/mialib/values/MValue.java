@@ -1,18 +1,28 @@
 package xyz.amymialee.mialib.values;
 
 import com.google.gson.JsonObject;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.MiaLib;
 import xyz.amymialee.mialib.util.TriConsumer;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class MValue<T> {
+public abstract class MValue<T> {
     private final SimpleOption<T> option;
-    private final ItemStack displayStack;
+    public final ItemStack displayStack;
     private final TriConsumer<JsonObject, Identifier, T> addToJson;
     private final BiFunction<JsonObject, Identifier, T> readFromJson;
 
@@ -21,7 +31,7 @@ public class MValue<T> {
         this.displayStack = displayStack;
         this.addToJson = addToJson;
         this.readFromJson = readFromJson;
-        MValues.register(id, this);
+        MValueManager.register(id, this);
     }
 
     protected void addToJson(JsonObject json, Identifier identifier) {
@@ -37,18 +47,46 @@ public class MValue<T> {
     }
 
     public void setValue(T value) {
-        if (!MValues.isFrozen()) {
+        if (!MValueManager.isFrozen()) {
             var error = new RuntimeException("MValue: Tried to set value before config load");
             MiaLib.LOGGER.error("MValue: Tried to set value before config load", error);
             throw error;
         }
         this.option.setValue(value);
-        MValues.saveConfig();
+        MValueManager.saveConfig();
     }
 
-    public ItemStack getDisplayStack() {
-        return this.displayStack;
+    public void updateServerToClient(@NotNull MinecraftServer server, Identifier id) {
+        var buf = PacketByteBufs.create();
+        var nbt = new NbtCompound();
+        nbt.putString("id", String.valueOf(id));
+        this.writeToNbt(nbt);
+        buf.writeNbt(nbt);
+        server.getPlayerManager().getPlayerList().forEach((player) -> ServerPlayNetworking.send(player, MiaLib.id("mvaluesync"), buf));
     }
+
+    public void updateServerToClient(@NotNull ServerPlayerEntity player, Identifier id) {
+        var buf = PacketByteBufs.create();
+        var nbt = new NbtCompound();
+        nbt.putString("id", String.valueOf(id));
+        this.writeToNbt(nbt);
+        buf.writeNbt(nbt);
+        ServerPlayNetworking.send(player, MiaLib.id("mvaluesync"), buf);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public ClickableWidget createWidget(GameOptions options, int x, int y, int width) {
+        return this.option.createWidget(options, x, y, width);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public ClickableWidget createWidget(GameOptions options, int x, int y, int width, Consumer<T> changeCallback) {
+        return this.option.createWidget(options, x, y, width, changeCallback);
+    }
+
+    public abstract void writeToNbt(NbtCompound nbt);
+
+    public abstract void readFromNbt(NbtCompound nbt);
 
     public static MValue<Boolean> ofBoolean(Identifier id, String translationKey, boolean defaultValue) {
         return MValueBuilder.ofBooleanBuilder(translationKey, defaultValue).build(id);

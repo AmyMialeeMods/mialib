@@ -37,7 +37,8 @@
   ],
   "custom": {
     "cardinal-components": [
-      "mialib:identifier_cooldown"
+      "mialib:identifier_cooldown",
+      "mialib:mvalue_manager"
     ]
   },
   "depends": {

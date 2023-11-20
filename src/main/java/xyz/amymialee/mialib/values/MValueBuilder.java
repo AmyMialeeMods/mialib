@@ -6,6 +6,7 @@ import net.minecraft.client.option.GameOptions;
 import static net.minecraft.client.option.GameOptions.getGenericValueText;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +15,7 @@ import xyz.amymialee.mialib.util.TriConsumer;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class MValueBuilder<T> {
     private String translationKey = "";
@@ -26,6 +28,8 @@ public class MValueBuilder<T> {
     private ItemStack displayStack = ItemStack.EMPTY;
     private TriConsumer<JsonObject, Identifier, T> addToJson = (json, identifier, value) -> {};
     private BiFunction<JsonObject, Identifier, T> readFromJson = (json, identifier) -> this.defaultValue;
+    private Function<NbtCompound, T> readFromNbt;
+    private Consumer<NbtCompound> writeToNbt;
 
     protected MValueBuilder() {}
 
@@ -60,7 +64,7 @@ public class MValueBuilder<T> {
     }
 
     public MValueBuilder<T> changedCallback(@NotNull Consumer<T> changedCallback) {
-        this.changedCallback = changedCallback.andThen(((value) -> MValues.saveConfig()));
+        this.changedCallback = changedCallback.andThen(((value) -> MValueManager.saveConfig()));
         return this;
     }
 
@@ -79,6 +83,16 @@ public class MValueBuilder<T> {
         return this;
     }
 
+    public MValueBuilder<T> readFromNbt(Function<NbtCompound, T> readFromNbt) {
+        this.readFromNbt = readFromNbt;
+        return this;
+    }
+
+    public MValueBuilder<T> writeToNbt(Consumer<NbtCompound> writeToNbt) {
+        this.writeToNbt = writeToNbt;
+        return this;
+    }
+
     public MValue<T> build(Identifier id) {
         if (this.callbacks == null) {
             var exception = new RuntimeException("MValueBuilder: callbacks cannot be null");
@@ -86,7 +100,17 @@ public class MValueBuilder<T> {
             throw exception;
         }
         var option = new SimpleOption<>(this.translationKey, this.tooltip, this.valueTextGetter, this.callbacks, this.codec, this.defaultValue, this.changedCallback);
-        return new MValue<>(id, option, this.displayStack, this.addToJson, this.readFromJson);
+        return new MValue<>(id, option, this.displayStack, this.addToJson, this.readFromJson) {
+            @Override
+            public void writeToNbt(NbtCompound nbt) {
+                MValueBuilder.this.writeToNbt.accept(nbt);
+            }
+
+            @Override
+            public void readFromNbt(NbtCompound nbt) {
+                this.setValue(MValueBuilder.this.readFromNbt.apply(nbt));
+            }
+        };
     }
 
     public static MValueBuilder<Boolean> ofBooleanBuilder(String translationKey, boolean defaultValue) {
@@ -114,7 +138,9 @@ public class MValueBuilder<T> {
                         return json.get(identifier.toString()).getAsBoolean();
                     }
                     return defaultValue;
-                });
+                })
+                .writeToNbt(nbt -> nbt.putBoolean("value", defaultValue))
+                .readFromNbt(nbt -> nbt.getBoolean("value"));
     }
 
     public static MValueBuilder<Integer> ofIntegerBuilder(String translationKey, int defaultValue, int min, int max) {
@@ -142,7 +168,9 @@ public class MValueBuilder<T> {
                         return json.get(identifier.toString()).getAsInt();
                     }
                     return defaultValue;
-                });
+                })
+                .writeToNbt(nbt -> nbt.putInt("value", defaultValue))
+                .readFromNbt(nbt -> nbt.getInt("value"));
     }
 
     public static MValueBuilder<Double> ofDoubleBuilder(String translationKey, double defaultValue) {
@@ -170,6 +198,8 @@ public class MValueBuilder<T> {
                         return json.get(identifier.toString()).getAsDouble();
                     }
                     return defaultValue;
-                });
+                })
+                .writeToNbt(nbt -> nbt.putDouble("value", defaultValue))
+                .readFromNbt(nbt -> nbt.getDouble("value"));
     }
 }
