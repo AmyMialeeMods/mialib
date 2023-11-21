@@ -3,7 +3,6 @@ package xyz.amymialee.mialib.values;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
-import xyz.amymialee.mialib.values.old.MValueManager;
 
 public class MValueMenuScreen extends Screen {
     private int x;

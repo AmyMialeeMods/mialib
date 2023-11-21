@@ -17,9 +17,8 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.amymialee.mialib.cca.IdCooldownComponent;
-import xyz.amymialee.mialib.values.old.MValue;
-import xyz.amymialee.mialib.values.old.MValueBuilder;
-import xyz.amymialee.mialib.values.old.MValueManager;
+import xyz.amymialee.mialib.values.MValue;
+import xyz.amymialee.mialib.values.MValueManager;
 
 import java.util.Objects;
 

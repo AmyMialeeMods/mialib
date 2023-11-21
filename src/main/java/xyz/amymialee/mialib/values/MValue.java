@@ -1,7 +1,6 @@
 package xyz.amymialee.mialib.values;
 
 import com.google.gson.JsonObject;
-import com.mojang.serialization.Codec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -16,7 +15,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.MiaLib;
-import xyz.amymialee.mialib.values.old.MValueManager;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -56,7 +54,7 @@ public class MValue<T> {
             throw error;
         }
         this.value = value;
-        if (MValueManager.INSTANCE.server != null) this.updateServerToClient(MValueManager.INSTANCE.server);
+        if (MValueManager.SERVER_INSTANCE != null) MValueManager.SERVER_INSTANCE.updateServerToClient(this);
     }
 
     public void resetValue() {
@@ -69,12 +67,12 @@ public class MValue<T> {
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createWidget(GameOptions options, int x, int y, int width) {
-        return this.getOption().createWidget(options, x, y, width, value -> this.updateClientToServer());
+        return this.getOption().createWidget(options, x, y, width, this::setValue);
     }
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createWidget(GameOptions options, int x, int y, int width, @NotNull Consumer<T> changeCallback) {
-        return this.getOption().createWidget(options, x, y, width, changeCallback.andThen(value -> this.updateClientToServer()));
+        return this.getOption().createWidget(options, x, y, width, changeCallback.andThen(this::setValue));
     }
 
     @Environment(EnvType.CLIENT)
@@ -136,57 +134,5 @@ public class MValue<T> {
     @Environment(EnvType.CLIENT)
     public void setValueTextFactory(BiFunction<MValue<T>, T, Text> valueTextFactory) {
         this.valueTextFactory = valueTextFactory;
-    }
-}
-
-class MValueType<T> {
-    public final Codec<T> codec;
-    public final BiFunction<NbtCompound, MValue<T>, NbtCompound> addToNbt;
-    public final BiFunction<NbtCompound, MValue<T>, T> readFromNbt;
-    public final BiFunction<JsonObject, MValue<T>, JsonObject> addToJson;
-    public final BiFunction<JsonObject, MValue<T>, T> readFromJson;
-    @Environment(EnvType.CLIENT)
-    protected BiFunction<MValue<T>, T, Text> defaultTooltipFactory = (m, v) -> Text.translatable(m.getTranslationKey()).append(Text.literal(": " + v));
-    @Environment(EnvType.CLIENT)
-    protected BiFunction<MValue<T>, T, Text> defaultValueTextFactory = (m, v) -> Text.translatable(m.getTranslationKey()).append(Text.literal(": " + v));
-    @Environment(EnvType.CLIENT)
-    protected SimpleOption.Callbacks<T> callbacks;
-
-    public MValueType(Codec<T> codec, BiFunction<NbtCompound, MValue<T>, NbtCompound> addToNbt, BiFunction<NbtCompound, MValue<T>, T> readFromNbt, BiFunction<JsonObject, MValue<T>, JsonObject> addToJson, BiFunction<JsonObject, MValue<T>, T> readFromJson) {
-        this.codec = codec;
-        this.addToNbt = addToNbt;
-        this.readFromNbt = readFromNbt;
-        this.addToJson = addToJson;
-        this.readFromJson = readFromJson;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public BiFunction<MValue<T>, T, Text> getDefaultTooltipFactory() {
-        return this.defaultTooltipFactory;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public void setDefaultTooltipFactory(BiFunction<MValue<T>, T, Text> defaultTooltipFactory) {
-        this.defaultTooltipFactory = defaultTooltipFactory;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public BiFunction<MValue<T>, T, Text> getDefaultValueTextFactory() {
-        return this.defaultValueTextFactory;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public void setDefaultValueTextFactory(BiFunction<MValue<T>, T, Text> defaultValueTextFactory) {
-        this.defaultValueTextFactory = defaultValueTextFactory;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public SimpleOption.Callbacks<T> getCallbacks() {
-        return this.callbacks;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public void setCallbacks(SimpleOption.Callbacks<T> callbacks) {
-        this.callbacks = callbacks;
     }
 }
