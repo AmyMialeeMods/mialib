@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.registration;
+package xyz.amymialee.mialib;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -72,7 +72,6 @@ import net.minecraft.world.gen.trunk.TrunkPlacerType;
 import net.minecraft.world.poi.PointOfInterestType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.amymialee.mialib.MiaLib;
 
 import java.util.ArrayList;
 import java.util.HashMap;

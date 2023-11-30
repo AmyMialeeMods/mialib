@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.enchantments;
+package xyz.amymialee.mialib.templates;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;

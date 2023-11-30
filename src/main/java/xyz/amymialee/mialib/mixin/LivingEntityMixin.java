@@ -16,7 +16,7 @@ public abstract class LivingEntityMixin extends Entity {
 	}
 
 	@Inject(method = "isGlowing", at = @At("HEAD"), cancellable = true)
-	private void miaLib$glow(CallbackInfoReturnable<Boolean> cir) {
+	private void mialib$glow(CallbackInfoReturnable<Boolean> cir) {
 //		if (MiaLibClient.raycastedEntities.contains(this)) {
 //			cir.setReturnValue(true);
 //		}

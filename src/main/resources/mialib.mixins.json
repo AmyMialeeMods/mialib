@@ -4,8 +4,13 @@
   "package": "xyz.amymialee.mialib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ItemEntityMixin",
     "ItemGroupMixin",
-    "LivingEntityMixin"
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "PlayerEntityMixin",
+    "ServerPlayerEntityMixin",
+    "TextMixin"
   ],
   "client": [
     "ClientPlayerEntityMixin",

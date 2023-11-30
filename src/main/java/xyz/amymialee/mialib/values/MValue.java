@@ -5,36 +5,31 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.SimpleOption;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.util.QuadFunction;
 
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public class MValue<T> {
     public final Identifier id;
-    public final Supplier<ItemStack> displayStack;
+    public final Function<T, ItemStack> displayStack;
     public final MValueType<T> type;
-    protected final Consumer<T> changedCallback = value -> {};
     protected final T defaultValue;
     protected T value;
+    @Environment(EnvType.CLIENT)
+    protected QuadFunction<MValue<T>, Integer, Integer, Integer, ClickableWidget> widgetFactory;
     @Environment(EnvType.CLIENT)
     protected BiFunction<MValue<T>, T, Text> tooltipFactory;
     @Environment(EnvType.CLIENT)
     protected BiFunction<MValue<T>, T, Text> valueTextFactory;
-    @Environment(EnvType.CLIENT)
-    protected SimpleOption<T> option;
 
-    public MValue(Identifier id, Supplier<ItemStack> displayStack, MValueType<T> type, T defaultValue) {
+    public MValue(Identifier id, Function<T, ItemStack> displayStack, MValueType<T> type, T defaultValue) {
         this.id = id;
         this.displayStack = displayStack;
         this.type = type;
@@ -57,6 +52,18 @@ public class MValue<T> {
         if (MValueManager.SERVER_INSTANCE != null) MValueManager.SERVER_INSTANCE.updateServerToClient(this);
     }
 
+    public T getScaledValue(double value) {
+        throw new RuntimeException("MValue: Tried to get scaled value on non-integer value");
+    }
+
+    public double getScaledValue() {
+        throw new RuntimeException("MValue: Tried to get scaled value on non-integer value");
+    }
+
+    public void setScaledValue(double value) {
+        this.setValue(this.getScaledValue(value));
+    }
+
     public void resetValue() {
         this.setValue(this.defaultValue);
     }
@@ -66,45 +73,23 @@ public class MValue<T> {
     }
 
     @Environment(EnvType.CLIENT)
-    public ClickableWidget createWidget(GameOptions options, int x, int y, int width) {
-        return this.getOption().createWidget(options, x, y, width, this::setValue);
+    public ClickableWidget createWidget(int x, int y, int width) {
+        return this.getWidget(x, y, width);
     }
 
     @Environment(EnvType.CLIENT)
-    public ClickableWidget createWidget(GameOptions options, int x, int y, int width, @NotNull Consumer<T> changeCallback) {
-        return this.getOption().createWidget(options, x, y, width, changeCallback.andThen(this::setValue));
-    }
-
-    @Environment(EnvType.CLIENT)
-    public void sendValue(T value) {
+    public void sendValue() {
         var buf = PacketByteBufs.create();
         buf.writeNbt(this.type.addToNbt.apply(new NbtCompound(), this));
+        System.out.println("SENDING " + this.value + " TO SERVER");
         ClientPlayNetworking.send(MiaLib.id("mvaluesync"), buf);
-    }
-
-    @Environment(EnvType.CLIENT)
-    public SimpleOption<T> getOption() {
-        try {
-            if (this.option == null) {
-                this.option = new SimpleOption<T>("mvalue.%s.%s".formatted(this.id.getNamespace(), this.id.getPath()),
-                        (value) -> Tooltip.of((this.tooltipFactory != null ? this.tooltipFactory : this.type.getDefaultValueTextFactory()).apply(this, value)),
-                        (text, value) -> (this.valueTextFactory != null ? this.valueTextFactory : this.type.getDefaultValueTextFactory()).apply(this, value),
-                        this.type.getCallbacks(),
-                        this.defaultValue,
-                        this::sendValue);
-            }
-        } catch (Throwable error) {
-            MiaLib.LOGGER.error("MValue type %s has no renderer.".formatted(this.id), error);
-            throw error;
-        }
-        return this.option;
     }
 
     protected final NbtCompound addToNbt(NbtCompound nbt) {
         return this.type.addToNbt.apply(nbt, this);
     }
 
-    protected final T readFromNbt(NbtCompound nbt) {
+    public final T readFromNbt(NbtCompound nbt) {
         return this.value = this.type.readFromNbt.apply(nbt, this);
     }
 
@@ -117,7 +102,19 @@ public class MValue<T> {
     }
 
     @Environment(EnvType.CLIENT)
+    public ClickableWidget getWidget(int x, int y, int width) {
+        if (this.widgetFactory == null) return this.type.defaultWidgetFactory.apply(this, x, y, width);
+        return this.widgetFactory.apply(this, x, y, width);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void setWidgetFactory(QuadFunction<MValue<T>, Integer, Integer, Integer, ClickableWidget> widgetFactory) {
+        this.widgetFactory = widgetFactory;
+    }
+
+    @Environment(EnvType.CLIENT)
     public BiFunction<MValue<T>, T, Text> getTooltipFactory() {
+        if (this.tooltipFactory == null) return this.type.defaultTooltipFactory;
         return this.tooltipFactory;
     }
 
@@ -128,6 +125,7 @@ public class MValue<T> {
 
     @Environment(EnvType.CLIENT)
     public BiFunction<MValue<T>, T, Text> getValueTextFactory() {
+        if (this.valueTextFactory == null) return this.type.defaultValueTextFactory;
         return this.valueTextFactory;
     }
 

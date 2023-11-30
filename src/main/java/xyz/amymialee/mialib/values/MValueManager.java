@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -20,10 +19,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class MValueManager implements AutoSyncedComponent {
     private static final Map<Identifier, MValue<?>> VALUES = new HashMap<>();
+    private static final Map<String, Set<Map.Entry<Identifier, MValue<?>>>> VALUES_BY_NAMESPACE = new HashMap<>();
     private static boolean frozen = false;
     public static MValueManager SERVER_INSTANCE;
     private final Scoreboard scoreboard;
@@ -46,6 +48,8 @@ public class MValueManager implements AutoSyncedComponent {
             throw exception;
         }
         VALUES.put(id, mValue);
+        if (!VALUES_BY_NAMESPACE.containsKey(id.getNamespace())) VALUES_BY_NAMESPACE.put(id.getNamespace(), new HashSet<>());
+        VALUES_BY_NAMESPACE.get(id.getNamespace()).add(Map.entry(id, mValue));
     }
 
     public void updateServerToClient(MValue<?> value) {
@@ -87,6 +91,14 @@ public class MValueManager implements AutoSyncedComponent {
         return VALUES;
     }
 
+    public static Set<String> getNamespaces() {
+        return VALUES_BY_NAMESPACE.keySet();
+    }
+
+    public static Set<Map.Entry<Identifier, MValue<?>>> getValuesByNamespace(String namespace) {
+        return VALUES_BY_NAMESPACE.get(namespace);
+    }
+
     public static void importConfig() {
         MiaLib.LOGGER.info("Loading %d MValue%s from config".formatted(VALUES.size(), VALUES.size() == 1 ? "" : "s"));
         var gson = new GsonBuilder().setPrettyPrinting().create();
@@ -111,30 +123,5 @@ public class MValueManager implements AutoSyncedComponent {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    static {
-        ClientPlayNetworking.registerGlobalReceiver(MiaLib.id("mvaluesync"), (client, handler, buf, responseSender) -> {
-            var nbt = buf.readNbt();
-            if (nbt == null) return;
-            client.execute(() -> {
-                var value = VALUES.get(new Identifier(nbt.getString("id")));
-                if (value != null) {
-                    value.readFromNbt(nbt);
-                }
-            });
-        });
-        ServerPlayNetworking.registerGlobalReceiver(MiaLib.id("mvaluesync"), (server, player, handler, buf, responseSender) -> {
-            var nbt = buf.readNbt();
-            if (nbt == null) return;
-            server.execute(() -> {
-                if (player.hasPermissionLevel(2)) {
-                    var value = VALUES.get(new Identifier(nbt.getString("id")));
-                    if (value != null) {
-                        value.readFromNbt(nbt);
-                    }
-                }
-            });
-        });
     }
 }

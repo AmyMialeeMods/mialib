@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.util;
+package xyz.amymialee.mialib.templates;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;

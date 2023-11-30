@@ -1,7 +1,6 @@
 package xyz.amymialee.mialib;
 
 import net.fabricmc.api.DedicatedServerModInitializer;
-import xyz.amymialee.mialib.registration.MRegistry;
 
 public class MiaLibServer implements DedicatedServerModInitializer {
     @Override

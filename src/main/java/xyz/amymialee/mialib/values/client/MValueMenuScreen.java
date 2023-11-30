@@ -1,10 +1,17 @@
-package xyz.amymialee.mialib.values;
+package xyz.amymialee.mialib.values.client;
 
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+import xyz.amymialee.mialib.values.MValueManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MValueMenuScreen extends Screen {
+    private final List<Element> mValueChildren = new ArrayList<>();
+    private String namespace;
     private int x;
     private int y;
 
@@ -17,10 +24,21 @@ public class MValueMenuScreen extends Screen {
         this.x = (this.width / 2);
         this.y = (this.height / 2);
         if (this.client == null) return;
+        var namespaces = MValueManager.getNamespaces().toArray(new String[0]);
+        if (namespaces.length == 0) return;
+        this.loadNamespace(namespaces[0]);
+    }
+
+    public void loadNamespace(String namespace) {
+        if (this.client == null) return;
+        this.namespace = namespace;
+        for (var element : this.mValueChildren) this.remove(element);
+        this.mValueChildren.clear();
         var i = 0;
-        for (var value : MValueManager.getValues().entrySet()) {
+        for (var value : MValueManager.getValuesByNamespace(namespace)) {
             var mValue = value.getValue();
-            var buttonWidget = mValue.createWidget(this.client.options, this.x - 40, 80 + i * 60, 120);
+            var buttonWidget = mValue.createWidget(this.x - 40, this.y - 80 + i * 30, 120);
+            this.mValueChildren.add(buttonWidget);
             this.addDrawableChild(buttonWidget);
             i++;
         }
@@ -33,6 +51,7 @@ public class MValueMenuScreen extends Screen {
         context.fillGradient(0, 0, this.width, this.height, 0x00000000, 0x00000000);
         context.setShaderColor(1, 1, 1, 1);
         super.render(context, mouseX, mouseY, delta);
+        context.drawText(this.textRenderer, this.title, this.x - this.textRenderer.getWidth(this.namespace), this.y - 100, 4210752, false);
     }
 
     @Override

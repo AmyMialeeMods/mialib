@@ -12,10 +12,14 @@ import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
 import org.lwjgl.glfw.GLFW;
-import xyz.amymialee.mialib.registration.MRegistry;
-import xyz.amymialee.mialib.values.MValueMenuScreen;
+import xyz.amymialee.mialib.values.MValueManager;
+import xyz.amymialee.mialib.values.MValueType;
+import xyz.amymialee.mialib.values.client.MValueBooleanButton;
+import xyz.amymialee.mialib.values.client.MValueMenuScreen;
+import xyz.amymialee.mialib.values.client.MValueSlider;
 
 public class MiaLibClient implements ClientModInitializer {
     public static ModelTransformationMode currentMode = ModelTransformationMode.NONE;
@@ -47,6 +51,16 @@ public class MiaLibClient implements ClientModInitializer {
             });
             return 0;
         }))));
+        ClientPlayNetworking.registerGlobalReceiver(MiaLib.id("mvaluesync"), (client, handler, buf, responseSender) -> {
+            var nbt = buf.readNbt();
+            if (nbt == null) return;
+            client.execute(() -> {
+                var value = MValueManager.getValues().get(new Identifier(nbt.getString("id")));
+                if (value != null) {
+                    value.readFromNbt(nbt);
+                }
+            });
+        });
         keyBindingOpenStore = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.fundyadvertisement.open_store",
                 GLFW.GLFW_KEY_N,
@@ -57,6 +71,12 @@ public class MiaLibClient implements ClientModInitializer {
                         client.setScreen(new MValueMenuScreen(Text.literal("MiaLib Values")));
                     }
                 });
+
+        MValueType.BOOLEAN.setDefaultWidgetFactory(MValueBooleanButton::new);
+        MValueType.INTEGER.setDefaultWidgetFactory(MValueSlider::new);
+        MValueType.LONG.setDefaultWidgetFactory(MValueSlider::new);
+        MValueType.FLOAT.setDefaultWidgetFactory(MValueSlider::new);
+        MValueType.DOUBLE.setDefaultWidgetFactory(MValueSlider::new);
     }
 
     static {

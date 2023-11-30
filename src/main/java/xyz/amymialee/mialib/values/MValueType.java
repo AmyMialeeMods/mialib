@@ -4,19 +4,21 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.option.SimpleOption;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
+import xyz.amymialee.mialib.util.QuadFunction;
 
 import java.util.function.BiFunction;
 
 public class MValueType<T> {
     public static final MValueType<Boolean> BOOLEAN = new MValueType<>(Codec.BOOL,
             (nbt, mValue) -> {
-                nbt.putBoolean(mValue.id.toString(), mValue.getValue());
+                nbt.putString("id", mValue.id.toString());
+                nbt.putBoolean("value", mValue.getValue());
                 return nbt;
             },
-            (nbt, mValue) -> nbt.getBoolean(mValue.id.toString()),
+            (nbt, mValue) -> nbt.getBoolean("value"),
             (json, mValue) -> {
                 json.addProperty(mValue.id.toString(), mValue.getValue());
                 return json;
@@ -25,10 +27,11 @@ public class MValueType<T> {
     );
     public static final MValueType<Integer> INTEGER = new MValueType<>(Codec.INT,
             (nbt, mValue) -> {
-                nbt.putInt(mValue.id.toString(), mValue.getValue());
+                nbt.putString("id", mValue.id.toString());
+                nbt.putInt("value", mValue.getValue());
                 return nbt;
             },
-            (nbt, mValue) -> nbt.getInt(mValue.id.toString()),
+            (nbt, mValue) -> nbt.getInt("value"),
             (json, mValue) -> {
                 json.addProperty(mValue.id.toString(), mValue.getValue());
                 return json;
@@ -37,10 +40,11 @@ public class MValueType<T> {
     );
     public static final MValueType<Long> LONG = new MValueType<>(Codec.LONG,
             (nbt, mValue) -> {
-                nbt.putLong(mValue.id.toString(), mValue.getValue());
+                nbt.putString("id", mValue.id.toString());
+                nbt.putLong("value", mValue.getValue());
                 return nbt;
             },
-            (nbt, mValue) -> nbt.getLong(mValue.id.toString()),
+            (nbt, mValue) -> nbt.getLong("value"),
             (json, mValue) -> {
                 json.addProperty(mValue.id.toString(), mValue.getValue());
                 return json;
@@ -49,10 +53,11 @@ public class MValueType<T> {
     );
     public static final MValueType<Float> FLOAT = new MValueType<>(Codec.FLOAT,
             (nbt, mValue) -> {
-                nbt.putFloat(mValue.id.toString(), mValue.getValue());
+                nbt.putString("id", mValue.id.toString());
+                nbt.putFloat("value", mValue.getValue());
                 return nbt;
             },
-            (nbt, mValue) -> nbt.getFloat(mValue.id.toString()),
+            (nbt, mValue) -> nbt.getFloat("value"),
             (json, mValue) -> {
                 json.addProperty(mValue.id.toString(), mValue.getValue());
                 return json;
@@ -61,27 +66,16 @@ public class MValueType<T> {
     );
     public static final MValueType<Double> DOUBLE = new MValueType<>(Codec.DOUBLE,
             (nbt, mValue) -> {
-                nbt.putDouble(mValue.id.toString(), mValue.getValue());
+                nbt.putString("id", mValue.id.toString());
+                nbt.putDouble("value", mValue.getValue());
                 return nbt;
             },
-            (nbt, mValue) -> nbt.getDouble(mValue.id.toString()),
+            (nbt, mValue) -> nbt.getDouble("value"),
             (json, mValue) -> {
                 json.addProperty(mValue.id.toString(), mValue.getValue());
                 return json;
             },
             (json, mValue) -> json.get(mValue.id.toString()).getAsDouble()
-    );
-    public static final MValueType<String> STRING = new MValueType<>(Codec.STRING,
-            (nbt, mValue) -> {
-                nbt.putString(mValue.id.toString(), mValue.getValue());
-                return nbt;
-            },
-            (nbt, mValue) -> nbt.getString(mValue.id.toString()),
-            (json, mValue) -> {
-                json.addProperty(mValue.id.toString(), mValue.getValue());
-                return json;
-            },
-            (json, mValue) -> json.get(mValue.id.toString()).getAsString()
     );
     public final Codec<T> codec;
     public final BiFunction<NbtCompound, MValue<T>, NbtCompound> addToNbt;
@@ -89,11 +83,11 @@ public class MValueType<T> {
     public final BiFunction<JsonObject, MValue<T>, JsonObject> addToJson;
     public final BiFunction<JsonObject, MValue<T>, T> readFromJson;
     @Environment(EnvType.CLIENT)
+    protected QuadFunction<MValue<T>, Integer, Integer, Integer, ClickableWidget> defaultWidgetFactory;
+    @Environment(EnvType.CLIENT)
     protected BiFunction<MValue<T>, T, Text> defaultTooltipFactory = (m, v) -> Text.translatable(m.getTranslationKey()).append(Text.literal(": " + v));
     @Environment(EnvType.CLIENT)
     protected BiFunction<MValue<T>, T, Text> defaultValueTextFactory = (m, v) -> Text.translatable(m.getTranslationKey()).append(Text.literal(": " + v));
-    @Environment(EnvType.CLIENT)
-    protected SimpleOption.Callbacks<T> callbacks;
 
     public MValueType(Codec<T> codec, BiFunction<NbtCompound, MValue<T>, NbtCompound> addToNbt, BiFunction<NbtCompound, MValue<T>, T> readFromNbt, BiFunction<JsonObject, MValue<T>, JsonObject> addToJson, BiFunction<JsonObject, MValue<T>, T> readFromJson) {
         this.codec = codec;
@@ -101,6 +95,16 @@ public class MValueType<T> {
         this.readFromNbt = readFromNbt;
         this.addToJson = addToJson;
         this.readFromJson = readFromJson;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public ClickableWidget getDefaultWidget(MValue<T> value, int x, int y, int width) {
+        return this.defaultWidgetFactory.apply(value, x, y, width);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void setDefaultWidgetFactory(QuadFunction<MValue<T>, Integer, Integer, Integer, ClickableWidget> widgetFactory) {
+        this.defaultWidgetFactory = widgetFactory;
     }
 
     @Environment(EnvType.CLIENT)
@@ -121,15 +125,5 @@ public class MValueType<T> {
     @Environment(EnvType.CLIENT)
     public void setDefaultValueTextFactory(BiFunction<MValue<T>, T, Text> defaultValueTextFactory) {
         this.defaultValueTextFactory = defaultValueTextFactory;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public SimpleOption.Callbacks<T> getCallbacks() {
-        return this.callbacks;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public void setCallbacks(SimpleOption.Callbacks<T> callbacks) {
-        this.callbacks = callbacks;
     }
 }

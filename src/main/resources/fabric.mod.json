@@ -42,7 +42,11 @@
     "cardinal-components": [
       "mialib:identifier_cooldown",
       "mialib:mvalue_manager"
-    ]
+    ],
+    "loom:injected_interfaces": {
+      "net/minecraft/class_1542": ["xyz/amymialee/mialib/interfaces/MItemEntity"],
+      "net/minecraft/class_1799": ["xyz/amymialee/mialib/interfaces/MItemStack"]
+    }
   },
   "depends": {
     "fabric": "*"
