@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.mixin;
+package xyz.amymialee.mialib.mixin.client;
 
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;

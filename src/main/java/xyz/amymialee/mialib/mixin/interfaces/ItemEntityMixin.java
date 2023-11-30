@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.mixin;
+package xyz.amymialee.mialib.mixin.interfaces;
 
 import net.minecraft.entity.ItemEntity;
 import org.spongepowered.asm.mixin.Mixin;

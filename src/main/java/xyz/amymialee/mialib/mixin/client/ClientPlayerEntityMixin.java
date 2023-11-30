@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.mixin;
+package xyz.amymialee.mialib.mixin.client;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -13,11 +13,6 @@ import xyz.amymialee.mialib.MiaLib;
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin {
 	@Shadow @Final protected MinecraftClient client;
-
-	@Inject(method = "onGameModeChanged", at = @At("HEAD"))
-	private void mialib$landingTest(CallbackInfo ci) {
-		System.out.println("ClientGameMode: " + MiaLib.TEST_FLOAT.getValue() + " " + MiaLib.TEST_DOUBLE.getValue() + " " + MiaLib.TEST_INTEGER.getValue() + " " + MiaLib.TEST_LONG.getValue() + " " + MiaLib.TEST_BOOLEAN.getValue());
-	}
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	private void mialib$raycasting(CallbackInfo ci) {

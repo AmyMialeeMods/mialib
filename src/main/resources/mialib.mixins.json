@@ -4,18 +4,15 @@
   "package": "xyz.amymialee.mialib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ItemEntityMixin",
-    "ItemGroupMixin",
-    "ItemStackMixin",
-    "LivingEntityMixin",
-    "PlayerEntityMixin",
-    "ServerPlayerEntityMixin",
-    "TextMixin"
+    "interfaces.ItemEntityMixin",
+    "interfaces.ItemGroupMixin",
+    "interfaces.ItemStackMixin",
+    "interfaces.PlayerEntityMixin",
+    "interfaces.TextMixin"
   ],
   "client": [
-    "ClientPlayerEntityMixin",
-    "EntityRenderDispatcherMixin",
-    "ItemRendererMixin"
+    "client.ClientPlayerEntityMixin",
+    "client.ItemRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

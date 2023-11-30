@@ -9,136 +9,64 @@ import net.minecraft.sound.SoundEvents;
 
 import java.util.function.Function;
 
-public class EquipmentMaterial implements ToolMaterial, ArmorMaterial {
-    private final String name;
-    private Function<ArmorItem.Type, Integer> armorDurability = (type) -> 0;
-    private Function<ArmorItem.Type, Integer> protection = (type) -> 0;
-    private SoundEvent equipSound = SoundEvents.ITEM_ARMOR_EQUIP_LEATHER;
-    private float toughness = 0;
-    private float knockbackResistance = 0;
-    private int toolDurability = 0;
-    private float miningSpeedMultiplier = 1;
-    private float attackDamage = 0;
-    private int miningLevel = 0;
-    private int enchantability = 0;
-    private Ingredient repairIngredient = Ingredient.EMPTY;
-
-    public EquipmentMaterial(String name) {
-        this.name = name;
-    }
-
-    public EquipmentMaterial setArmorDurability(Function<ArmorItem.Type, Integer> armorDurability) {
-        this.armorDurability = armorDurability;
-        return this;
-    }
-
-    public EquipmentMaterial setProtection(Function<ArmorItem.Type, Integer> protection) {
-        this.protection = protection;
-        return this;
-    }
-
-    public EquipmentMaterial setEquipSound(SoundEvent equipSound) {
-        this.equipSound = equipSound;
-        return this;
-    }
-
-    public EquipmentMaterial setToughness(float toughness) {
-        this.toughness = toughness;
-        return this;
-    }
-
-    public EquipmentMaterial setKnockbackResistance(float knockbackResistance) {
-        this.knockbackResistance = knockbackResistance;
-        return this;
-    }
-
-    public EquipmentMaterial setToolDurability(int toolDurability) {
-        this.toolDurability = toolDurability;
-        return this;
-    }
-
-    public EquipmentMaterial setMiningSpeedMultiplier(float miningSpeedMultiplier) {
-        this.miningSpeedMultiplier = miningSpeedMultiplier;
-        return this;
-    }
-
-    public EquipmentMaterial setAttackDamage(float attackDamage) {
-        this.attackDamage = attackDamage;
-        return this;
-    }
-
-    public EquipmentMaterial setMiningLevel(int miningLevel) {
-        this.miningLevel = miningLevel;
-        return this;
-    }
-
-    public EquipmentMaterial setEnchantability(int enchantability) {
-        this.enchantability = enchantability;
-        return this;
-    }
-
-    public EquipmentMaterial setRepairIngredient(Ingredient repairIngredient) {
-        this.repairIngredient = repairIngredient;
-        return this;
+public interface EquipmentMaterial extends ToolMaterial, ArmorMaterial {
+    @Override
+    default int getDurability(ArmorItem.Type type) {
+        return 0;
     }
 
     @Override
-    public int getDurability(ArmorItem.Type type) {
-        return this.armorDurability.apply(type);
+    default int getProtection(ArmorItem.Type type) {
+        return 0;
     }
 
     @Override
-    public int getProtection(ArmorItem.Type type) {
-        return this.protection.apply(type);
+    default SoundEvent getEquipSound() {
+        return SoundEvents.ITEM_ARMOR_EQUIP_LEATHER;
     }
 
     @Override
-    public SoundEvent getEquipSound() {
-        return this.equipSound;
+    default String getName() {
+        return "mialib";
     }
 
     @Override
-    public String getName() {
-        return this.name;
+    default float getToughness() {
+        return 0;
     }
 
     @Override
-    public float getToughness() {
-        return this.toughness;
+    default float getKnockbackResistance() {
+        return 0;
     }
 
     @Override
-    public float getKnockbackResistance() {
-        return this.knockbackResistance;
+    default int getDurability() {
+        return 0;
     }
 
     @Override
-    public int getDurability() {
-        return this.toolDurability;
+    default float getMiningSpeedMultiplier() {
+        return 1;
     }
 
     @Override
-    public float getMiningSpeedMultiplier() {
-        return this.miningSpeedMultiplier;
+    default float getAttackDamage() {
+        return 0;
     }
 
     @Override
-    public float getAttackDamage() {
-        return this.attackDamage;
+    default int getMiningLevel() {
+        return 0;
     }
 
     @Override
-    public int getMiningLevel() {
-        return this.miningLevel;
+    default int getEnchantability() {
+        return 0;
     }
 
     @Override
-    public int getEnchantability() {
-        return this.enchantability;
-    }
-
-    @Override
-    public Ingredient getRepairIngredient() {
-        return this.repairIngredient;
+    default Ingredient getRepairIngredient() {
+        return Ingredient.EMPTY;
     }
 }

@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.cca;
+package xyz.amymialee.mialib.raycasting;
 
 //public class RaycastManagerComponent implements Component {
 //	private static final Set<Identifier> RECORDS = new HashSet<>();
