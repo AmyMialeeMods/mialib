@@ -8,7 +8,7 @@ import net.minecraft.sound.SoundEvents;
 import java.util.function.Function;
 
 public class EquipmentMaterialInstance implements EquipmentMaterial {
-    public static final EquipmentMaterialInstance EMPTY = new EquipmentMaterialInstance("empty");
+    public static final EquipmentMaterialInstance EMPTY = new EquipmentMaterialInstance("mialib");
     private final String name;
     private Function<ArmorItem.Type, Integer> armorDurability = (type) -> 0;
     private Function<ArmorItem.Type, Integer> protection = (type) -> 0;

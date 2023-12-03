@@ -4,15 +4,30 @@
   "package": "xyz.amymialee.mialib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "BlockMixin",
+    "EntityMixin",
+    "FlatLevelGeneratorPresetsMixin",
+    "FlatLevelGeneratorPresetsMixin$RegistrarMixin",
+    "ItemEntityMixin",
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "MobEntityMixin",
+    "PlayerEntityMixin",
+    "RecipeManagerMixin",
     "interfaces.ItemEntityMixin",
     "interfaces.ItemGroupMixin",
+    "interfaces.ItemMixin",
     "interfaces.ItemStackMixin",
     "interfaces.PlayerEntityMixin",
     "interfaces.TextMixin"
   ],
   "client": [
     "client.ClientPlayerEntityMixin",
-    "client.ItemRendererMixin"
+    "client.DrawContextMixin",
+    "client.ItemRendererMixin",
+    "client.EntityRenderDispatcherMixin",
+    "client.PresetsScreenMixin",
+    "client.PresetsScreenMixin$SuperflatPresetsListWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1

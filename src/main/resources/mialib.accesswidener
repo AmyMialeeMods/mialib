@@ -12,8 +12,8 @@ accessible field net/minecraft/client/gui/widget/SliderWidget HANDLE_HIGHLIGHTED
 accessible method net/minecraft/client/gui/widget/SliderWidget getTexture ()Lnet/minecraft/util/Identifier;
 accessible method net/minecraft/client/gui/widget/SliderWidget getHandleTexture ()Lnet/minecraft/util/Identifier;
 accessible method net/minecraft/client/gui/widget/CyclingButtonWidget <init> (IIIILnet/minecraft/text/Text;Lnet/minecraft/text/Text;ILjava/lang/Object;Lnet/minecraft/client/gui/widget/CyclingButtonWidget$Values;Ljava/util/function/Function;Ljava/util/function/Function;Lnet/minecraft/client/gui/widget/CyclingButtonWidget$UpdateCallback;Lnet/minecraft/client/option/SimpleOption$TooltipFactory;Z)V
-
-
+accessible class net/minecraft/world/gen/FlatLevelGeneratorPresets$Registrar
+accessible method net/minecraft/world/gen/FlatLevelGeneratorPresets of (Ljava/lang/String;)Lnet/minecraft/registry/RegistryKey;
 
 
 

@@ -6,4 +6,8 @@ public interface MPlayerEntity {
     boolean mialib$isCoolingDown(Identifier id);
     void mialib$setCooldown(Identifier id, int ticks);
     int mialib$getCooldown(Identifier id);
+    float mialib$getCooldown(Identifier id, float tickDelta);
+    boolean mialib$holdingAttack();
+    void miaLib$setHoldingAttack(boolean attackHeld);
+    int mialib$getHoldingTime();
 }

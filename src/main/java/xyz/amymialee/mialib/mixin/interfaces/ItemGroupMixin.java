@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.amymialee.mialib.interfaces.MItemGroup;
-import xyz.amymialee.mialib.util.MRepeatSupplier;
 
 import java.util.function.Supplier;
 

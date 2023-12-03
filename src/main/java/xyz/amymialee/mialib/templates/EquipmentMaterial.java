@@ -7,8 +7,6 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 
-import java.util.function.Function;
-
 public interface EquipmentMaterial extends ToolMaterial, ArmorMaterial {
     @Override
     default int getDurability(ArmorItem.Type type) {
