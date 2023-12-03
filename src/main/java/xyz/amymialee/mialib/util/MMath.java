@@ -1,7 +1,5 @@
 package xyz.amymialee.mialib.util;
 
-import xyz.amymialee.mialib.MiaLib;
-
 public interface MMath {
 	static int lerp(int a, int b, double t) {
 		return (int) Math.round(a + (b - a) * t);
@@ -21,47 +19,51 @@ public interface MMath {
 
 	static int clampLoop(int value, int min, int max) {
 		var range = max - min + 1;
-		var offset = value - min;
-		var mod = offset % range;
-		if (mod < 0) {
-			mod += range;
+		while (value < min) {
+			value += range;
 		}
-		return min + mod;
+		while (value > max) {
+			value -= range;
+		}
+		return value;
 	}
 
 	static long clampLoop(long value, long min, long max) {
 		var range = max - min + 1;
-		var offset = value - min;
-		var mod = offset % range;
-		if (mod < 0) {
-			mod += range;
+		while (value < min) {
+			value += range;
 		}
-		return min + mod;
+		while (value > max) {
+			value -= range;
+		}
+		return value;
 	}
 
 	static float clampLoop(float value, float min, float max) {
-		var range = max - min;
-		var offset = value - min;
-		var mod = offset % range;
-		if (mod < 0) {
-			mod += range;
+		var range = max - min + 1;
+		while (value < min) {
+			value += range;
 		}
-		return min + mod;
+		while (value > max) {
+			value -= range;
+		}
+		return value;
 	}
 
 	static double clampLoop(double value, double min, double max) {
-		var range = max - min;
-		var offset = value - min;
-		var mod = offset % range;
-		if (mod < 0) {
-			mod += range;
+		var range = max - min + 1;
+		while (value < min) {
+			value += range;
 		}
-		return min + mod;
+		while (value > max) {
+			value -= range;
+		}
+		return value;
 	}
 
 	static boolean getByteFlag(byte data, int flag) {
 		if (flag < 0 || flag > 8) {
-			MiaLib.LOGGER.warn("Invalid byte flag index: " + flag);
+//			MiaLib.LOGGER.warn("Invalid byte flag index: " + flag);
 			return false;
 		}
 		return (data >> flag & 0x01) == 1;
@@ -69,7 +71,7 @@ public interface MMath {
 
 	static byte setByteFlag(byte data, int flag, boolean value) {
 		if (flag < 0 || flag > 8) {
-			MiaLib.LOGGER.warn("Invalid byte flag index: " + flag);
+//			MiaLib.LOGGER.warn("Invalid byte flag index: " + flag);
 			return data;
 		}
 		if (value) {

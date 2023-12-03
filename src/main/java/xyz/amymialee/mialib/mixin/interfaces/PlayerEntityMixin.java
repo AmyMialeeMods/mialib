@@ -18,22 +18,22 @@ public abstract class PlayerEntityMixin extends Entity implements MPlayerEntity 
 
     @Override
     public boolean mialib$isCoolingDown(Identifier id) {
-        return IdCooldownComponent.isCoolingDown((PlayerEntity) (Object) this, id);
+        return MiaLib.ID_COOLDOWN_COMPONENT.get(this).isCoolingDown(id);
     }
 
     @Override
     public void mialib$setCooldown(Identifier id, int ticks) {
-        IdCooldownComponent.setCooldown((PlayerEntity) (Object) this, id, ticks);
+        MiaLib.ID_COOLDOWN_COMPONENT.get(this).setCooldown(id, ticks);
     }
 
     @Override
     public int mialib$getCooldown(Identifier id) {
-        return IdCooldownComponent.getCooldown((PlayerEntity) (Object) this, id);
+        return MiaLib.ID_COOLDOWN_COMPONENT.get(this).getCooldown(id);
     }
 
     @Override
     public float mialib$getCooldown(Identifier id, float tickDelta) {
-        return IdCooldownComponent.getCooldown((PlayerEntity) (Object) this, id, tickDelta);
+        return MiaLib.ID_COOLDOWN_COMPONENT.get(this).getCooldown(id, tickDelta);
     }
 
     @Override

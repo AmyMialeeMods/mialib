@@ -25,16 +25,17 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 		return MiaLib.ID_COOLDOWN_COMPONENT.get(player);
 	}
 
-	public static void sync(PlayerEntity player) {
-		MiaLib.ID_COOLDOWN_COMPONENT.sync(player);
+	public void sync() {
+		MiaLib.ID_COOLDOWN_COMPONENT.sync(this.player);
 	}
 
 	@Override
 	public void tick() {
-		for (var id : this.cooldowns.keySet()) {
-			if (this.cooldowns.get(id).endTick > this.tick) {
-                this.cooldowns.remove(id);
-				sync(this.player);
+		this.tick++;
+		for (var entry : this.cooldowns.entrySet()) {
+			if (entry.getValue().endTick < this.tick) {
+                this.cooldowns.remove(entry.getKey());
+                this.sync();
 			}
 		}
 	}
@@ -64,44 +65,29 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 	public void setCooldown(Identifier id, int ticks) {
 		if (ticks <= 0) {
             if (this.cooldowns.remove(id) != null) {
-				sync(this.player);
+                this.sync();
 			}
 			return;
 		}
         this.cooldowns.put(id, new Entry(this.tick, this.tick + ticks));
-		sync(this.player);
-	}
-
-	public static boolean isCoolingDown(PlayerEntity player, Identifier id) {
-		return get(player).isCoolingDown(id);
-	}
-
-	public static void setCooldown(PlayerEntity player, Identifier id, int ticks) {
-		get(player).setCooldown(id, ticks);
-	}
-
-	public static int getCooldown(PlayerEntity player, Identifier id) {
-		return get(player).getCooldown(id);
-	}
-
-	public static float getCooldown(PlayerEntity playerEntity, Identifier id, float tickDelta) {
-		return get(playerEntity).getCooldown(id, tickDelta);
+        this.sync();
 	}
 
 	@Override
 	public void readFromNbt(@NotNull NbtCompound tag) {
+		this.tick = tag.getInt("tick");
+		this.cooldowns.clear();
 		var compound = tag.getCompound("cooldowns");
 		if (compound == null) return;
-        this.cooldowns.clear();
 		for (var id : compound.getKeys()) {
 			var entry = compound.getCompound(id);
 			if (entry != null) this.cooldowns.put(new Identifier(id), new Entry(entry.getInt("start"), entry.getInt("end")));
 		}
-		this.tick = tag.getInt("tick");
 	}
 
 	@Override
 	public void writeToNbt(NbtCompound tag) {
+		tag.putInt("tick", this.tick);
 		var compound = new NbtCompound();
 		for (var id : this.cooldowns.keySet()) {
 			var entry = new NbtCompound();
@@ -110,7 +96,6 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 			compound.put(id.toString(), entry);
 		}
 		tag.put("cooldowns", compound);
-		tag.putInt("tick", this.tick);
 	}
 
 	record Entry(int startTick, int endTick) {}
