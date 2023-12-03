@@ -10,7 +10,6 @@ import xyz.amymialee.mialib.data.MDataGen;
 public class MiaLibDataGen extends MDataGen {
     @Override
     protected void generateTranslations(MLanguageProvider provider, FabricLanguageProvider.@NotNull TranslationBuilder builder) {
-        builder.add("mvalue.mialib.test_boolean", "Test Boolean");
         builder.add(MiaLib.FIRE_ASPECT_AUTOSMELTING.getTranslationKey(), "Fire Aspect Autosmelting");
         builder.add(MiaLib.DEV_READY.getValue().toTranslationKey(), "Dev Ready");
         builder.add(MiaLib.BLAST_PROOF.getValue().toTranslationKey(), "Blast Proof");
@@ -18,6 +17,14 @@ public class MiaLibDataGen extends MDataGen {
         builder.add(provider.getTagTranslationKey(MiaLib.UNDESTROYABLE), "Undestroyable");
         builder.add(provider.getTagTranslationKey(MiaLib.UNCRAFTABLE), "Uncraftable");
         builder.add(provider.getTagTranslationKey(MiaLib.UNBREAKABLE), "Unbreakable");
+        for (var enabled : new boolean[]{true, false}) {
+            for (var single : new boolean[]{true, false}) {
+                builder.add("commands.mialib.vanish." + (enabled ? "enabled" : "disabled") + "." + (single ? "single" : "multiple"), "§7Vanish " + (enabled ? "§aenabled" : "§cdisabled") + "§7 for %s");
+                builder.add("commands.mialib.indestructible." + (enabled ? "enabled" : "disabled") + "." + (single ? "single" : "multiple"), "§7Indestructibility " + (enabled ? "§aenabled" : "§cdisabled") + "§7 for %s");
+            }
+            builder.add("commands.mialib.vanish." + (enabled ? "enabled" : "disabled") + ".self", "§7Vanish " + (enabled ? "§aenabled" : "§cdisabled") + "§7 for self");
+            builder.add("commands.mialib.indestructible." + (enabled ? "enabled" : "disabled") + ".self", "§7Indestructibility " + (enabled ? "§aenabled" : "§cdisabled") + "§7 for self");
+        }
     }
 
     @Override

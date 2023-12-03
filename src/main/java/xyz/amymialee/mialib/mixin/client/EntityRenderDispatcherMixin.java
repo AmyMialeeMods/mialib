@@ -13,6 +13,6 @@ import xyz.amymialee.mialib.MiaLib;
 public class EntityRenderDispatcherMixin {
     @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
     private <E extends Entity> void mialib$imperceptible(E entity, Frustum frustum, double x, double y, double z, CallbackInfoReturnable<Boolean> cir) {
-        if (MiaLib.FLAGS.get(entity).isImperceptible()) cir.setReturnValue(false);
+        if (MiaLib.EXTRA_FLAGS.get(entity).isImperceptible()) cir.setReturnValue(false);
     }
 }

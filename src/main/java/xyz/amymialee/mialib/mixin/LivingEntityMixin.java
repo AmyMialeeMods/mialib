@@ -14,7 +14,7 @@ import xyz.amymialee.mialib.MiaLib;
 public class LivingEntityMixin {
     @WrapOperation(method = "tickStatusEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V"))
     private void mialib$noParticles(World instance, ParticleEffect parameters, double x, double y, double z, double velocityX, double velocityY, double velocityZ, @NotNull Operation<Void> original) {
-        if (MiaLib.FLAGS.get(this).isImperceptible()) return;
+        if (MiaLib.EXTRA_FLAGS.get(this).isImperceptible()) return;
         original.call(instance, parameters, x, y, z, velocityX, velocityY, velocityZ);
     }
 }

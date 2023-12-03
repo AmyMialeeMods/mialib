@@ -13,16 +13,16 @@ import xyz.amymialee.mialib.MiaLib;
 public class EntityMixin {
     @Inject(method = "isInvulnerable", at = @At("HEAD"), cancellable = true)
     private void mialib$indestructible(CallbackInfoReturnable<Boolean> cir) {
-        if (MiaLib.FLAGS.get(this).isIndestructible()) cir.setReturnValue(true);
+        if (MiaLib.EXTRA_FLAGS.get(this).isIndestructible()) cir.setReturnValue(true);
     }
 
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
     private void mialib$indestructible(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
-        if (MiaLib.FLAGS.get(this).isIndestructible()) cir.setReturnValue(true);
+        if (MiaLib.EXTRA_FLAGS.get(this).isIndestructible()) cir.setReturnValue(true);
     }
 
     @Inject(method = "isInvisibleTo", at = @At("HEAD"), cancellable = true)
     private void mialib$imperceptible(PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
-        if (MiaLib.FLAGS.get(this).isImperceptible()) cir.setReturnValue(true);
+        if (MiaLib.EXTRA_FLAGS.get(this).isImperceptible()) cir.setReturnValue(true);
     }
 }
