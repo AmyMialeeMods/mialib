@@ -8,168 +8,169 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemStack;
-import xyz.amymialee.mialib.util.TriConsumer;
+import xyz.amymialee.mialib.util.QuadConsumer;
+import xyz.amymialee.mialib.util.QuadFunction;
+import xyz.amymialee.mialib.util.TriFunction;
 
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class MEnchantment extends Enchantment {
-	private int minLevel = super.getMinLevel();
-	private int maxLevel = super.getMaxLevel();
-	private Function<Integer, Integer> minPower = super::getMinPower;
-	private Function<Integer, Integer> maxPower = super::getMaxPower;
-	private BiFunction<Integer, DamageSource, Integer> protectionAmount = super::getProtectionAmount;
-	private BiFunction<Integer, EntityGroup, Float> attackDamage = super::getAttackDamage;
-	private Function<Enchantment, Boolean> canAccept = super::canAccept;
-	private Function<ItemStack, Boolean> isAcceptableItem = super::isAcceptableItem;
-	private TriConsumer<LivingEntity, Entity, Integer> onTargetDamaged = super::onTargetDamaged;
-	private TriConsumer<LivingEntity, Entity, Integer> onUserDamaged = super::onUserDamaged;
-	private boolean isTreasure = super.isTreasure();
-	private boolean isCursed = super.isCursed();
-	private boolean isAvailableForEnchantedBookOffer = super.isAvailableForEnchantedBookOffer();
-	private boolean isAvailableForRandomSelection = super.isAvailableForRandomSelection();
+	private BiFunction<MEnchantment, Integer, Integer> minLevel = (enchantment, original) -> original;
+	private BiFunction<MEnchantment, Integer, Integer> maxLevel = (enchantment, original) -> original;
+	private TriFunction<MEnchantment, Integer, Integer, Integer> minPower = (enchantment, original, level) -> original;
+	private TriFunction<MEnchantment, Integer, Integer, Integer> maxPower = (enchantment, original, level) -> original;
+	private QuadFunction<MEnchantment, Integer, Integer, DamageSource, Integer> protectionAmount = (enchantment, original, level, source) -> original;
+	private QuadFunction<MEnchantment, Float, Integer, EntityGroup, Float> attackDamage = (enchantment, original, level, group) -> original;
+	private TriFunction<MEnchantment, Boolean, Enchantment, Boolean> canAccept = (enchantment, original, other) -> original;
+	private TriFunction<MEnchantment, Boolean, ItemStack, Boolean> isAcceptableItem = (enchantment, original, stack) -> original;
+	private QuadConsumer<MEnchantment, LivingEntity, Entity, Integer> onTargetDamaged = (enchantment, user, target, level) -> {};
+	private QuadConsumer<MEnchantment, LivingEntity, Entity, Integer> onUserDamaged = (enchantment, user, target, level) -> {};
+	private BiFunction<MEnchantment, Boolean, Boolean> isTreasure = (enchantment, original) -> original;
+	private BiFunction<MEnchantment, Boolean, Boolean> isCursed = (enchantment, original) -> original;
+	private BiFunction<MEnchantment, Boolean, Boolean> isAvailableForEnchantedBookOffer = (enchantment, original) -> original;
+	private BiFunction<MEnchantment, Boolean, Boolean> isAvailableForRandomSelection = (enchantment, original) -> original;
 
 	public MEnchantment(Rarity weight, EnchantmentTarget type, EquipmentSlot ... slotTypes) {
 		super(weight, type, slotTypes);
 	}
 
-	public MEnchantment setMinLevel(int minLevel) {
+	public MEnchantment setMinLevel(BiFunction<MEnchantment, Integer, Integer> minLevel) {
 		this.minLevel = minLevel;
 		return this;
 	}
 
-	public MEnchantment setMaxLevel(int maxLevel) {
+	public MEnchantment setMaxLevel(BiFunction<MEnchantment, Integer, Integer> maxLevel) {
 		this.maxLevel = maxLevel;
 		return this;
 	}
 
-	public MEnchantment setMinPower(Function<Integer, Integer> minPower) {
+	public MEnchantment setMinPower(TriFunction<MEnchantment, Integer, Integer, Integer> minPower) {
 		this.minPower = minPower;
 		return this;
 	}
 
-	public MEnchantment setMaxPower(Function<Integer, Integer> maxPower) {
+	public MEnchantment setMaxPower(TriFunction<MEnchantment, Integer, Integer, Integer> maxPower) {
 		this.maxPower = maxPower;
 		return this;
 	}
 
-	public MEnchantment setProtectionAmount(BiFunction<Integer, DamageSource, Integer> protectionAmount) {
+	public MEnchantment setProtectionAmount(QuadFunction<MEnchantment, Integer, Integer, DamageSource, Integer> protectionAmount) {
 		this.protectionAmount = protectionAmount;
 		return this;
 	}
 
-	public MEnchantment setAttackDamage(BiFunction<Integer, EntityGroup, Float> attackDamage) {
+	public MEnchantment setAttackDamage(QuadFunction<MEnchantment, Float, Integer, EntityGroup, Float> attackDamage) {
 		this.attackDamage = attackDamage;
 		return this;
 	}
 
-	public MEnchantment setCanAccept(Function<Enchantment, Boolean> canAccept) {
+	public MEnchantment setCanAccept(TriFunction<MEnchantment, Boolean, Enchantment, Boolean> canAccept) {
 		this.canAccept = canAccept;
 		return this;
 	}
 
-	public MEnchantment setIsAcceptableItem(Function<ItemStack, Boolean> isAcceptableItem) {
+	public MEnchantment setIsAcceptableItem(TriFunction<MEnchantment, Boolean, ItemStack, Boolean> isAcceptableItem) {
 		this.isAcceptableItem = isAcceptableItem;
 		return this;
 	}
 
-	public MEnchantment setOnTargetDamaged(TriConsumer<LivingEntity, Entity, Integer> onTargetDamaged) {
+	public MEnchantment setOnTargetDamaged(QuadConsumer<MEnchantment, LivingEntity, Entity, Integer> onTargetDamaged) {
 		this.onTargetDamaged = onTargetDamaged;
 		return this;
 	}
 
-	public MEnchantment setOnUserDamaged(TriConsumer<LivingEntity, Entity, Integer> onUserDamaged) {
+	public MEnchantment setOnUserDamaged(QuadConsumer<MEnchantment, LivingEntity, Entity, Integer> onUserDamaged) {
 		this.onUserDamaged = onUserDamaged;
 		return this;
 	}
 
-	public MEnchantment setIsTreasure(boolean isTreasure) {
+	public MEnchantment setIsTreasure(BiFunction<MEnchantment, Boolean, Boolean> isTreasure) {
 		this.isTreasure = isTreasure;
 		return this;
 	}
 
-	public MEnchantment setIsCursed(boolean isCursed) {
+	public MEnchantment setIsCursed(BiFunction<MEnchantment, Boolean, Boolean> isCursed) {
 		this.isCursed = isCursed;
 		return this;
 	}
 
-	public MEnchantment setIsAvailableForEnchantedBookOffer(boolean isAvailableForEnchantedBookOffer) {
+	public MEnchantment setIsAvailableForEnchantedBookOffer(BiFunction<MEnchantment, Boolean, Boolean> isAvailableForEnchantedBookOffer) {
 		this.isAvailableForEnchantedBookOffer = isAvailableForEnchantedBookOffer;
 		return this;
 	}
 
-	public MEnchantment setIsAvailableForRandomSelection(boolean isAvailableForRandomSelection) {
+	public MEnchantment setIsAvailableForRandomSelection(BiFunction<MEnchantment, Boolean, Boolean> isAvailableForRandomSelection) {
 		this.isAvailableForRandomSelection = isAvailableForRandomSelection;
 		return this;
 	}
 
 	@Override
 	public int getMinLevel() {
-		return this.minLevel;
+		return this.minLevel.apply(this, super.getMinLevel());
 	}
 
 	@Override
 	public int getMaxLevel() {
-		return this.maxLevel;
+		return this.maxLevel.apply(this, super.getMaxLevel());
 	}
 
 	@Override
 	public int getMinPower(int level) {
-		return this.minPower.apply(level);
+		return this.minPower.apply(this, super.getMinPower(level), level);
 	}
 
 	@Override
 	public int getMaxPower(int level) {
-		return this.maxPower.apply(level);
+		return this.maxPower.apply(this, super.getMaxPower(level), level);
 	}
 
 	@Override
 	public int getProtectionAmount(int level, DamageSource source) {
-		return this.protectionAmount.apply(level, source);
+		return this.protectionAmount.apply(this, super.getProtectionAmount(level, source), level, source);
 	}
 
 	@Override
 	public float getAttackDamage(int level, EntityGroup group) {
-		return this.attackDamage.apply(level, group);
+		return this.attackDamage.apply(this, super.getAttackDamage(level, group), level, group);
 	}
 
 	@Override
 	protected boolean canAccept(Enchantment other) {
-		return this.canAccept.apply(other);
+		return this.canAccept.apply(this, super.canAccept(other), other);
 	}
 
 	@Override
 	public boolean isAcceptableItem(ItemStack stack) {
-		return this.isAcceptableItem.apply(stack);
+		return this.isAcceptableItem.apply(this, super.isAcceptableItem(stack), stack);
 	}
 
 	@Override
 	public void onTargetDamaged(LivingEntity user, Entity target, int level) {
-		this.onTargetDamaged.accept(user, target, level);
+		this.onTargetDamaged.accept(this, user, target, level);
 	}
 
 	@Override
 	public void onUserDamaged(LivingEntity user, Entity attacker, int level) {
-		this.onUserDamaged.accept(user, attacker, level);
+		this.onUserDamaged.accept(this, user, attacker, level);
 	}
 
 	@Override
 	public boolean isTreasure() {
-		return this.isTreasure;
+		return this.isTreasure.apply(this, super.isTreasure());
 	}
 
 	@Override
 	public boolean isCursed() {
-		return this.isCursed;
+		return this.isCursed.apply(this, super.isCursed());
 	}
 
 	@Override
 	public boolean isAvailableForEnchantedBookOffer() {
-		return this.isAvailableForEnchantedBookOffer;
+		return this.isAvailableForEnchantedBookOffer.apply(this, super.isAvailableForEnchantedBookOffer());
 	}
 
 	@Override
 	public boolean isAvailableForRandomSelection() {
-		return this.isAvailableForRandomSelection;
+		return this.isAvailableForRandomSelection.apply(this, super.isAvailableForRandomSelection());
 	}
 }
