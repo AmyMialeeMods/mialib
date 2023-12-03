@@ -24,8 +24,9 @@
   "client": [
     "client.ClientPlayerEntityMixin",
     "client.DrawContextMixin",
-    "client.ItemRendererMixin",
     "client.EntityRenderDispatcherMixin",
+    "client.ItemRendererMixin",
+    "client.PlayerEntityRendererMixin",
     "client.PresetsScreenMixin",
     "client.PresetsScreenMixin$SuperflatPresetsListWidgetMixin"
   ],

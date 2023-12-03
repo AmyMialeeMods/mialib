@@ -1,11 +1,15 @@
 package xyz.amymialee.mialib.mixin.interfaces;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -35,5 +39,10 @@ public class ItemMixin implements MItem {
     @Override
     public Identifier[] mialib$cooldownDisplays() {
         return EMPTY;
+    }
+
+    @Override @Environment(EnvType.CLIENT)
+    public BipedEntityModel.ArmPose mialib$pose(LivingEntity entity, Hand hand, ItemStack stack) {
+        return null;
     }
 }

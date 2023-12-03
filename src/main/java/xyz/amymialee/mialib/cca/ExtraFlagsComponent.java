@@ -25,6 +25,7 @@ public class ExtraFlagsComponent implements AutoSyncedComponent {
 
     public void setImperceptible(boolean imperceptible) {
         this.flags = MMath.setByteFlag(this.flags, 0, imperceptible);
+        this.sync();
     }
 
     public boolean isIndestructible() {
@@ -33,6 +34,7 @@ public class ExtraFlagsComponent implements AutoSyncedComponent {
 
     public void setIndestructible(boolean indestructible) {
         this.flags = MMath.setByteFlag(this.flags, 1, indestructible);
+        this.sync();
     }
 
     @Override
