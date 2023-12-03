@@ -51,8 +51,8 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
     public static final TagKey<Item> UNCRAFTABLE = TagKey.of(Registries.ITEM.getKey(), id("uncraftable"));
     public static final TagKey<Item> UNBREAKABLE = TagKey.of(Registries.ITEM.getKey(), id("unbreakable"));
     // Superflat Presets
-    public static final RegistryKey<FlatLevelGeneratorPreset> DEV_READY = FlatLevelGeneratorPresets.of("dev_ready");
-    public static final RegistryKey<FlatLevelGeneratorPreset> BLAST_PROOF = FlatLevelGeneratorPresets.of("blast_proof");
+    public static final RegistryKey<FlatLevelGeneratorPreset> DEV_READY = FlatLevelGeneratorPresets.of(id("dev_ready").toString());
+    public static final RegistryKey<FlatLevelGeneratorPreset> BLAST_PROOF = FlatLevelGeneratorPresets.of(id("blast_proof").toString());
 
     public static final MValue<Boolean> FIRE_ASPECT_AUTOSMELTING = new MValue<>(id("fire_aspect_autosmelting"), (b) -> b ? Items.TORCH.getDefaultStack() : Items.LEVER.getDefaultStack(), MValueType.BOOLEAN, false);
 //    public static final MIntegerValue TEST_INTEGER = new MIntegerValue(id("test_integer"), (i) -> i > 50 ? Items.COOKED_SALMON.getDefaultStack() : Items.SALMON.getDefaultStack(), 0, 0, 100);

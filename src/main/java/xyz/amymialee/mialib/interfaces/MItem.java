@@ -4,6 +4,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
@@ -46,4 +49,7 @@ public interface MItem {
     default ActionResult mialib$checkEnchantment(EnchantmentTarget target, Enchantment enchantment) {
         return ActionResult.PASS;
     }
+
+    @Environment(EnvType.CLIENT)
+    default void mialib$renderCustomBar(DrawContext drawContext, TextRenderer renderer, ItemStack stack, int x, int y, String countLabel) {}
 }

@@ -2,6 +2,8 @@ package xyz.amymialee.mialib;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.util.Identifier;
@@ -67,6 +69,7 @@ public class MiaLibClient implements ClientModInitializer {
 //                        client.setScreen(new MValueMenuScreen(Text.literal("MiaLib Values")));
 //                    }
 //                });
+
 
         MValueType.BOOLEAN.setDefaultWidgetFactory(MValueBooleanButton::new);
         MValueType.INTEGER.setDefaultWidgetFactory(MValueSlider::new);

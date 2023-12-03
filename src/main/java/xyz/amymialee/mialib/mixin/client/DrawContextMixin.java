@@ -18,6 +18,14 @@ public abstract class DrawContextMixin {
     @Shadow @Final private MinecraftClient client;
     @Shadow public abstract void fill(RenderLayer layer, int x1, int y1, int x2, int y2, int color);
 
+    @Inject(method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isItemBarVisible()Z", shift = At.Shift.BEFORE))
+    public void mialib$customBar(TextRenderer renderer, ItemStack stack, int x, int y, String countLabel, CallbackInfo ci) {
+        var clientPlayerEntity = MinecraftClient.getInstance().player;
+        if (clientPlayerEntity != null) {
+            stack.getItem().mialib$renderCustomBar((DrawContext) (Object) this, renderer, stack, x, y, countLabel);
+        }
+    }
+
     @Inject(method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getItemCooldownManager()Lnet/minecraft/entity/player/ItemCooldownManager;"))
     public void mialib$cooldownOverlay(TextRenderer renderer, ItemStack stack, int x, int y, String countLabel, CallbackInfo ci) {
         var clientPlayerEntity = MinecraftClient.getInstance().player;

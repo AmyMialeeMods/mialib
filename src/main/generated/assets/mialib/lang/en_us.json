@@ -1,6 +1,6 @@
 {
-  "minecraft.blast_proof": "Blast Proof",
-  "minecraft.dev_ready": "Dev Ready",
+  "mialib.blast_proof": "Blast Proof",
+  "mialib.dev_ready": "Dev Ready",
   "mvalue.mialib.fire_aspect_autosmelting": "Fire Aspect Autosmelting",
   "mvalue.mialib.test_boolean": "Test Boolean",
   "tag.mialib.damage_immune": "Undestroyable",
