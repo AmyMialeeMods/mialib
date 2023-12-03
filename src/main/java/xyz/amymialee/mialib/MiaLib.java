@@ -90,6 +90,10 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
                 }
             });
         });
+        ServerPlayNetworking.registerGlobalReceiver(id("holding"), (server, player, handler, buf, responseSender) -> {
+            var holding = buf.readBoolean();
+            server.execute(() -> player.miaLib$setHoldingAttack(holding));
+        });
         MiaLibEvents.SMELT_BROKEN_BLOCK.register((world, state, pos, blockEntity, entity, stack) -> {
             if (stack.getItem().mialib$shouldSmelt(world, state, pos, blockEntity, entity, stack)) {
                 return ActionResult.SUCCESS;

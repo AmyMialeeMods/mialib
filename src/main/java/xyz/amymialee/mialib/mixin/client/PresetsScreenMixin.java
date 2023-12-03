@@ -16,7 +16,7 @@ public class PresetsScreenMixin {
     @Mixin(targets = "net/minecraft/client/gui/screen/PresetsScreen$SuperflatPresetsListWidget")
     static abstract class SuperflatPresetsListWidgetMixin {
         @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/registry/Registry;iterateEntries(Lnet/minecraft/registry/tag/TagKey;)Ljava/lang/Iterable;"))
-        private static Iterable<?> iterateEntries(@NotNull Registry<FlatLevelGeneratorPreset> instance, TagKey<FlatLevelGeneratorPreset> tag, Operation<Iterable<RegistryEntry<FlatLevelGeneratorPreset>>> original) {
+        private static Iterable<?> mialib$tagless(@NotNull Registry<FlatLevelGeneratorPreset> instance, TagKey<FlatLevelGeneratorPreset> tag, Operation<Iterable<RegistryEntry<FlatLevelGeneratorPreset>>> original) {
             return instance.getIndexedEntries();
         }
     }

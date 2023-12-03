@@ -4,7 +4,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import xyz.amymialee.mialib.MiaLib;
@@ -34,14 +33,7 @@ public abstract class PlayerEntityMixin extends Entity implements MPlayerEntity 
 
     @Override
     public float mialib$getCooldown(Identifier id, float tickDelta) {
-        var entry = this.mialib$getCooldown(id);
-        if (entry != null) {
-            float f = (float)(entry.endTick - entry.startTick);
-            float g = (float)entry.endTick - ((float)this.tick + tickDelta);
-            return MathHelper.clamp(g / f, 0.0F, 1.0F);
-        } else {
-            return 0.0F;
-        }
+        return IdCooldownComponent.getCooldown((PlayerEntity) (Object) this, id, tickDelta);
     }
 
     @Override

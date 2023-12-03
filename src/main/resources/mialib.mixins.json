@@ -26,6 +26,7 @@
     "client.DrawContextMixin",
     "client.EntityRenderDispatcherMixin",
     "client.ItemRendererMixin",
+    "client.MinecraftClientMixin",
     "client.PlayerEntityRendererMixin",
     "client.PresetsScreenMixin",
     "client.PresetsScreenMixin$SuperflatPresetsListWidgetMixin"

@@ -84,6 +84,10 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 		return get(player).getCooldown(id);
 	}
 
+	public static float getCooldown(PlayerEntity playerEntity, Identifier id, float tickDelta) {
+		return get(playerEntity).getCooldown(id, tickDelta);
+	}
+
 	@Override
 	public void readFromNbt(@NotNull NbtCompound tag) {
 		var compound = tag.getCompound("cooldowns");
