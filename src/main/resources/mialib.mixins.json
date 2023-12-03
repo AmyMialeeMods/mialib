@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BlockMixin",
+    "EnchantmentHelperMixin",
+    "EnchantmentMixin",
     "EntityMixin",
     "FlatLevelGeneratorPresetsMixin",
     "FlatLevelGeneratorPresetsMixin$RegistrarMixin",

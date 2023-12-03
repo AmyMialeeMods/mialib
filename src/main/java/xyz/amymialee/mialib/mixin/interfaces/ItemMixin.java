@@ -5,10 +5,13 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -44,5 +47,15 @@ public class ItemMixin implements MItem {
     @Override @Environment(EnvType.CLIENT)
     public BipedEntityModel.ArmPose mialib$pose(LivingEntity entity, Hand hand, ItemStack stack) {
         return null;
+    }
+
+    @Override
+    public int mialib$enchantLevel(Enchantment enchantment, ItemStack stack, int level) {
+        return level;
+    }
+
+    @Override
+    public ActionResult mialib$checkEnchantment(EnchantmentTarget target, Enchantment enchantment) {
+        return ActionResult.PASS;
     }
 }
