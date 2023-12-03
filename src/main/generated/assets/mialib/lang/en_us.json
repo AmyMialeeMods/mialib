@@ -1,0 +1,10 @@
+{
+  "minecraft.blast_proof": "Blast Proof",
+  "minecraft.dev_ready": "Dev Ready",
+  "mvalue.mialib.fire_aspect_autosmelting": "Fire Aspect Autosmelting",
+  "mvalue.mialib.test_boolean": "Test Boolean",
+  "tag.mialib.damage_immune": "Undestroyable",
+  "tag.mialib.soul_fire_smelting": "Soul Fire Smelting",
+  "tag.mialib.unbreakable": "Unbreakable",
+  "tag.mialib.uncraftable": "Uncraftable"
+}

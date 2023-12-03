@@ -7,10 +7,21 @@ import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public interface MItemStack {
-	ItemStack mialib$enchantStack(Enchantment enchantment, int level);
-	ItemStack mialib$enchantStack(EnchantmentLevelEntry ... enchantmentLevelEntry);
-	ItemStack mialib$enchantBook(Enchantment enchantment, int level);
-	ItemStack mialib$enchantBook(EnchantmentLevelEntry ... enchantmentLevelEntry);
+	default ItemStack mialib$enchantStack(Enchantment enchantment, int level) {
+		return ItemStack.EMPTY;
+	}
+
+	default ItemStack mialib$enchantStack(EnchantmentLevelEntry ... enchantmentLevelEntry) {
+		return ItemStack.EMPTY;
+	}
+
+	default ItemStack mialib$enchantBook(Enchantment enchantment, int level) {
+		return ItemStack.EMPTY;
+	}
+
+	default ItemStack mialib$enchantBook(EnchantmentLevelEntry ... enchantmentLevelEntry) {
+		return ItemStack.EMPTY;
+	}
 
 	static @NotNull ItemStack enchantStack(@NotNull ItemStack stack, Enchantment enchantment, int level) {
 		stack.addEnchantment(enchantment, level);

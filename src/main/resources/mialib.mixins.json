@@ -6,7 +6,6 @@
   "mixins": [
     "BlockMixin",
     "EnchantmentHelperMixin",
-    "EnchantmentMixin",
     "EntityMixin",
     "FlatLevelGeneratorPresetsMixin",
     "FlatLevelGeneratorPresetsMixin$RegistrarMixin",

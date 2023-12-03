@@ -6,13 +6,33 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public interface MText {
-	Text mialib$withColor(int color);
-	Text mialib$withItalics(boolean italics);
-	Text mialib$withBold(boolean bold);
-	Text mialib$withUnderline(boolean underline);
-	Text mialib$withStrikethrough(boolean strikethrough);
-	Text mialib$withObfuscated(boolean obfuscated);
-	Text mialib$withInsertion(String insertion);
+	default Text mialib$withColor(int color) {
+		return Text.empty();
+	}
+
+	default Text mialib$withItalics(boolean italics) {
+		return Text.empty();
+	}
+
+	default Text mialib$withBold(boolean bold) {
+		return Text.empty();
+	}
+
+	default Text mialib$withUnderline(boolean underline) {
+		return Text.empty();
+	}
+
+	default Text mialib$withStrikethrough(boolean strikethrough) {
+		return Text.empty();
+	}
+
+	default Text mialib$withObfuscated(boolean obfuscated) {
+		return Text.empty();
+	}
+
+	default Text mialib$withInsertion(String insertion) {
+		return Text.empty();
+	}
 
 	static Text withColor(@NotNull Text text, int color) {
 		return repack(text.getWithStyle(text.getStyle().withColor(color)));

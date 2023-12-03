@@ -18,12 +18,32 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public interface MItem {
-    boolean mialib$shouldSmelt(World world, BlockState state, BlockPos pos, @Nullable BlockEntity blockEntity, @Nullable Entity entity, ItemStack stack);
-    boolean mialib$attack(World world, ItemStack stack, LivingEntity attacker, Entity target);
-    void mialib$killEntity(World world, ItemStack stack, LivingEntity user, LivingEntity victim);
-    Identifier[] mialib$cooldownDisplays();
+    Identifier[] EMPTY = new Identifier[0];
+
+    default boolean mialib$shouldSmelt(World world, BlockState state, BlockPos pos, @Nullable BlockEntity blockEntity, @Nullable Entity entity, ItemStack stack) {
+        return false;
+    }
+
+    default boolean mialib$attack(World world, ItemStack stack, LivingEntity attacker, Entity target) {
+        return false;
+    }
+
+    default void mialib$killEntity(World world, ItemStack stack, LivingEntity user, LivingEntity victim) {}
+
+    default Identifier[] mialib$cooldownDisplays() {
+        return EMPTY;
+    }
+
     @Environment(EnvType.CLIENT)
-    BipedEntityModel.ArmPose mialib$pose(LivingEntity entity, Hand hand, ItemStack stack);
-    int mialib$enchantLevel(Enchantment enchantment, ItemStack stack, int level);
-    ActionResult mialib$checkEnchantment(EnchantmentTarget target, Enchantment enchantment);
+    default BipedEntityModel.ArmPose mialib$pose(LivingEntity entity, Hand hand, ItemStack stack) {
+        return null;
+    }
+
+    default int mialib$enchantLevel(Enchantment enchantment, ItemStack stack, int level) {
+        return level;
+    }
+
+    default ActionResult mialib$checkEnchantment(EnchantmentTarget target, Enchantment enchantment) {
+        return ActionResult.PASS;
+    }
 }
