@@ -32,7 +32,8 @@ public class ItemGroupMixin implements MItemGroup {
     }
 
     @Override
-    public void mialib$setConstantIcon(boolean constantIcon) {
+    public ItemGroup mialib$setConstantIcon(boolean constantIcon) {
         this.constantIcon = constantIcon;
+        return (ItemGroup) (Object) this;
     }
 }
