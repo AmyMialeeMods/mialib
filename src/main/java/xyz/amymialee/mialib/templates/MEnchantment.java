@@ -29,7 +29,7 @@ public class MEnchantment extends Enchantment {
 	private boolean isAvailableForEnchantedBookOffer = super.isAvailableForEnchantedBookOffer();
 	private boolean isAvailableForRandomSelection = super.isAvailableForRandomSelection();
 
-	protected MEnchantment(Rarity weight, EnchantmentTarget type, EquipmentSlot ... slotTypes) {
+	public MEnchantment(Rarity weight, EnchantmentTarget type, EquipmentSlot ... slotTypes) {
 		super(weight, type, slotTypes);
 	}
 
