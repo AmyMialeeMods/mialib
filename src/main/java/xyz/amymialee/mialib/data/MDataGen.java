@@ -17,6 +17,8 @@ import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Model;
 import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
@@ -85,6 +87,8 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 	protected void generateEntityTypeTags(MEntityTypeTagProvider provider, RegistryWrapper.WrapperLookup arg) {}
 
 	protected void generateGameEventTags(MGameEventTagProvider provider, RegistryWrapper.WrapperLookup arg) {}
+
+	protected void generateDamageTypeTags(MDamageTypeTagProvider provider, RegistryWrapper.WrapperLookup arg) {}
 
 	protected void generateFlatLevelGeneratorPresetTags(MFlatLevelGeneratorPresetTagProvider provider, RegistryWrapper.WrapperLookup arg) {}
 
@@ -279,6 +283,25 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 
 		@Override
 		public FabricTagBuilder getOrCreateTagBuilder(TagKey<GameEvent> tag) {
+			return super.getOrCreateTagBuilder(tag);
+		}
+	}
+
+	protected static class MDamageTypeTagProvider extends FabricTagProvider<DamageType> {
+		private final MDataGen dataGen;
+
+		public MDamageTypeTagProvider(MDataGen gen, FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture) {
+			super(output, RegistryKeys.DAMAGE_TYPE, completableFuture);
+			this.dataGen = gen;
+		}
+
+		@Override
+		protected void configure(RegistryWrapper.WrapperLookup arg) {
+			this.dataGen.generateDamageTypeTags(this, arg);
+		}
+
+		@Override
+		public FabricTagBuilder getOrCreateTagBuilder(TagKey<DamageType> tag) {
 			return super.getOrCreateTagBuilder(tag);
 		}
 	}
