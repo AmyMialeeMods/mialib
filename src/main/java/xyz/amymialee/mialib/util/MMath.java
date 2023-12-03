@@ -20,35 +20,43 @@ public interface MMath {
 	}
 
 	static int clampLoop(int value, int min, int max) {
-		if (value < min) {
-			return max - (min - value) % (max - min);
-		} else {
-			return min + (value - min) % (max - min);
+		var range = max - min + 1;
+		var offset = value - min;
+		var mod = offset % range;
+		if (mod < 0) {
+			mod += range;
 		}
+		return min + mod;
 	}
 
 	static long clampLoop(long value, long min, long max) {
-		if (value < min) {
-			return max - (min - value) % (max - min);
-		} else {
-			return min + (value - min) % (max - min);
+		var range = max - min + 1;
+		var offset = value - min;
+		var mod = offset % range;
+		if (mod < 0) {
+			mod += range;
 		}
+		return min + mod;
 	}
 
 	static float clampLoop(float value, float min, float max) {
-		if (value < min) {
-			return max - (min - value) % (max - min);
-		} else {
-			return min + (value - min) % (max - min);
+		var range = max - min;
+		var offset = value - min;
+		var mod = offset % range;
+		if (mod < 0) {
+			mod += range;
 		}
+		return min + mod;
 	}
 
 	static double clampLoop(double value, double min, double max) {
-		if (value < min) {
-			return max - (min - value) % (max - min);
-		} else {
-			return min + (value - min) % (max - min);
+		var range = max - min;
+		var offset = value - min;
+		var mod = offset % range;
+		if (mod < 0) {
+			mod += range;
 		}
+		return min + mod;
 	}
 
 	static boolean getByteFlag(byte data, int flag) {
