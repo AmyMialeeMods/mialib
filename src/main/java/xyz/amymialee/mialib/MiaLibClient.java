@@ -71,11 +71,11 @@ public class MiaLibClient implements ClientModInitializer {
 //                });
 
 
-        MValueType.BOOLEAN.setDefaultWidgetFactory(MValueBooleanButton::new);
-        MValueType.INTEGER.setDefaultWidgetFactory(MValueSlider::new);
-        MValueType.LONG.setDefaultWidgetFactory(MValueSlider::new);
-        MValueType.FLOAT.setDefaultWidgetFactory(MValueSlider::new);
-        MValueType.DOUBLE.setDefaultWidgetFactory(MValueSlider::new);
+//        MValueType.BOOLEAN.setDefaultWidgetFactory(MValueBooleanButton::new);
+//        MValueType.INTEGER.setDefaultWidgetFactory(MValueSlider::new);
+//        MValueType.LONG.setDefaultWidgetFactory(MValueSlider::new);
+//        MValueType.FLOAT.setDefaultWidgetFactory(MValueSlider::new);
+//        MValueType.DOUBLE.setDefaultWidgetFactory(MValueSlider::new);
     }
 
     static {

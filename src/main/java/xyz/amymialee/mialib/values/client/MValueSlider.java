@@ -20,7 +20,7 @@ public class MValueSlider<T> extends SliderWidget {
     public MValueSlider(@NotNull MValue<T> mValue, int x, int y, int width) {
         super(x, y, width, 20, Text.empty(), mValue.getScaledValue());
         this.mValue = mValue;
-        this.setMessage(mValue.getValueTextFactory().apply(mValue, mValue.getValue()));
+//        this.setMessage(mValue.getValueTextFactory().apply(mValue, mValue.getValue()));
     }
 
     private Identifier getSliderTexture() {
@@ -33,14 +33,14 @@ public class MValueSlider<T> extends SliderWidget {
 
     @Override
     protected void updateMessage() {
-        this.setMessage(this.mValue.getValueTextFactory().apply(this.mValue, this.mValue.getValue()));
-        this.setTooltip(Tooltip.of(this.mValue.getTooltipFactory().apply(this.mValue, this.mValue.getValue())));
+//        this.setMessage(this.mValue.getValueTextFactory().apply(this.mValue, this.mValue.getValue()));
+//        this.setTooltip(Tooltip.of(this.mValue.getTooltipFactory().apply(this.mValue, this.mValue.getValue())));
     }
 
     @Override
     protected void applyValue() {
         this.mValue.setScaledValue(this.value);
-        this.mValue.sendValue();
+//        this.mValue.sendValue();
     }
 
 //    @Override

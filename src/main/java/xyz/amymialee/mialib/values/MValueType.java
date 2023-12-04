@@ -82,12 +82,12 @@ public class MValueType<T> {
     public final BiFunction<NbtCompound, MValue<T>, T> readFromNbt;
     public final BiFunction<JsonObject, MValue<T>, JsonObject> addToJson;
     public final BiFunction<JsonObject, MValue<T>, T> readFromJson;
-    @Environment(EnvType.CLIENT)
-    protected QuadFunction<MValue<T>, Integer, Integer, Integer, ClickableWidget> defaultWidgetFactory;
-    @Environment(EnvType.CLIENT)
-    protected BiFunction<MValue<T>, T, Text> defaultTooltipFactory = (m, v) -> Text.translatable(m.getTranslationKey()).append(Text.literal(": " + v));
-    @Environment(EnvType.CLIENT)
-    protected BiFunction<MValue<T>, T, Text> defaultValueTextFactory = (m, v) -> Text.translatable(m.getTranslationKey()).append(Text.literal(": " + v));
+//    @Environment(EnvType.CLIENT)
+//    protected QuadFunction<MValue<T>, Integer, Integer, Integer, ClickableWidget> defaultWidgetFactory;
+//    @Environment(EnvType.CLIENT)
+//    protected BiFunction<MValue<T>, T, Text> defaultTooltipFactory = (m, v) -> Text.translatable(m.getTranslationKey()).append(Text.literal(": " + v));
+//    @Environment(EnvType.CLIENT)
+//    protected BiFunction<MValue<T>, T, Text> defaultValueTextFactory = (m, v) -> Text.translatable(m.getTranslationKey()).append(Text.literal(": " + v));
 
     public MValueType(Codec<T> codec, BiFunction<NbtCompound, MValue<T>, NbtCompound> addToNbt, BiFunction<NbtCompound, MValue<T>, T> readFromNbt, BiFunction<JsonObject, MValue<T>, JsonObject> addToJson, BiFunction<JsonObject, MValue<T>, T> readFromJson) {
         this.codec = codec;
@@ -97,33 +97,33 @@ public class MValueType<T> {
         this.readFromJson = readFromJson;
     }
 
-    @Environment(EnvType.CLIENT)
-    public ClickableWidget getDefaultWidget(MValue<T> value, int x, int y, int width) {
-        return this.defaultWidgetFactory.apply(value, x, y, width);
-    }
-
-    @Environment(EnvType.CLIENT)
-    public void setDefaultWidgetFactory(QuadFunction<MValue<T>, Integer, Integer, Integer, ClickableWidget> widgetFactory) {
-        this.defaultWidgetFactory = widgetFactory;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public BiFunction<MValue<T>, T, Text> getDefaultTooltipFactory() {
-        return this.defaultTooltipFactory;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public void setDefaultTooltipFactory(BiFunction<MValue<T>, T, Text> defaultTooltipFactory) {
-        this.defaultTooltipFactory = defaultTooltipFactory;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public BiFunction<MValue<T>, T, Text> getDefaultValueTextFactory() {
-        return this.defaultValueTextFactory;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public void setDefaultValueTextFactory(BiFunction<MValue<T>, T, Text> defaultValueTextFactory) {
-        this.defaultValueTextFactory = defaultValueTextFactory;
-    }
+//    @Environment(EnvType.CLIENT)
+//    public ClickableWidget getDefaultWidget(MValue<T> value, int x, int y, int width) {
+//        return this.defaultWidgetFactory.apply(value, x, y, width);
+//    }
+//
+//    @Environment(EnvType.CLIENT)
+//    public void setDefaultWidgetFactory(QuadFunction<MValue<T>, Integer, Integer, Integer, ClickableWidget> widgetFactory) {
+//        this.defaultWidgetFactory = widgetFactory;
+//    }
+//
+//    @Environment(EnvType.CLIENT)
+//    public BiFunction<MValue<T>, T, Text> getDefaultTooltipFactory() {
+//        return this.defaultTooltipFactory;
+//    }
+//
+//    @Environment(EnvType.CLIENT)
+//    public void setDefaultTooltipFactory(BiFunction<MValue<T>, T, Text> defaultTooltipFactory) {
+//        this.defaultTooltipFactory = defaultTooltipFactory;
+//    }
+//
+//    @Environment(EnvType.CLIENT)
+//    public BiFunction<MValue<T>, T, Text> getDefaultValueTextFactory() {
+//        return this.defaultValueTextFactory;
+//    }
+//
+//    @Environment(EnvType.CLIENT)
+//    public void setDefaultValueTextFactory(BiFunction<MValue<T>, T, Text> defaultValueTextFactory) {
+//        this.defaultValueTextFactory = defaultValueTextFactory;
+//    }
 }

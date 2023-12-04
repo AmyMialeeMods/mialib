@@ -37,9 +37,9 @@ public class MValueMenuScreen extends Screen {
         var i = 0;
         for (var value : MValueManager.getValuesByNamespace(namespace)) {
             var mValue = value.getValue();
-            var buttonWidget = mValue.createWidget(this.x - 40, this.y - 80 + i * 30, 120);
-            this.mValueChildren.add(buttonWidget);
-            this.addDrawableChild(buttonWidget);
+//            var buttonWidget = mValue.createWidget(this.x - 40, this.y - 80 + i * 30, 120);
+//            this.mValueChildren.add(buttonWidget);
+//            this.addDrawableChild(buttonWidget);
             i++;
         }
     }
