@@ -4,12 +4,12 @@
   "package": "xyz.amymialee.mialib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ArmorItemMixin",
+    "AnvilScreenHandlerMixin",
     "BlockMixin",
+    "EnchantCommandMixin",
     "EnchantmentHelperMixin",
+    "EnchantRandomlyLootFunctionMixin",
     "EntityMixin",
-    "FlatLevelGeneratorPresetsMixin",
-    "FlatLevelGeneratorPresetsMixin$RegistrarMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
@@ -29,9 +29,7 @@
     "client.EntityRenderDispatcherMixin",
     "client.ItemRendererMixin",
     "client.MinecraftClientMixin",
-    "client.PlayerEntityRendererMixin",
-    "client.PresetsScreenMixin",
-    "client.PresetsScreenMixin$SuperflatPresetsListWidgetMixin"
+    "client.PlayerEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

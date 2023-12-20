@@ -7,7 +7,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import xyz.amymialee.mialib.MiaLib;
-import xyz.amymialee.mialib.cca.IdCooldownComponent;
 import xyz.amymialee.mialib.interfaces.MPlayerEntity;
 
 @Mixin(PlayerEntity.class)

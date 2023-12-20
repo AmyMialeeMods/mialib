@@ -2,15 +2,11 @@ package xyz.amymialee.mialib;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.util.Identifier;
 import xyz.amymialee.mialib.values.MValueManager;
-import xyz.amymialee.mialib.values.MValueType;
-import xyz.amymialee.mialib.values.client.MValueBooleanButton;
-import xyz.amymialee.mialib.values.client.MValueSlider;
 
 public class MiaLibClient implements ClientModInitializer {
     public static ModelTransformationMode currentMode = ModelTransformationMode.NONE;
@@ -80,7 +76,7 @@ public class MiaLibClient implements ClientModInitializer {
 
     static {
         for (var mode : ModelTransformationMode.values()) {
-            ModelPredicateProviderRegistry.register(MiaLib.id(mode.name().toLowerCase()), (stack, world, entity, seed) -> mode == currentMode ? 1.0F : 0.0F);
+             FabricModelPredicateProviderRegistry.register(MiaLib.id(mode.name().toLowerCase()), (stack, world, entity, seed) -> mode == currentMode ? 1.0F : 0.0F);
         }
     }
 }

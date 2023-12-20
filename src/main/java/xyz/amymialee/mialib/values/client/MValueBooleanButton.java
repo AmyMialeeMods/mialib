@@ -2,15 +2,11 @@ package xyz.amymialee.mialib.values.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import org.jetbrains.annotations.NotNull;
-import xyz.amymialee.mialib.values.MValue;
 
-import java.util.List;
 import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)

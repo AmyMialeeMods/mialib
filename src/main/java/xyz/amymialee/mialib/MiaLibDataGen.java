@@ -1,18 +1,24 @@
 package xyz.amymialee.mialib;
 
+import com.google.common.collect.ImmutableSet;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.FlatLevelGeneratorPresetTags;
+import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.data.MDataGen;
+
+import java.util.function.Consumer;
 
 public class MiaLibDataGen extends MDataGen {
     @Override
     protected void generateTranslations(MLanguageProvider provider, FabricLanguageProvider.@NotNull TranslationBuilder builder) {
         builder.add(MiaLib.FIRE_ASPECT_AUTOSMELTING.getTranslationKey(), "Fire Aspect Autosmelting");
-        builder.add(MiaLib.DEV_READY.getValue().toTranslationKey(), "Dev Ready");
-        builder.add(MiaLib.BLAST_PROOF.getValue().toTranslationKey(), "Blast Proof");
+        builder.add("flat_world_preset." + MiaLib.DEV_READY.getValue().toTranslationKey(), "Dev Ready");
+        builder.add("flat_world_preset." + MiaLib.BLAST_PROOF.getValue().toTranslationKey(), "Blast Proof");
         builder.add(provider.getTagTranslationKey(MiaLib.SOUL_FIRE_SMELTING), "Soul Fire Smelting");
         builder.add(provider.getTagTranslationKey(MiaLib.UNDESTROYABLE), "Undestroyable");
         builder.add(provider.getTagTranslationKey(MiaLib.UNCRAFTABLE), "Uncraftable");
@@ -43,6 +49,12 @@ public class MiaLibDataGen extends MDataGen {
     @Override
     protected void generateFlatLevelGeneratorPresetTags(@NotNull MFlatLevelGeneratorPresetTagProvider provider, RegistryWrapper.WrapperLookup arg) {
         provider.getOrCreateTagBuilder(FlatLevelGeneratorPresetTags.VISIBLE).setReplace(false)
-                .add(MiaLib.DEV_READY.getValue(), MiaLib.BLAST_PROOF.getValue());
+                .addOptional(MiaLib.DEV_READY.getValue()).addOptional(MiaLib.BLAST_PROOF.getValue());
+    }
+
+    @Override
+    protected void generateFlatLevelGeneratorPresets(MFlatLevelGeneratorPresetProvider provider, Consumer<FlatLevelGeneratorPresetDataBuilder> consumer) {
+        consumer.accept(new FlatLevelGeneratorPresetDataBuilder(MiaLib.DEV_READY, Items.AMETHYST_SHARD, BiomeKeys.DARK_FOREST, ImmutableSet.of(), false, false, new FlatChunkGeneratorLayer(15, Blocks.RED_SANDSTONE), new FlatChunkGeneratorLayer(112, Blocks.DEEPSLATE), new FlatChunkGeneratorLayer(1, Blocks.BEDROCK)));
+        consumer.accept(new FlatLevelGeneratorPresetDataBuilder(MiaLib.BLAST_PROOF, Items.TNT, BiomeKeys.DARK_FOREST, ImmutableSet.of(), false, false, new FlatChunkGeneratorLayer(15, Blocks.OBSIDIAN), new FlatChunkGeneratorLayer(112, Blocks.REINFORCED_DEEPSLATE), new FlatChunkGeneratorLayer(1, Blocks.BEDROCK)));
     }
 }

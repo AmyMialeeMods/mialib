@@ -2,12 +2,7 @@ package xyz.amymialee.mialib.values;
 
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
-import xyz.amymialee.mialib.util.QuadFunction;
 
 import java.util.function.BiFunction;
 

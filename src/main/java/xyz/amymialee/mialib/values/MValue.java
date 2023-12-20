@@ -1,19 +1,11 @@
 package xyz.amymialee.mialib.values;
 
 import com.google.gson.JsonObject;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import xyz.amymialee.mialib.MiaLib;
-import xyz.amymialee.mialib.util.QuadFunction;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class MValue<T> {

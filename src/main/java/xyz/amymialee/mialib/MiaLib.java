@@ -74,7 +74,7 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
                                         .executes(ctx -> {
                                             var enabled = BoolArgumentType.getBool(ctx, "enabled");
                                             var targets = EntityArgumentType.getEntities(ctx, "targets");
-                                            for (Entity target : targets) {
+                                            for (var target : targets) {
                                                 var component = EXTRA_FLAGS.get(target);
                                                 component.setImperceptibleCommand(enabled);
                                             }

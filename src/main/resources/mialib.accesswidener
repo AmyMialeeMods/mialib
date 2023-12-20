@@ -1,4 +1,4 @@
-accessWidener v1 named
+accessWidener v2 named
 
 accessible method net/minecraft/client/render/entity/EntityRenderDispatcher renderHitbox (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;Lnet/minecraft/entity/Entity;F)V
 accessible field net/minecraft/world/GameRules rules Ljava/util/Map;
@@ -14,7 +14,6 @@ accessible method net/minecraft/client/gui/widget/SliderWidget getHandleTexture 
 accessible method net/minecraft/client/gui/widget/CyclingButtonWidget <init> (IIIILnet/minecraft/text/Text;Lnet/minecraft/text/Text;ILjava/lang/Object;Lnet/minecraft/client/gui/widget/CyclingButtonWidget$Values;Ljava/util/function/Function;Ljava/util/function/Function;Lnet/minecraft/client/gui/widget/CyclingButtonWidget$UpdateCallback;Lnet/minecraft/client/option/SimpleOption$TooltipFactory;Z)V
 accessible class net/minecraft/world/gen/FlatLevelGeneratorPresets$Registrar
 accessible method net/minecraft/world/gen/FlatLevelGeneratorPresets of (Ljava/lang/String;)Lnet/minecraft/registry/RegistryKey;
-
 
 
 

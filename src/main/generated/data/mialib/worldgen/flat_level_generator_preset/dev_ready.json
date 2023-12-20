@@ -1,0 +1,23 @@
+{
+  "display": "amethyst_shard",
+  "settings": {
+    "biome": "minecraft:dark_forest",
+    "features": false,
+    "lakes": false,
+    "layers": [
+      {
+        "block": "minecraft:bedrock",
+        "height": 1
+      },
+      {
+        "block": "minecraft:deepslate",
+        "height": 112
+      },
+      {
+        "block": "minecraft:red_sandstone",
+        "height": 15
+      }
+    ],
+    "structure_overrides": []
+  }
+}

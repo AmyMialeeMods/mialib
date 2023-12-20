@@ -1,7 +1,13 @@
 {
   "replace": false,
   "values": [
-    "mialib:dev_ready",
-    "mialib:blast_proof"
+    {
+      "id": "mialib:dev_ready",
+      "required": false
+    },
+    {
+      "id": "mialib:blast_proof",
+      "required": false
+    }
   ]
 }

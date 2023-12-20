@@ -1,5 +1,8 @@
 package xyz.amymialee.mialib.data;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -13,11 +16,13 @@ import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.block.Block;
+import net.minecraft.data.DataOutput;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.DataWriter;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Model;
 import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
@@ -28,21 +33,31 @@ import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.structure.StructureSet;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.gen.FlatLevelGeneratorPreset;
+import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.MRegistry;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public abstract class MDataGen implements DataGeneratorEntrypoint {
 	public static final Model SPAWN_EGG = new Model(Optional.of(new Identifier("item/template_spawn_egg")), Optional.empty());
 
@@ -56,6 +71,7 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		pack.addProvider((dataOutput, future) -> new MLootTableProvider(this, dataOutput));
 		pack.addProvider((dataOutput, future) -> new MModelProvider(this, dataOutput));
 		pack.addProvider((dataOutput, future) -> new MRecipeProvider(this, dataOutput));
+		pack.addProvider((dataOutput, future) -> new MFlatLevelGeneratorPresetProvider(this, dataOutput, future));
 		pack.addProvider((dataOutput, future) -> new MBlockTagProvider(this, dataOutput, future));
 		pack.addProvider((dataOutput, future) -> new MItemTagProvider(this, dataOutput, future));
 		pack.addProvider((dataOutput, future) -> new MFluidTagProvider(this, dataOutput, future));
@@ -91,6 +107,8 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 	protected void generateDamageTypeTags(MDamageTypeTagProvider provider, RegistryWrapper.WrapperLookup arg) {}
 
 	protected void generateFlatLevelGeneratorPresetTags(MFlatLevelGeneratorPresetTagProvider provider, RegistryWrapper.WrapperLookup arg) {}
+
+	protected void generateFlatLevelGeneratorPresets(MFlatLevelGeneratorPresetProvider provider, Consumer<FlatLevelGeneratorPresetDataBuilder> consumer) {}
 
 	private static @NotNull Advancement emptyAdvancement(String id) {
 		return emptyAdvancement(new Identifier(id));
@@ -322,6 +340,97 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		@Override
 		public FabricTagBuilder getOrCreateTagBuilder(TagKey<FlatLevelGeneratorPreset> tag) {
 			return super.getOrCreateTagBuilder(tag);
+		}
+	}
+
+	protected static class MFlatLevelGeneratorPresetProvider implements DataProvider {
+		private final MDataGen dataGen;
+		private final DataOutput.PathResolver pathResolver;
+        private final CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture;
+
+		public MFlatLevelGeneratorPresetProvider(MDataGen gen, FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+			this.dataGen = gen;
+            this.registriesFuture = registriesFuture;
+			this.pathResolver = output.getResolver(DataOutput.OutputType.DATA_PACK, "worldgen/flat_level_generator_preset");
+		}
+
+		public void generate(Consumer<FlatLevelGeneratorPresetDataBuilder> consumer) {
+			this.dataGen.generateFlatLevelGeneratorPresets(this, consumer);
+		}
+
+		@Override
+		public CompletableFuture<?> run(DataWriter writer) {
+			return this.registriesFuture.thenCompose(lookup -> {
+				Set<Identifier> set = new HashSet<>();
+				List<CompletableFuture<?>> list = new ArrayList<>();
+				Consumer<FlatLevelGeneratorPresetDataBuilder> consumer = flatPreset -> {
+					if (!set.add(flatPreset.name.getValue())) {
+						throw new IllegalStateException("Duplicate Superflat Preset " + flatPreset.name.getValue());
+					} else {
+						var path = this.pathResolver.resolveJson(flatPreset.name.getValue());
+						list.add(DataProvider.writeToPath(writer, flatPreset.toJson(), path));
+					}
+				};
+				this.generate(consumer);
+				return CompletableFuture.allOf(list.toArray(CompletableFuture[]::new));
+			});
+		}
+
+		@Override
+		public String getName() {
+			return "Flat Level Generator Presets";
+		}
+	}
+
+	public static class FlatLevelGeneratorPresetDataBuilder {
+		protected final RegistryKey<FlatLevelGeneratorPreset> name;
+		protected final ItemConvertible icon;
+		protected final RegistryKey<Biome> biome;
+		protected final Set<RegistryKey<StructureSet>> structureSetKeys;
+		protected final boolean hasFeatures;
+		protected final boolean hasLakes;
+		protected final FlatChunkGeneratorLayer[] layers;
+
+		public FlatLevelGeneratorPresetDataBuilder(
+				RegistryKey<FlatLevelGeneratorPreset> registryKey,
+				ItemConvertible icon,
+				RegistryKey<Biome> biome,
+				@NotNull Set<RegistryKey<StructureSet>> structureSetKeys,
+				boolean hasFeatures,
+				boolean hasLakes,
+				FlatChunkGeneratorLayer... layers) {
+			this.name = registryKey;
+			this.icon = icon;
+			this.biome = biome;
+			this.structureSetKeys = structureSetKeys;
+			this.hasFeatures = hasFeatures;
+			this.hasLakes = hasLakes;
+			this.layers = layers;
+		}
+
+		public JsonElement toJson() {
+			var base = new JsonObject();
+			base.addProperty("display", this.icon.asItem().toString());
+			var settings = new JsonObject();
+			settings.addProperty("biome", this.biome.getValue().toString());
+			settings.addProperty("features", this.hasFeatures);
+			settings.addProperty("lakes", this.hasLakes);
+			var layersJson = new JsonArray();
+			for(var i = this.layers.length - 1; i >= 0; i--) {
+				var layerInstance = this.layers[i];
+				var layerJson = new JsonObject();
+				layerJson.addProperty("block", Registries.BLOCK.getId(layerInstance.getBlockState().getBlock()).toString());
+				layerJson.addProperty("height", layerInstance.getThickness());
+				layersJson.add(layerJson);
+			}
+			settings.add("layers", layersJson);
+			var structuresJson = new JsonArray();
+			for (var structureInstance : this.structureSetKeys) {
+				structuresJson.add(structureInstance.getValue().toString());
+			}
+			settings.add("structure_overrides", structuresJson);
+			base.add("settings", settings);
+			return base;
 		}
 	}
 }

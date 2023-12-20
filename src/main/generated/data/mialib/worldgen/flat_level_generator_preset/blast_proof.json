@@ -1,0 +1,23 @@
+{
+  "display": "tnt",
+  "settings": {
+    "biome": "minecraft:dark_forest",
+    "features": false,
+    "lakes": false,
+    "layers": [
+      {
+        "block": "minecraft:bedrock",
+        "height": 1
+      },
+      {
+        "block": "minecraft:reinforced_deepslate",
+        "height": 112
+      },
+      {
+        "block": "minecraft:obsidian",
+        "height": 15
+      }
+    ],
+    "structure_overrides": []
+  }
+}
