@@ -3,12 +3,14 @@ package xyz.amymialee.mialib;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import xyz.amymialee.mialib.values.MValueManager;
 
 public class MiaLibClient implements ClientModInitializer {
+    public static LivingEntity renderingEntityWithItem = null;
     public static ModelTransformationMode currentMode = ModelTransformationMode.NONE;
 //    public static KeyBinding keyBindingOpenStore;
 

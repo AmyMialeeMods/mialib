@@ -27,6 +27,8 @@
     "client.ClientPlayerEntityMixin",
     "client.DrawContextMixin",
     "client.EntityRenderDispatcherMixin",
+    "client.HeldItemFeatureRendererMixin",
+    "client.HeldItemRendererMixin",
     "client.ItemRendererMixin",
     "client.MinecraftClientMixin",
     "client.PlayerEntityRendererMixin"

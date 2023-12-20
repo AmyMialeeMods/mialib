@@ -41,6 +41,11 @@ public interface MItem {
         return null;
     }
 
+    @Environment(EnvType.CLIENT)
+    default boolean mialib$shouldHideInHand(LivingEntity entity, Hand hand, ItemStack stack) {
+        return false;
+    }
+
     default int mialib$enchantLevel(Enchantment enchantment, ItemStack stack, int level) {
         return level;
     }

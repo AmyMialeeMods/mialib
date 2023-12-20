@@ -185,6 +185,10 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
             }
             return ActionResult.PASS;
         });
+        MiaLibEvents.DAMAGE_PREVENTION.register((entity, source) -> {
+            var component = EXTRA_FLAGS.get(entity);
+            return component.isIndestructible();
+        });
         ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, entity, killedEntity) -> {
             if (entity instanceof LivingEntity livingEntity) {
                 livingEntity.getMainHandStack().getItem().mialib$killEntity(world, livingEntity.getMainHandStack(), livingEntity, killedEntity);

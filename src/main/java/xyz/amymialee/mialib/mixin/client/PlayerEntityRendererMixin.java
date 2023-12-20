@@ -13,9 +13,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PlayerEntityRenderer.class)
 public class PlayerEntityRendererMixin {
     @Inject(method = "getArmPose", at = @At("HEAD"), cancellable = true)
-    private static void mialib$poses(@NotNull AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> cir) {
-        var itemStack = player.getStackInHand(hand);
-        var pose = itemStack.getItem().mialib$pose(player, hand, itemStack);
+    private static void mialib$hideOrPose(@NotNull AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> cir) {
+        var stack = player.getStackInHand(hand);
+        if (stack.getItem().mialib$shouldHideInHand(player, hand, stack)) {
+            cir.setReturnValue(BipedEntityModel.ArmPose.EMPTY);
+            return;
+        }
+        var pose = stack.getItem().mialib$pose(player, hand, stack);
         if (pose != null) {
             cir.setReturnValue(pose);
         }
