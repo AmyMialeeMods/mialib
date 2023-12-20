@@ -35,7 +35,7 @@ public class EnchantmentHelperMixin {
     private static boolean mialib$itemAllows(EnchantmentTarget enchantmentTarget, @NotNull Item item, Operation<Boolean> original, @Share("storedEnchantment") @NotNull LocalRef<Enchantment> storedEnchantment) {
         var stored = storedEnchantment.get();
         var result = item.mialib$checkEnchantment(enchantmentTarget, stored);
-        if (result != null) {
+        if (result != null && result != ActionResult.PASS) {
             return result == ActionResult.SUCCESS;
         }
         return original.call(enchantmentTarget, item);
