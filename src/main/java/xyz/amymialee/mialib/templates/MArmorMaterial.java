@@ -5,6 +5,8 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -43,8 +45,18 @@ public class MArmorMaterial implements ArmorMaterial {
         return this;
     }
 
+    public MArmorMaterial setArmorDurability(int[] armorDurability) {
+        this.armorDurability = new ArmorTypeFunction(armorDurability);
+        return this;
+    }
+
     public MArmorMaterial setProtection(Function<ArmorItem.Type, Integer> protection) {
         this.protection = protection;
+        return this;
+    }
+
+    public MArmorMaterial setProtection(int[] protection) {
+        this.protection = new ArmorTypeFunction(protection);
         return this;
     }
 
@@ -111,5 +123,12 @@ public class MArmorMaterial implements ArmorMaterial {
     @Override
     public Ingredient getRepairIngredient() {
         return this.repairIngredient;
+    }
+
+    private record ArmorTypeFunction(int[] values) implements Function<ArmorItem.Type, Integer> {
+        @Override
+        public Integer apply(ArmorItem.@NotNull Type type) {
+            return this.values[type.ordinal()];
+        }
     }
 }

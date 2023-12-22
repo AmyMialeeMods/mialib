@@ -20,13 +20,13 @@ public class MinecraftClientMixin {
 	@Shadow @Final public GameOptions options;
 	@Shadow @Nullable public ClientPlayerEntity player;
 
-	@Unique private boolean astronomical$holding = false;
+	@Unique private boolean mialib$holding = false;
 
 	@WrapOperation(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V"))
 	private void mialib$holding(MinecraftClient instance, boolean bl, Operation<Void> original) {
 		var holding = this.options.attackKey.isPressed();
-		if (holding != this.astronomical$holding) {
-			this.astronomical$holding = holding;
+		if (holding != this.mialib$holding) {
+			this.mialib$holding = holding;
 			var buf = PacketByteBufs.create();
 			buf.writeBoolean(holding);
 			ClientPlayNetworking.send(MiaLib.id("holding"), buf);

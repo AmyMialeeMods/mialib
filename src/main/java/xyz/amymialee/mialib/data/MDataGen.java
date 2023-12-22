@@ -108,7 +108,7 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 
 	protected void generateFlatLevelGeneratorPresetTags(MFlatLevelGeneratorPresetTagProvider provider, RegistryWrapper.WrapperLookup arg) {}
 
-	protected void generateFlatLevelGeneratorPresets(MFlatLevelGeneratorPresetProvider provider, Consumer<FlatLevelGeneratorPresetDataBuilder> consumer) {}
+	protected void generateFlatLevelGeneratorPresets(MFlatLevelGeneratorPresetProvider provider, Consumer<FlatLevelGeneratorPresetData> consumer) {}
 
 	private static @NotNull Advancement emptyAdvancement(String id) {
 		return emptyAdvancement(new Identifier(id));
@@ -354,7 +354,7 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 			this.pathResolver = output.getResolver(DataOutput.OutputType.DATA_PACK, "worldgen/flat_level_generator_preset");
 		}
 
-		public void generate(Consumer<FlatLevelGeneratorPresetDataBuilder> consumer) {
+		public void generate(Consumer<FlatLevelGeneratorPresetData> consumer) {
 			this.dataGen.generateFlatLevelGeneratorPresets(this, consumer);
 		}
 
@@ -363,7 +363,7 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 			return this.registriesFuture.thenCompose(lookup -> {
 				Set<Identifier> set = new HashSet<>();
 				List<CompletableFuture<?>> list = new ArrayList<>();
-				Consumer<FlatLevelGeneratorPresetDataBuilder> consumer = flatPreset -> {
+				Consumer<FlatLevelGeneratorPresetData> consumer = flatPreset -> {
 					if (!set.add(flatPreset.name.getValue())) {
 						throw new IllegalStateException("Duplicate Superflat Preset " + flatPreset.name.getValue());
 					} else {
@@ -382,7 +382,7 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		}
 	}
 
-	public static class FlatLevelGeneratorPresetDataBuilder {
+	public static class FlatLevelGeneratorPresetData {
 		protected final RegistryKey<FlatLevelGeneratorPreset> name;
 		protected final ItemConvertible icon;
 		protected final RegistryKey<Biome> biome;
@@ -391,7 +391,7 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		protected final boolean hasLakes;
 		protected final FlatChunkGeneratorLayer[] layers;
 
-		public FlatLevelGeneratorPresetDataBuilder(
+		public FlatLevelGeneratorPresetData(
 				RegistryKey<FlatLevelGeneratorPreset> registryKey,
 				ItemConvertible icon,
 				RegistryKey<Biome> biome,
