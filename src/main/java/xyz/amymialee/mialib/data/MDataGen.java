@@ -23,6 +23,7 @@ import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Model;
 import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
@@ -283,6 +284,11 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		@Override
 		protected void configure(RegistryWrapper.WrapperLookup arg) {
 			this.dataGen.generateEntityTypeTags(this, arg);
+		}
+
+		@Override
+		public FabricTagProvider<EntityType<?>>.FabricTagBuilder getOrCreateTagBuilder(TagKey<EntityType<?>> tag) {
+			return super.getOrCreateTagBuilder(tag);
 		}
 	}
 
