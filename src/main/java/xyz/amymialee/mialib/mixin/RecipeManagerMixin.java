@@ -22,17 +22,17 @@ import java.util.Optional;
 @Mixin(RecipeManager.class)
 public class RecipeManagerMixin {
     @Inject(method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/inventory/Inventory;Lnet/minecraft/world/World;)Ljava/util/Optional;", at = @At(value = "RETURN"), cancellable = true)
-    private <C extends Inventory, T extends Recipe<C>> void mialib$killRecipe(RecipeType<T> type, C inventory, World world, @NotNull CallbackInfoReturnable<Optional<T>> cir) {
+    private <C extends Inventory, T extends Recipe<C>> void mialib$killRecipe(RecipeType<T> type, C inventory, World world, @NotNull CallbackInfoReturnable<Optional<RecipeEntry<T>>> cir) {
         var optional = cir.getReturnValue();
-        if (optional.isPresent() && optional.get().getResult(world.getRegistryManager()).isIn(MiaLib.UNCRAFTABLE)) {
+        if (optional.isPresent() && optional.get().value().getResult(world.getRegistryManager()).isIn(MiaLib.UNCRAFTABLE)) {
             cir.setReturnValue(Optional.empty());
         }
     }
 
     @Inject(method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/inventory/Inventory;Lnet/minecraft/world/World;Lnet/minecraft/util/Identifier;)Ljava/util/Optional;", at = @At(value = "RETURN"), cancellable = true)
-    private <C extends Inventory, T extends Recipe<C>> void mialib$killRecipe(RecipeType<T> type, C inventory, World world, @Nullable Identifier id, @NotNull CallbackInfoReturnable<Optional<Pair<Identifier, T>>> cir) {
+    private <C extends Inventory, T extends Recipe<C>> void mialib$killRecipe(RecipeType<T> type, C inventory, World world, @Nullable Identifier id, @NotNull CallbackInfoReturnable<Optional<Pair<Identifier, RecipeEntry<T>>>> cir) {
         var optional = cir.getReturnValue();
-        if (optional.isPresent() && optional.get().getSecond().getResult(world.getRegistryManager()).isIn(MiaLib.UNCRAFTABLE)) {
+        if (optional.isPresent() && optional.get().getSecond().value().getResult(world.getRegistryManager()).isIn(MiaLib.UNCRAFTABLE)) {
             cir.setReturnValue(Optional.empty());
         }
     }
