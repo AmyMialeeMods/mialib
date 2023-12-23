@@ -9,6 +9,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,7 +30,7 @@ public class RecipeManagerMixin {
     }
 
     @Inject(method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/inventory/Inventory;Lnet/minecraft/world/World;Lnet/minecraft/util/Identifier;)Ljava/util/Optional;", at = @At(value = "RETURN"), cancellable = true)
-    private <C extends Inventory, T extends Recipe<C>> void mialib$killRecipe(RecipeType<T> type, C inventory, World world, Identifier id, @NotNull CallbackInfoReturnable<Optional<Pair<Identifier, RecipeEntry<T>>>> cir) {
+    private <C extends Inventory, T extends Recipe<C>> void mialib$killRecipe(RecipeType<T> type, C inventory, World world, @Nullable Identifier id, @NotNull CallbackInfoReturnable<Optional<Pair<Identifier, RecipeEntry<T>>>> cir) {
         var optional = cir.getReturnValue();
         if (optional.isPresent() && optional.get().getSecond().value().getResult(world.getRegistryManager()).isIn(MiaLib.UNCRAFTABLE)) {
             cir.setReturnValue(Optional.empty());

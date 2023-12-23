@@ -16,6 +16,7 @@
     "MobEntityMixin",
     "PlayerEntityMixin",
     "RecipeManagerMixin",
+    "ServerRecipeBookMixin",
     "interfaces.ItemEntityMixin",
     "interfaces.ItemGroupMixin",
     "interfaces.ItemMixin",
