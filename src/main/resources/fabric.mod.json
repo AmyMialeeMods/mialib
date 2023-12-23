@@ -51,7 +51,8 @@
       "net/minecraft/class_1761": ["xyz/amymialee/mialib/interfaces/MItemGroup"],
       "net/minecraft/class_1799": ["xyz/amymialee/mialib/interfaces/MItemStack"],
       "net/minecraft/class_1657": ["xyz/amymialee/mialib/interfaces/MPlayerEntity"],
-      "net/minecraft/class_2561": ["xyz/amymialee/mialib/interfaces/MText"]
+      "net/minecraft/class_2561": ["xyz/amymialee/mialib/interfaces/MText"],
+      "net/minecraft/class_1937": ["xyz/amymialee/mialib/interfaces/MWorld"]
     }
   },
   "depends": {

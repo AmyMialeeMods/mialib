@@ -21,7 +21,9 @@
     "interfaces.ItemMixin",
     "interfaces.ItemStackMixin",
     "interfaces.PlayerEntityMixin",
-    "interfaces.TextMixin"
+    "interfaces.ServerWorldMixin",
+    "interfaces.TextMixin",
+    "interfaces.WorldMixin"
   ],
   "client": [
     "client.ClientPlayerEntityMixin",
@@ -31,7 +33,8 @@
     "client.HeldItemRendererMixin",
     "client.ItemRendererMixin",
     "client.MinecraftClientMixin",
-    "client.PlayerEntityRendererMixin"
+    "client.PlayerEntityRendererMixin",
+    "interfaces.ClientWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1

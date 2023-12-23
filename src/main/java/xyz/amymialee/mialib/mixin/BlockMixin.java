@@ -47,7 +47,7 @@ public class BlockMixin {
     }
 
     @WrapOperation(method = "dropStacks(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/WorldAccess;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/entity/BlockEntity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getDroppedStacks(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/entity/BlockEntity;)Ljava/util/List;"))
-    private static List<ItemStack> mialib$autoSmelting(BlockState state, ServerWorld world, BlockPos pos, BlockEntity blockEntity, Operation<List<ItemStack>> original) {
+    private static List<ItemStack> mialib$autoSmelting(BlockState state, ServerWorld world, BlockPos pos, BlockEntity blockEntity, @NotNull Operation<List<ItemStack>> original) {
         var result = MiaLibEvents.SMELT_BROKEN_BLOCK.invoker().shouldSmeltBlock(world, state, pos, blockEntity, null, ItemStack.EMPTY);
         var originalResult = original.call(state, world, pos, blockEntity);
         if (result == ActionResult.SUCCESS) {

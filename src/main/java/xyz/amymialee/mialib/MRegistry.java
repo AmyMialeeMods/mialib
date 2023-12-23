@@ -137,7 +137,6 @@ public class MRegistry {
 		return this.registerEntity(path, entity, null, eggData);
 	}
 
-	@SuppressWarnings("DataFlowIssue")
 	public <T extends LivingEntity> EntityType<T> registerEntity(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer attributes) {
 		this.register(path, entity);
 		if (attributes != null) {
@@ -146,7 +145,6 @@ public class MRegistry {
 		return entity;
 	}
 
-	@SuppressWarnings("DataFlowIssue")
 	public <T extends MobEntity> EntityType<T> registerEntity(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer attributes, @Nullable EggData eggData) {
 		this.register(path, entity);
 		if (attributes != null) {
@@ -191,7 +189,6 @@ public class MRegistry {
 		return thing;
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T> void build() {
 		if (this.built) {
 			MiaLib.LOGGER.warn("Tried to build the " + this.namespace + " MRegistry twice!");
