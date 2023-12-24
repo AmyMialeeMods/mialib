@@ -116,9 +116,9 @@ public class Detonation {
     /**
      * Effects for the detonation to have.
      */
-    protected BiConsumer<World, Vec3d> detonationEffects = (world, vec3d) -> {
+    protected BiConsumer<ServerWorld, Vec3d> detonationEffects = (world, vec3d) -> {
         world.playSound(null, vec3d.x, vec3d.y, vec3d.z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1.0f, 1.0f);
-        world.addParticle(ParticleTypes.EXPLOSION_EMITTER, vec3d.x, vec3d.y, vec3d.z, 0.0D, 0.0D, 0.0D);
+        world.spawnParticles(ParticleTypes.EXPLOSION_EMITTER, vec3d.x, vec3d.y, vec3d.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
     };
     protected boolean sealed = false;
 
@@ -232,7 +232,7 @@ public class Detonation {
         return this;
     }
 
-    public Detonation setDetonationEffects(BiConsumer<World, Vec3d> detonationEffects) {
+    public Detonation setDetonationEffects(BiConsumer<ServerWorld, Vec3d> detonationEffects) {
         this.detonationEffects = detonationEffects;
         return this;
     }
