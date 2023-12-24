@@ -85,6 +85,7 @@ public class MRegistry {
 	private final String namespace;
 	private final Map<Registry<?>, Map<Identifier, Object>> objects;
 	private final List<Runnable> itemGroupRegistrations = new ArrayList<>();
+	private final List<Runnable> entityAttributeRegistrations = new ArrayList<>();
 	public final Map<EntityType<?>, SpawnEggItem> spawnEggs = new HashMap<>();
 	private Map<Class<?>, Registry<?>> registries;
 	private boolean built = false;
@@ -137,18 +138,18 @@ public class MRegistry {
 		return this.registerEntity(path, entity, null, eggData);
 	}
 
-	public <T extends LivingEntity> EntityType<T> registerEntity(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer attributes) {
+	public <T extends LivingEntity> EntityType<T> registerEntity(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes) {
 		this.register(path, entity);
 		if (attributes != null) {
-			FabricDefaultAttributeRegistry.register(entity, attributes);
+			this.entityAttributeRegistrations.add(() -> FabricDefaultAttributeRegistry.register(entity, attributes));
 		}
 		return entity;
 	}
 
-	public <T extends MobEntity> EntityType<T> registerEntity(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer attributes, @Nullable EggData eggData) {
+	public <T extends MobEntity> EntityType<T> registerEntity(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes, @Nullable EggData eggData) {
 		this.register(path, entity);
 		if (attributes != null) {
-			FabricDefaultAttributeRegistry.register(entity, attributes);
+			this.entityAttributeRegistrations.add(() -> FabricDefaultAttributeRegistry.register(entity, attributes));
 		}
 		if (eggData != null) {
 			var egg = new SpawnEggItem(entity, eggData.primaryColor, eggData.secondaryColor, new FabricItemSettings());
@@ -203,6 +204,9 @@ public class MRegistry {
 		}
 		for (var itemGroupRegistration : this.itemGroupRegistrations) {
 			itemGroupRegistration.run();
+		}
+		for (var entityAttributeRegistration : this.entityAttributeRegistrations) {
+			entityAttributeRegistration.run();
 		}
 		this.itemGroupRegistrations.clear();
 	}

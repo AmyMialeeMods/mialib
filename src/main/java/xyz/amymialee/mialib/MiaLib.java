@@ -16,10 +16,13 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.ClampedEntityAttribute;
+import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.command.CommandManager;
@@ -58,7 +61,7 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
     // Superflat Presets
     public static final RegistryKey<FlatLevelGeneratorPreset> DEV_READY = FlatLevelGeneratorPresets.of(id("dev_ready").toString());
     public static final RegistryKey<FlatLevelGeneratorPreset> BLAST_PROOF = FlatLevelGeneratorPresets.of(id("blast_proof").toString());
-
+    // MValues
     public static final MValue<Boolean> FIRE_ASPECT_AUTOSMELTING = new MValue<>(id("fire_aspect_autosmelting"), (b) -> b ? Items.TORCH.getDefaultStack() : Items.LEVER.getDefaultStack(), MValueType.BOOLEAN, false);
 //    public static final MIntegerValue TEST_INTEGER = new MIntegerValue(id("test_integer"), (i) -> i > 50 ? Items.COOKED_SALMON.getDefaultStack() : Items.SALMON.getDefaultStack(), 0, 0, 100);
 //    public static final MLongValue TEST_LONG = new MLongValue(id("test_long"), (l) -> l > 50 ? Items.COOKED_SALMON.getDefaultStack() : Items.SALMON.getDefaultStack(), 0L, 0L, 100L);

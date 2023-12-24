@@ -132,8 +132,18 @@ public class Detonation {
         return this;
     }
 
+    public Detonation setDestructionRadius(double destructionRadius) {
+        this.destructionRadius = () -> destructionRadius;
+        return this;
+    }
+
     public Detonation setEntityRadius(Supplier<Double> entityRadius) {
         this.entityRadius = entityRadius;
+        return this;
+    }
+
+    public Detonation setEntityRadius(double entityRadius) {
+        this.entityRadius = () -> entityRadius;
         return this;
     }
 
@@ -142,8 +152,18 @@ public class Detonation {
         return this;
     }
 
+    public Detonation setHorizontalPushback(double horizontalPushback) {
+        this.horizontalPushback = () -> horizontalPushback;
+        return this;
+    }
+
     public Detonation setVerticalPushback(Supplier<Double> verticalPushback) {
         this.verticalPushback = verticalPushback;
+        return this;
+    }
+
+    public Detonation setVerticalPushback(double verticalPushback) {
+        this.verticalPushback = () -> verticalPushback;
         return this;
     }
 
@@ -152,8 +172,18 @@ public class Detonation {
         return this;
     }
 
+    public Detonation setDamage(double damage) {
+        this.damage = () -> (float) damage;
+        return this;
+    }
+
     public Detonation setSoftening(Function<Double, Float> softening) {
         this.softening = softening;
+        return this;
+    }
+
+    public Detonation setSoftening(double softening) {
+        this.softening = (distance) -> (float) softening;
         return this;
     }
 
@@ -162,8 +192,18 @@ public class Detonation {
         return this;
     }
 
+    public Detonation setSparseness(double sparseness) {
+        this.sparseness = (distance) -> (float) sparseness;
+        return this;
+    }
+
     public Detonation setDamageType(Function<Double, RegistryKey<DamageType>> damageType) {
         this.damageType = damageType;
+        return this;
+    }
+
+    public Detonation setDamageType(RegistryKey<DamageType> damageType) {
+        this.damageType = (distance) -> damageType;
         return this;
     }
 
