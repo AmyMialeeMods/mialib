@@ -10,14 +10,14 @@ public interface MRandom {
 	}
 
 	static long getRandomBetween(long min, long max) {
-		return RANDOM.nextLong() % (max - min + 1) + min;
+		return RANDOM.nextLong(min, max + 1);
 	}
 
 	static float getRandomBetween(float min, float max) {
-		return RANDOM.nextFloat() % (max - min + 1) + min;
+		return RANDOM.nextFloat(min, max);
 	}
 
 	static double getRandomBetween(double min, double max) {
-		return RANDOM.nextDouble() % (max - min + 1) + min;
+		return RANDOM.nextDouble(min, max + 1);
 	}
 }
