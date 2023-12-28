@@ -159,6 +159,13 @@ public class MRegistry {
 		return entity;
 	}
 
+	public SoundEvent registerSound(String name) {
+		var id = MiaLib.id(name);
+		var event = SoundEvent.of(id);
+		this.register(id, event);
+		return event;
+	}
+
 	public <T> T register(String path, T thing) {
 		return this.register(new Identifier(this.namespace, path), thing);
 	}
