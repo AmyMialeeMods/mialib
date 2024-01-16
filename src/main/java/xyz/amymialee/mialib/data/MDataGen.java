@@ -6,15 +6,11 @@ import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
-import net.minecraft.advancement.Advancement;
-import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataOutput;
 import net.minecraft.data.DataProvider;
@@ -22,7 +18,6 @@ import net.minecraft.data.DataWriter;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Model;
-import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.fluid.Fluid;
@@ -51,7 +46,6 @@ import xyz.amymialee.mialib.MRegistry;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -65,12 +59,10 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 	public void onInitializeDataGenerator(@NotNull FabricDataGenerator generator) {
 		MRegistry.REGISTRIES.forEach(MRegistry::build);
 		var pack = generator.createPack();
-		pack.addProvider((dataOutput, future) -> new MAdvancementProvider(this, dataOutput));
 		pack.addProvider((dataOutput, future) -> new MBlockLootTableProvider(this, dataOutput));
 		pack.addProvider((dataOutput, future) -> new MLanguageProvider(this, dataOutput));
 		pack.addProvider((dataOutput, future) -> new MLootTableProvider(this, dataOutput));
 		pack.addProvider((dataOutput, future) -> new MModelProvider(this, dataOutput));
-		pack.addProvider((dataOutput, future) -> new MRecipeProvider(this, dataOutput));
 		pack.addProvider((dataOutput, future) -> new MFlatLevelGeneratorPresetProvider(this, dataOutput, future));
 		pack.addProvider((dataOutput, future) -> new MBlockTagProvider(this, dataOutput, future));
 		pack.addProvider((dataOutput, future) -> new MItemTagProvider(this, dataOutput, future));
@@ -79,8 +71,6 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		pack.addProvider((dataOutput, future) -> new MGameEventTagProvider(this, dataOutput, future));
 		pack.addProvider((dataOutput, future) -> new MFlatLevelGeneratorPresetTagProvider(this, dataOutput, future));
 	}
-
-	protected void generateAdvancements(MAdvancementProvider provider, Consumer<AdvancementEntry> consumer) {}
 
 	protected void generateBlockLootTables(MBlockLootTableProvider provider) {}
 
@@ -91,8 +81,6 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 	protected void generateBlockStateModels(MModelProvider provider, BlockStateModelGenerator generator) {}
 
 	protected void generateItemModels(MModelProvider provider, ItemModelGenerator generator) {}
-
-	protected void generateRecipes(MRecipeProvider provider, RecipeExporter exporter) {}
 
 	protected void generateBlockTags(MBlockTagProvider provider, RegistryWrapper.WrapperLookup arg) {}
 
@@ -110,30 +98,8 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 
 	protected void generateFlatLevelGeneratorPresets(MFlatLevelGeneratorPresetProvider provider, Consumer<FlatLevelGeneratorPresetData> consumer) {}
 
-	private static @NotNull Advancement emptyAdvancement(String id) {
-		return emptyAdvancement(new Identifier(id));
-	}
-
-	private static @NotNull Advancement emptyAdvancement(Identifier id) {
-		return new Advancement(Optional.of(id), Optional.empty(), null, Map.of(), null, false);
-	}
-
 	private static LootTable.Builder makeItemWithRange(ItemConvertible item, int min, int max) {
 		return LootTable.builder().pool(LootPool.builder().rolls(ConstantLootNumberProvider.create(1.0F)).with(ItemEntry.builder(item).apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(min, max)))));
-	}
-
-	protected static class MAdvancementProvider extends FabricAdvancementProvider {
-		private final MDataGen dataGen;
-
-		public MAdvancementProvider(MDataGen gen, FabricDataOutput output) {
-			super(output);
-			this.dataGen = gen;
-		}
-
-		@Override
-		public void generateAdvancement(Consumer<AdvancementEntry> consumer) {
-			this.dataGen.generateAdvancements(this, consumer);
-		}
 	}
 
 	protected static class MBlockLootTableProvider extends FabricBlockLootTableProvider {
@@ -198,20 +164,6 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		@Override
 		public void generateItemModels(ItemModelGenerator generator) {
 			this.dataGen.generateItemModels(this, generator);
-		}
-	}
-
-	protected static class MRecipeProvider extends FabricRecipeProvider {
-		private final MDataGen dataGen;
-
-		public MRecipeProvider(MDataGen gen, FabricDataOutput output) {
-			super(output);
-			this.dataGen = gen;
-		}
-
-		@Override
-		public void generate(RecipeExporter exporter) {
-			this.dataGen.generateRecipes(this, exporter);
 		}
 	}
 

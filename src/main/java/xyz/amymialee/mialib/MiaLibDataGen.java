@@ -16,7 +16,6 @@ import java.util.function.Consumer;
 public class MiaLibDataGen extends MDataGen {
     @Override
     protected void generateTranslations(@NotNull MLanguageProvider provider, FabricLanguageProvider.@NotNull TranslationBuilder builder) {
-        builder.add(MiaLib.FIRE_ASPECT_AUTOSMELTING.getTranslationKey(), "Fire Aspect Autosmelting");
         builder.add("flat_world_preset." + MiaLib.DEV_READY.getValue().toTranslationKey(), "Dev Ready");
         builder.add("flat_world_preset." + MiaLib.BLAST_PROOF.getValue().toTranslationKey(), "Blast Proof");
         builder.add(provider.getTagTranslationKey(MiaLib.SOUL_FIRE_SMELTING), "Soul Fire Smelting");
