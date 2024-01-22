@@ -9,8 +9,10 @@ import xyz.amymialee.mialib.MiaLib;
 
 public class HoldingComponent implements AutoSyncedComponent, CommonTickingComponent {
 	private final PlayerEntity player;
-	private boolean holding = false;
-	private int tick = 0;
+	private boolean attacking = false;
+	private boolean using = false;
+	private int tickAttacking = 0;
+	private int tickUsing = 0;
 
 	public HoldingComponent(PlayerEntity player) {
 		this.player = player;
@@ -20,35 +22,59 @@ public class HoldingComponent implements AutoSyncedComponent, CommonTickingCompo
 		MiaLib.HOLDING.sync(this.player);
 	}
 
-	public boolean isHolding() {
-		return this.holding;
+	public boolean isAttacking() {
+		return this.attacking;
 	}
 
-	public void setHolding(boolean holding) {
-		this.holding = holding;
+	public void setAttacking(boolean attacking) {
+		this.attacking = attacking;
 		this.sync();
 	}
 
-	public int getTick() {
-		return this.tick;
+	public boolean isUsing() {
+		return this.using;
+	}
+
+	public void setUsing(boolean using) {
+		this.using = using;
+		this.sync();
+	}
+
+	public int getTickAttacking() {
+		return this.tickAttacking;
+	}
+
+	public int getTickUsing() {
+		return this.tickUsing;
 	}
 
 	@Override
 	public void tick() {
-		if (this.holding) {
-			this.tick++;
+		if (this.attacking) {
+			this.tickAttacking++;
 		} else {
-			this.tick = 0;
+			this.tickAttacking = 0;
+		}
+		if (this.using) {
+			this.tickUsing++;
+		} else {
+			this.tickUsing = 0;
 		}
 	}
 
 	@Override
 	public void readFromNbt(@NotNull NbtCompound tag) {
-		this.holding = tag.getBoolean("holding");
+		this.attacking = tag.getBoolean("attacking");
+		this.using = tag.getBoolean("using");
+		this.tickAttacking = tag.getInt("tickAttacking");
+		this.tickUsing = tag.getInt("tickUsing");
 	}
 
 	@Override
 	public void writeToNbt(@NotNull NbtCompound tag) {
-		tag.putBoolean("holding", this.holding);
+		tag.putBoolean("attacking", this.attacking);
+		tag.putBoolean("using", this.using);
+		tag.putInt("tickAttacking", this.tickAttacking);
+		tag.putInt("tickUsing", this.tickUsing);
 	}
 }

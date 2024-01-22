@@ -37,16 +37,16 @@ public abstract class PlayerEntityMixin extends Entity implements MPlayerEntity 
 
     @Override
     public boolean mialib$holdingAttack() {
-        return MiaLib.HOLDING.get(this).isHolding();
+        return MiaLib.HOLDING.get(this).isAttacking();
     }
 
     @Override
     public void miaLib$setHoldingAttack(boolean attackHeld) {
-        MiaLib.HOLDING.get(this).setHolding(attackHeld);
+        MiaLib.HOLDING.get(this).setAttacking(attackHeld);
     }
 
     @Override
-    public int mialib$getHoldingTime() {
-        return MiaLib.HOLDING.get(this).getTick();
+    public int mialib$getHoldingAttackTime() {
+        return MiaLib.HOLDING.get(this).getTickAttacking();
     }
 }
