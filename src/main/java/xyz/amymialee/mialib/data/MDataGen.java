@@ -77,6 +77,7 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		pack.addProvider((dataOutput, future) -> new MFluidTagProvider(this, dataOutput, future));
 		pack.addProvider((dataOutput, future) -> new MEntityTypeTagProvider(this, dataOutput, future));
 		pack.addProvider((dataOutput, future) -> new MGameEventTagProvider(this, dataOutput, future));
+		pack.addProvider((dataOutput, future) -> new MDamageTypeTagProvider(this, dataOutput, future));
 		pack.addProvider((dataOutput, future) -> new MFlatLevelGeneratorPresetTagProvider(this, dataOutput, future));
 	}
 
