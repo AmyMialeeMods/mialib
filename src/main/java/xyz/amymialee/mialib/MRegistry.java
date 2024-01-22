@@ -160,7 +160,7 @@ public class MRegistry {
 	}
 
 	public SoundEvent registerSound(String name) {
-		var id = MiaLib.id(name);
+		var id = new Identifier(this.namespace, name);
 		var event = SoundEvent.of(id);
 		this.register(id, event);
 		return event;
