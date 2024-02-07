@@ -174,7 +174,7 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		}
 
 		public String[] getDamageKeys(@NotNull Identifier damageName) {
-			return this.getDamageKeys(damageName.getNamespace() + "." + damageName.getPath());
+			return this.getDamageKeys(damageName.getPath());
 		}
 
 		public String[] getDamageKeys(String damageName) {
