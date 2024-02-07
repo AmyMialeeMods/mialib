@@ -39,6 +39,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.structure.StructureSet;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
@@ -166,6 +167,18 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 
 		public String getTagTranslationKey(@NotNull TagKey<?> tag) {
 			return "tag." + tag.id().getNamespace() + "." + tag.id().getPath();
+		}
+
+		public String getSubtitleKey(@NotNull SoundEvent event) {
+			return "subtitles." + event.getId().getNamespace() + "." + event.getId().getPath();
+		}
+
+		public String[] getDamageKeys(String damageName) {
+			return new String[] {
+					"death.attack." + damageName,
+					"death.attack." + damageName + ".player",
+					"death.attack." + damageName + ".item"
+			};
 		}
 	}
 

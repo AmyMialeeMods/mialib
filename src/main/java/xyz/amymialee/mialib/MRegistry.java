@@ -1,6 +1,7 @@
 package xyz.amymialee.mialib;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.block.Block;
@@ -108,7 +109,7 @@ public class MRegistry {
 
 	public Item registerItem(String path, Item item, ItemGroup @NotNull ... groups) {
 		for (var group : groups) {
-			this.itemGroupRegistrations.add(() -> Registries.ITEM_GROUP.getKey(group).ifPresent(itemGroupRegistryKey -> ItemGroupEvents.modifyEntriesEvent(itemGroupRegistryKey).register(content -> content.add(item))));
+			this.addToItemGroup(group, content -> content.add(item));
 		}
 		return this.register(path, item);
 	}
@@ -119,6 +120,10 @@ public class MRegistry {
 			this.itemGroupRegistrations.add(() -> group.accept(item));
 		}
 		return this.register(path, item);
+	}
+
+	public void addToItemGroup(ItemGroup group, Consumer<FabricItemGroupEntries> consumer) {
+		this.itemGroupRegistrations.add(() -> Registries.ITEM_GROUP.getKey(group).ifPresent(itemGroupRegistryKey -> ItemGroupEvents.modifyEntriesEvent(itemGroupRegistryKey).register(consumer::accept)));
 	}
 
 	public Block registerBlockWithItem(String path, Block block, ItemGroup @NotNull ... groups) {
