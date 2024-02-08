@@ -153,8 +153,7 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
                     @Override
                     public <T extends GameRules.Rule<T>> void visit(GameRules.Key<T> key, GameRules.Type<T> type) {
                         if (Objects.equals(key.getName(), name) && Objects.equals(key.getCategory().getCategory(), category)) {
-                            var rule = server.getGameRules().get(key);
-                            rule.deserialize(value);
+                            server.getGameRules().get(key).deserialize(value);
                         }
                     }
                 });
