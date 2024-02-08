@@ -86,7 +86,7 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
+	public void writeToNbt(@NotNull NbtCompound tag) {
 		tag.putInt("tick", this.tick);
 		var compound = new NbtCompound();
 		for (var id : this.cooldowns.keySet()) {

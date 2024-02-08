@@ -2,7 +2,7 @@ package xyz.amymialee.mialib;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.entity.LivingEntity;
 
@@ -24,7 +24,7 @@ public class MiaLibClient implements ClientModInitializer {
 
     static {
         for (var mode : ModelTransformationMode.values()) {
-             FabricModelPredicateProviderRegistry.register(MiaLib.id(mode.name().toLowerCase()), (stack, world, entity, seed) -> mode == currentMode ? 1.0F : 0.0F);
+             ModelPredicateProviderRegistry.register(MiaLib.id(mode.name().toLowerCase()), (stack, world, entity, seed) -> mode == currentMode ? 1.0F : 0.0F);
         }
     }
 }

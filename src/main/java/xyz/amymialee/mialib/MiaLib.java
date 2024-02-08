@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import xyz.amymialee.mialib.cca.ExtraFlagsComponent;
 import xyz.amymialee.mialib.cca.HoldingComponent;
 import xyz.amymialee.mialib.cca.IdCooldownComponent;
+import xyz.amymialee.mialib.util.TypeAddition;
 
 import java.util.Objects;
 
@@ -52,43 +53,6 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer {
 
     @Override
     public void onInitialize() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, reg, env) -> dispatcher.register(
-                CommandManager.literal("vanish").requires(source -> source.hasPermissionLevel(2))
-                        .then(CommandManager.argument("enabled", BoolArgumentType.bool())
-                                .then(CommandManager.argument("targets", EntityArgumentType.entities())
-                                        .executes(ctx -> {
-                                            var enabled = BoolArgumentType.getBool(ctx, "enabled");
-                                            var targets = EntityArgumentType.getEntities(ctx, "targets");
-                                            for (var target : targets) {
-                                                var component = EXTRA_FLAGS.get(target);
-                                                component.setImperceptibleCommand(enabled);
-                                            }
-                                            ctx.getSource().sendFeedback(() -> Text.translatable("commands.mialib.vanish." + (enabled ? "enabled" : "disabled") + (targets.size() == 1 ? "single" : "multiple"), targets.size() == 1 ? targets.iterator().next().getDisplayName() : targets.size()), true);
-                                            return targets.size();
-                                        })
-                                ).executes(ctx -> {
-                                    var enabled = BoolArgumentType.getBool(ctx, "enabled");
-                                    var user = ctx.getSource().getPlayer();
-                                    if (user != null) {
-                                        var component = EXTRA_FLAGS.get(user);
-                                        component.setImperceptibleCommand(enabled);
-                                        ctx.getSource().sendFeedback(() -> Text.translatable("commands.mialib.vanish." + (enabled ? "enabled" : "disabled") + ".self", user.getDisplayName()), true);
-                                        return 1;
-                                    }
-                                    return 0;
-                                })
-                        ).executes(ctx -> {
-                            var user = ctx.getSource().getPlayer();
-                            if (user != null) {
-                                var component = EXTRA_FLAGS.get(user);
-                                var enabled = !component.hasImperceptibleCommand();
-                                component.setImperceptibleCommand(enabled);
-                                ctx.getSource().sendFeedback(() -> Text.translatable("commands.mialib.vanish." + (enabled ? "enabled" : "disabled") + ".self", user.getDisplayName()), true);
-                                return 1;
-                            }
-                            return 0;
-                        })
-        ));
         CommandRegistrationCallback.EVENT.register((dispatcher, reg, env) -> dispatcher.register(
                 CommandManager.literal("indestructible").requires(source -> source.hasPermissionLevel(2))
                         .then(CommandManager.argument("enabled", BoolArgumentType.bool())
@@ -155,10 +119,12 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer {
             }
             return ActionResult.PASS;
         });
-        MiaLibEvents.DAMAGE_PREVENTION.register((entity, source) -> {
-            var component = EXTRA_FLAGS.get(entity);
-            return component.isIndestructible();
-        });
+        MiaLibEvents.DAMAGE_PREVENTION.register((entity, source) -> EXTRA_FLAGS.get(entity).isIndestructible());
+        ServerPlayNetworking.registerGlobalReceiver(id("syncbar"), ((server, player, handler, buf, responseSender) -> {
+            var code = buf.readInt();
+            var value = buf.readIntArray();
+            server.execute(() -> TypeAddition.of(server, code, value));
+        }));
         ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, entity, killedEntity) -> {
             if (entity instanceof LivingEntity livingEntity) {
                 livingEntity.getMainHandStack().getItem().mialib$killEntity(world, livingEntity.getMainHandStack(), livingEntity, killedEntity);

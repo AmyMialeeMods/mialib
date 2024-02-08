@@ -13,7 +13,10 @@
     "LivingEntityMixin",
     "MobEntityMixin",
     "PlayerEntityMixin",
-    "interfaces.ItemClientMixin",
+    "interfaces.GameTypeMixin",
+    "interfaces.GameTypeMixin$BooleanType",
+    "interfaces.GameTypeMixin$DoubleType",
+    "interfaces.GameTypeMixin$IntType",
     "interfaces.ItemEntityMixin",
     "interfaces.ItemGroupMixin",
     "interfaces.ItemMixin",
@@ -31,7 +34,8 @@
     "client.ItemRendererMixin",
     "client.MinecraftClientMixin",
     "client.PlayerEntityRendererMixin",
-    "interfaces.ClientWorldMixin"
+    "interfaces.ClientWorldMixin",
+    "interfaces.ItemClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1
