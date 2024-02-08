@@ -30,9 +30,6 @@
     ],
     "cardinal-components-entity": [
       "xyz.amymialee.mialib.MiaLib"
-    ],
-    "cardinal-components-scoreboard": [
-      "xyz.amymialee.mialib.MiaLib"
     ]
   },
   "mixins": [
@@ -46,7 +43,7 @@
       "mialib:mvalue_manager"
     ],
     "loom:injected_interfaces": {
-      "net/minecraft/class_1792": ["xyz/amymialee/mialib/interfaces/MItem"],
+      "net/minecraft/class_1792": ["xyz/amymialee/mialib/interfaces/MItem", "xyz/amymialee/mialib/interfaces/MItemClient"],
       "net/minecraft/class_1542": ["xyz/amymialee/mialib/interfaces/MItemEntity"],
       "net/minecraft/class_1761": ["xyz/amymialee/mialib/interfaces/MItemGroup"],
       "net/minecraft/class_1799": ["xyz/amymialee/mialib/interfaces/MItemStack"],

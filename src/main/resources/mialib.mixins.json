@@ -13,6 +13,7 @@
     "LivingEntityMixin",
     "MobEntityMixin",
     "PlayerEntityMixin",
+    "interfaces.ItemClientMixin",
     "interfaces.ItemEntityMixin",
     "interfaces.ItemGroupMixin",
     "interfaces.ItemMixin",
