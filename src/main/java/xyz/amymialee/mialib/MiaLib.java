@@ -135,16 +135,31 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer {
                     @Override
                     public <T extends GameRules.Rule<T>> void visit(GameRules.Key<T> key, GameRules.Type<T> type) {
                         if (Objects.equals(key.getName(), name) && Objects.equals(key.getCategory().getCategory(), category)) {
-                            var rule = server.getGameRules().get(key);
-                            rule.deserialize(value);
+                            server.getGameRules().get(key).deserialize(value);
                         }
                     }
                 });
             }
         }));
-        ServerPlayNetworking.registerGlobalReceiver(id("holding"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(MiaLib.id("mvaluesync"), (server, player, handler, buf, responseSender) -> {
+            var nbt = buf.readNbt();
+            if (nbt == null) return;
+            server.execute(() -> {
+                if (player.hasPermissionLevel(2)) {
+                    var value = MValueManager.getValues().get(new Identifier(nbt.getString("id")));
+                    if (value != null) {
+                        value.readFromNbt(nbt);
+                    }
+                }
+            });
+        });
+        ServerPlayNetworking.registerGlobalReceiver(id("attacking"), (server, player, handler, buf, responseSender) -> {
             var holding = buf.readBoolean();
             server.execute(() -> player.miaLib$setHoldingAttack(holding));
+        });
+        ServerPlayNetworking.registerGlobalReceiver(id("using"), (server, player, handler, buf, responseSender) -> {
+            var holding = buf.readBoolean();
+            server.execute(() -> player.miaLib$setHoldingUse(holding));
         });
         MiaLibEvents.SMELT_BROKEN_BLOCK.register((world, state, pos, blockEntity, entity, stack) -> {
             if (stack.getItem().mialib$shouldSmelt(world, state, pos, blockEntity, entity, stack)) {

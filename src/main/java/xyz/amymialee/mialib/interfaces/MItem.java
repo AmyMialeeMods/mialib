@@ -55,5 +55,10 @@ public interface MItem {
     }
 
     @Environment(EnvType.CLIENT)
+    default int mialib$getNameColor(ItemStack stack) {
+        return -1;
+    }
+
+    @Environment(EnvType.CLIENT)
     default void mialib$renderCustomBar(DrawContext drawContext, TextRenderer renderer, ItemStack stack, int x, int y, String countLabel) {}
 }

@@ -23,7 +23,17 @@ public interface MPlayerEntity {
 
     default void miaLib$setHoldingAttack(boolean attackHeld) {}
 
-    default int mialib$getHoldingTime() {
+    default int mialib$getHoldingAttackTime() {
+        return 0;
+    }
+
+    default boolean mialib$holdingUse() {
+        return false;
+    }
+
+    default void miaLib$setHoldingUse(boolean useHeld) {}
+
+    default int mialib$getHoldingUseTime() {
         return 0;
     }
 }

@@ -21,6 +21,7 @@ public class MinecraftClientMixin {
 	@Shadow @Nullable public ClientPlayerEntity player;
 
 	@Unique private boolean mialib$holding = false;
+	@Unique private boolean mialib$using = false;
 
 	@WrapOperation(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V"))
 	private void mialib$holding(MinecraftClient instance, boolean bl, Operation<Void> original) {
@@ -29,7 +30,14 @@ public class MinecraftClientMixin {
 			this.mialib$holding = holding;
 			var buf = PacketByteBufs.create();
 			buf.writeBoolean(holding);
-			ClientPlayNetworking.send(MiaLib.id("holding"), buf);
+			ClientPlayNetworking.send(MiaLib.id("attacking"), buf);
+		}
+		var using = this.options.useKey.isPressed();
+		if (using != this.mialib$using) {
+			this.mialib$using = using;
+			var buf = PacketByteBufs.create();
+			buf.writeBoolean(using);
+			ClientPlayNetworking.send(MiaLib.id("using"), buf);
 		}
 		original.call(instance, bl);
 	}
