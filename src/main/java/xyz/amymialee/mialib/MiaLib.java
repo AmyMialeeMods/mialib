@@ -141,18 +141,6 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer {
                 });
             }
         }));
-        ServerPlayNetworking.registerGlobalReceiver(id("mvaluesync"), (server, player, handler, buf, responseSender) -> {
-            var nbt = buf.readNbt();
-            if (nbt == null) return;
-            server.execute(() -> {
-                if (player.hasPermissionLevel(2)) {
-                    var value = MValueManager.getValues().get(new Identifier(nbt.getString("id")));
-                    if (value != null) {
-                        value.readFromNbt(nbt);
-                    }
-                }
-            });
-        });
         ServerPlayNetworking.registerGlobalReceiver(id("attacking"), (server, player, handler, buf, responseSender) -> {
             var holding = buf.readBoolean();
             server.execute(() -> player.miaLib$setHoldingAttack(holding));
