@@ -14,6 +14,6 @@ public record TypeAddition(MinecraftServer server, int code, int[] value) implem
 
     @Override
     public <T extends GameRules.Rule<T>> void visit(GameRules.@NotNull Key<T> key, GameRules.Type<T> type) {
-        if (key.getName().hashCode() == this.code) ((MGameType)this.server.getGameRules().get(key)).sync(this.value);
+        if (key.getName().hashCode() == this.code) ((MGameType)this.server.getGameRules().get(key)).sync(this.server, this.value);
     }
 }

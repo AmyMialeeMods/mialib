@@ -9,6 +9,8 @@ import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
