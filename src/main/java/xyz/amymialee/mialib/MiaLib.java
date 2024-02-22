@@ -9,8 +9,6 @@ import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
@@ -33,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import xyz.amymialee.mialib.cca.ExtraFlagsComponent;
 import xyz.amymialee.mialib.cca.HoldingComponent;
 import xyz.amymialee.mialib.cca.IdCooldownComponent;
-import xyz.amymialee.mialib.util.TypeAddition;
 
 import java.util.Objects;
 
@@ -122,11 +119,6 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer {
             return ActionResult.PASS;
         });
         MiaLibEvents.DAMAGE_PREVENTION.register((entity, source) -> EXTRA_FLAGS.get(entity).isIndestructible());
-        ServerPlayNetworking.registerGlobalReceiver(id("syncbar"), ((server, player, handler, buf, responseSender) -> {
-            var code = buf.readInt();
-            var value = buf.readIntArray();
-            server.execute(() -> TypeAddition.of(server, code, value));
-        }));
         ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, entity, killedEntity) -> {
             if (entity instanceof LivingEntity livingEntity) {
                 livingEntity.getMainHandStack().getItem().mialib$killEntity(world, livingEntity.getMainHandStack(), livingEntity, killedEntity);
