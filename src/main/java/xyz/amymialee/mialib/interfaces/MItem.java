@@ -54,7 +54,6 @@ public interface MItem {
         return ActionResult.PASS;
     }
 
-    @Environment(EnvType.CLIENT)
     default int mialib$getNameColor(ItemStack stack) {
         return -1;
     }
