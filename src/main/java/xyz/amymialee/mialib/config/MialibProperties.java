@@ -1,13 +1,10 @@
 package xyz.amymialee.mialib.config;
 
-import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.MiaLib;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +12,13 @@ import java.util.List;
  * Mialib Properties are read from %APPDATA%/.mialib/mialib.yaml
  * These properties are used to store user preferences and other settings across instances, and are typically very optional.
  */
-public class MiaLibProperties {
+public class MialibProperties {
     private static final List<MProperty<?>> properties = new ArrayList<>();
     public static MBooleanProperty eulaAccepted = new MBooleanProperty("eula_accepted", false);
+    public static MBooleanProperty skipNarrator = new MBooleanProperty("skip_narrator", false);
 
     public static void loadConfig() {
-        var mialibFile = getMialibFile("mialib.yaml");
+        var mialibFile = MialibDir.getMialibFile("mialib.yaml");
         try (var reader = new BufferedReader(new FileReader(mialibFile))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -35,20 +33,6 @@ public class MiaLibProperties {
         } catch (Exception e) {
             MiaLib.LOGGER.warn("Failed to load mialib properties file {}", mialibFile, e);
         }
-    }
-
-    public static @NotNull Path getMialibPath(String fileName) {
-        return getMialibFile(fileName).toPath();
-    }
-
-    public static @NotNull File getMialibFile(String fileName) {
-        String workingDirectory;
-        if (System.getProperty("os.name").toUpperCase().contains("WIN")) {
-            workingDirectory = System.getenv("AppData");
-        } else {
-            workingDirectory = System.getProperty("user.home") + "/Library/Application Support";
-        }
-        return new File(workingDirectory, ".mialib/" + fileName);
     }
 
     public static class MBooleanProperty extends MProperty<Boolean> {

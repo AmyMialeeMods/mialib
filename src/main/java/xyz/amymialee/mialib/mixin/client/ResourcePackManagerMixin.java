@@ -4,22 +4,19 @@ import com.google.common.collect.ImmutableSet;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.MinecraftVersion;
-import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.*;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import xyz.amymialee.mialib.config.MiaLibProperties;
-
-import java.io.File;
+import xyz.amymialee.mialib.config.MialibDir;
 
 @Mixin(ResourcePackManager.class)
 public class ResourcePackManagerMixin {
     @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableSet;copyOf([Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;"))
     private ImmutableSet<ResourcePackProvider> mialib$moreDirs(Object @NotNull [] array, @NotNull Operation<ImmutableSet<ResourcePackProvider>> operation) {
-        var universalDir = MiaLibProperties.getMialibPath("resourcepacks/universal");
-        var versionDir = MiaLibProperties.getMialibPath("resourcepacks/pack_format_" + MinecraftVersion.CURRENT.getResourceVersion(ResourceType.CLIENT_RESOURCES));
+        var universalDir = MialibDir.getMialibPath("resourcepacks/universal");
+        var versionDir = MialibDir.getMialibPath("resourcepacks/pack_format_" + MinecraftVersion.CURRENT.getResourceVersion(ResourceType.CLIENT_RESOURCES));
         var universalProvider = new FileResourcePackProvider(universalDir, ResourceType.CLIENT_RESOURCES, ResourcePackSource.NONE, MinecraftClient.getInstance().getSymlinkFinder());
         var versionProvider = new FileResourcePackProvider(versionDir, ResourceType.CLIENT_RESOURCES, ResourcePackSource.NONE, MinecraftClient.getInstance().getSymlinkFinder());
         var combined = new ResourcePackProvider[array.length + 2];

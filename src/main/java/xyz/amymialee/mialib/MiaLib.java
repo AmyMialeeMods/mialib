@@ -111,7 +111,7 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
                                         .executes(ctx -> {
                                             var enabled = BoolArgumentType.getBool(ctx, "enabled");
                                             var targets = EntityArgumentType.getEntities(ctx, "targets");
-                                            for (Entity target : targets) {
+                                            for (var target : targets) {
                                                 var component = EXTRA_FLAGS.get(target);
                                                 component.setIndestructibleCommand(enabled);
                                             }
@@ -156,7 +156,7 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
                 });
             }
         }));
-        ServerPlayNetworking.registerGlobalReceiver(MiaLib.id("mvaluesync"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(id("mvaluesync"), (server, player, handler, buf, responseSender) -> {
             var nbt = buf.readNbt();
             if (nbt == null) return;
             server.execute(() -> {

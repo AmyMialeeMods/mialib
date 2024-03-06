@@ -23,11 +23,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.CatVariant;
 import net.minecraft.entity.passive.FrogVariant;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Instrument;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.SpawnEggItem;
+import net.minecraft.item.*;
 import net.minecraft.loot.condition.LootConditionType;
 import net.minecraft.loot.entry.LootPoolEntryType;
 import net.minecraft.loot.function.LootFunctionType;
@@ -80,6 +76,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class MRegistry {
 	private static final Map<Class<?>, Registry<?>> DEFAULT_REGISTRIES = new HashMap<>();
 	public static final List<MRegistry> REGISTRIES = new ArrayList<>();
@@ -203,6 +200,7 @@ public class MRegistry {
 		return thing;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> void build() {
 		if (this.built) {
 			MiaLib.LOGGER.warn("Tried to build the " + this.namespace + " MRegistry twice!");

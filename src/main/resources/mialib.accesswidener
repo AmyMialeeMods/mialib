@@ -15,5 +15,6 @@ accessible method net/minecraft/client/gui/widget/CyclingButtonWidget <init> (II
 accessible class net/minecraft/world/gen/FlatLevelGeneratorPresets$Registrar
 accessible method net/minecraft/world/gen/FlatLevelGeneratorPresets of (Ljava/lang/String;)Lnet/minecraft/registry/RegistryKey;
 accessible field net/minecraft/client/sound/Source pointer I
-
-
+accessible class net/minecraft/client/option/GameOptions$Visitor
+accessible method net/minecraft/client/option/GameOptions isTrue (Ljava/lang/String;)Z
+accessible method net/minecraft/client/option/GameOptions isFalse (Ljava/lang/String;)Z

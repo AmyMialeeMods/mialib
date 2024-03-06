@@ -31,11 +31,7 @@ import xyz.amymialee.mialib.util.TriFunction;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 public class Detonation {
     public static final Detonation CREEPER = new Detonation().setDestructionRadius(() -> 3d).setEntityRadius(() -> 3d).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 6f).seal();
