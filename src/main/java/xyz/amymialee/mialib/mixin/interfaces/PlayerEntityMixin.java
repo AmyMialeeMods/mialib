@@ -41,7 +41,7 @@ public abstract class PlayerEntityMixin extends Entity implements MPlayerEntity 
     }
 
     @Override
-    public void miaLib$setHoldingAttack(boolean attackHeld) {
+    public void mialib$setHoldingAttack(boolean attackHeld) {
         MiaLib.HOLDING.get(this).setAttacking(attackHeld);
     }
 

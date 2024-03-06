@@ -3,6 +3,7 @@ package xyz.amymialee.mialib;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,10 +17,7 @@ public class MiaLibClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        if (!MRegistry.REGISTRIES.isEmpty()) {
-            MiaLib.LOGGER.info("Building %d MiaLib Registr%s on Client".formatted(MRegistry.REGISTRIES.size(), MRegistry.REGISTRIES.size() == 1 ? "y" : "ies"));
-            MRegistry.REGISTRIES.forEach(MRegistry::build);
-        }
+        MRegistry.tryBuildAll("Mialib Client");
 //        ClientCommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess) -> dispatcher.register(ClientCommandManager.literal("mgamerules").executes(context -> {
 //            var client = context.getSource().getClient();
 //            client.execute(() -> {

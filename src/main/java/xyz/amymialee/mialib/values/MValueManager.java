@@ -12,6 +12,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.amymialee.mialib.MiaLib;
 
@@ -91,7 +93,7 @@ public class MValueManager implements AutoSyncedComponent {
         return VALUES;
     }
 
-    public static Set<String> getNamespaces() {
+    public static @NotNull Set<String> getNamespaces() {
         return VALUES_BY_NAMESPACE.keySet();
     }
 

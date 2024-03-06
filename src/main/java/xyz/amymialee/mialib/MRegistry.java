@@ -83,6 +83,7 @@ import java.util.function.Consumer;
 public class MRegistry {
 	private static final Map<Class<?>, Registry<?>> DEFAULT_REGISTRIES = new HashMap<>();
 	public static final List<MRegistry> REGISTRIES = new ArrayList<>();
+	private static boolean builtAll = false;
 	private final String namespace;
 	private final Map<Registry<?>, Map<Identifier, Object>> objects;
 	private final List<Runnable> itemGroupRegistrations = new ArrayList<>();
@@ -221,6 +222,18 @@ public class MRegistry {
 			entityAttributeRegistration.run();
 		}
 		this.itemGroupRegistrations.clear();
+	}
+
+	public static void tryBuildAll(String location) {
+		if (!REGISTRIES.isEmpty()) {
+			if (builtAll) {
+				MiaLib.LOGGER.info("Tried to build all MiaLib Registries on %s, but it was already built.".formatted(location));
+				return;
+			}
+			builtAll = true;
+			MiaLib.LOGGER.info("Building %d MiaLib Registr%s on %s".formatted(REGISTRIES.size(), REGISTRIES.size() == 1 ? "y" : "ies", location));
+			REGISTRIES.forEach(MRegistry::build);
+		}
 	}
 
 	static {

@@ -21,7 +21,7 @@ public interface MPlayerEntity {
         return false;
     }
 
-    default void miaLib$setHoldingAttack(boolean attackHeld) {}
+    default void mialib$setHoldingAttack(boolean attackHeld) {}
 
     default int mialib$getHoldingAttackTime() {
         return 0;
@@ -31,7 +31,7 @@ public interface MPlayerEntity {
         return false;
     }
 
-    default void miaLib$setHoldingUse(boolean useHeld) {}
+    default void mialib$setHoldingUse(boolean useHeld) {}
 
     default int mialib$getHoldingUseTime() {
         return 0;

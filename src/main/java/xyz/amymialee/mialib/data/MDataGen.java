@@ -64,7 +64,7 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 
 	@Override
 	public void onInitializeDataGenerator(@NotNull FabricDataGenerator generator) {
-		MRegistry.REGISTRIES.forEach(MRegistry::build);
+		MRegistry.tryBuildAll("%s Datagen".formatted(generator.getModId()));
 		var pack = generator.createPack();
 		pack.addProvider((dataOutput, future) -> new MAdvancementProvider(this, dataOutput));
 		pack.addProvider((dataOutput, future) -> new MBlockLootTableProvider(this, dataOutput));

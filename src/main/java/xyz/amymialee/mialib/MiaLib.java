@@ -16,13 +16,10 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.ClampedEntityAttribute;
-import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.command.CommandManager;
@@ -173,11 +170,11 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
         });
         ServerPlayNetworking.registerGlobalReceiver(id("attacking"), (server, player, handler, buf, responseSender) -> {
             var holding = buf.readBoolean();
-            server.execute(() -> player.miaLib$setHoldingAttack(holding));
+            server.execute(() -> player.mialib$setHoldingAttack(holding));
         });
         ServerPlayNetworking.registerGlobalReceiver(id("using"), (server, player, handler, buf, responseSender) -> {
             var holding = buf.readBoolean();
-            server.execute(() -> player.miaLib$setHoldingUse(holding));
+            server.execute(() -> player.mialib$setHoldingUse(holding));
         });
         MiaLibEvents.SMELT_BROKEN_BLOCK.register((world, state, pos, blockEntity, entity, stack) -> {
             if (stack.getItem().mialib$shouldSmelt(world, state, pos, blockEntity, entity, stack)) {

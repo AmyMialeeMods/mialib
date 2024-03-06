@@ -17,6 +17,7 @@
     "PlayerEntityMixin",
     "RecipeManagerMixin",
     "ServerRecipeBookMixin",
+    "SharedConstantsMixin",
     "interfaces.ItemEntityMixin",
     "interfaces.ItemGroupMixin",
     "interfaces.ItemMixin",
@@ -27,6 +28,7 @@
     "interfaces.WorldMixin"
   ],
   "client": [
+    "client.ResourcePackManagerMixin",
     "client.ClientPlayerEntityMixin",
     "client.DrawContextMixin",
     "client.EntityRenderDispatcherMixin",
@@ -36,6 +38,10 @@
     "client.MinecraftClientMixin",
     "client.PlayerEntityRendererMixin",
     "interfaces.ClientWorldMixin"
+  ],
+  "server": [
+    "server.ResourcePackManagerMixin",
+    "server.EulaReaderMixin"
   ],
   "injectors": {
     "defaultRequire": 1
