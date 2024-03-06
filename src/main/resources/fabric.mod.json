@@ -1,20 +1,19 @@
 {
   "schemaVersion": 1,
   "id": "mialib",
-  "version": "${version}",
-  "accessWidener" : "mialib.accesswidener",
-  "name": "mialib",
+  "name": "Mialib",
   "description": "Library for AmyMialee Mods",
   "authors": [
     "AmyMialee"
   ],
-  "contact": {
-    "website": "http://amymialee.xyz/",
-    "repo": "https://github.com/AmyMialeeMods/mialib"
-  },
+  "version": "${version}",
   "license": "All-Rights-Reserved",
   "icon": "assets/mialib/icon.png",
-  "environment": "*",
+  "contact": {
+    "homepage": "http://amymialee.xyz/",
+    "sources": "https://github.com/AmyMialeeMods/mialib",
+    "issues": "https://github.com/AmyMialeeMods/mialib/issues"
+  },
   "entrypoints": {
     "client": [
       "xyz.amymialee.mialib.MiaLibClient"
@@ -35,9 +34,6 @@
       "xyz.amymialee.mialib.MiaLib"
     ]
   },
-  "mixins": [
-    "mialib.mixins.json"
-  ],
   "custom": {
     "cardinal-components": [
       "mialib:identifier_cooldown",
@@ -53,8 +49,18 @@
       "net/minecraft/class_1657": ["xyz/amymialee/mialib/interfaces/MPlayerEntity"],
       "net/minecraft/class_2561": ["xyz/amymialee/mialib/interfaces/MText"],
       "net/minecraft/class_1937": ["xyz/amymialee/mialib/interfaces/MWorld"]
+    },
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/P4dUsxv6An"
+      }
     }
   },
+  "accessWidener" : "mialib.accesswidener",
+  "mixins": [
+    "mialib.mixins.json"
+  ],
+  "environment": "*",
   "depends": {
     "fabric": "*"
   }
