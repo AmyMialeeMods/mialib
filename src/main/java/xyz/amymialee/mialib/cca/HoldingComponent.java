@@ -2,11 +2,16 @@ package xyz.amymialee.mialib.cca;
 
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.MiaLib;
 
+/**
+ * Stores values for telling if a player is holding attack or use.
+ * Also provides the amount of time they have been held.
+ */
 public class HoldingComponent implements AutoSyncedComponent, CommonTickingComponent {
 	private final PlayerEntity player;
 	private boolean attacking = false;
@@ -26,6 +31,10 @@ public class HoldingComponent implements AutoSyncedComponent, CommonTickingCompo
 		return this.attacking;
 	}
 
+	public int getAttackTicks() {
+		return this.tickAttacking;
+	}
+
 	public void setAttacking(boolean attacking) {
 		this.attacking = attacking;
 		this.sync();
@@ -35,17 +44,13 @@ public class HoldingComponent implements AutoSyncedComponent, CommonTickingCompo
 		return this.using;
 	}
 
+	public int getUsageTicks() {
+		return this.tickUsing;
+	}
+
 	public void setUsing(boolean using) {
 		this.using = using;
 		this.sync();
-	}
-
-	public int getTickAttacking() {
-		return this.tickAttacking;
-	}
-
-	public int getTickUsing() {
-		return this.tickUsing;
 	}
 
 	@Override
@@ -76,5 +81,16 @@ public class HoldingComponent implements AutoSyncedComponent, CommonTickingCompo
 		tag.putBoolean("using", this.using);
 		tag.putInt("tickAttacking", this.tickAttacking);
 		tag.putInt("tickUsing", this.tickUsing);
+	}
+
+	static {
+		ServerPlayNetworking.registerGlobalReceiver(MiaLib.id("attacking"), (server, player, handler, buf, responseSender) -> {
+			var holding = buf.readBoolean();
+			server.execute(() -> player.mialib$setHoldingAttack(holding));
+		});
+		ServerPlayNetworking.registerGlobalReceiver(MiaLib.id("using"), (server, player, handler, buf, responseSender) -> {
+			var holding = buf.readBoolean();
+			server.execute(() -> player.mialib$setHoldingUse(holding));
+		});
 	}
 }

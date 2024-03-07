@@ -1,10 +1,15 @@
 package xyz.amymialee.mialib.cca;
 
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +17,29 @@ import xyz.amymialee.mialib.MiaLib;
 import xyz.amymialee.mialib.util.MMath;
 import xyz.amymialee.mialib.util.TriFunction;
 
+/**
+ * <p>
+ * Stores an extra set of flags for entities.
+ * </p>
+ * <p>
+ * Keeps flags stored as a byte, with each bit representing a different flag.
+ * </p>
+ * <p>
+ * Also stores a set of command toggles for each flag.
+ * </p>
+ * <p>
+ * Includes 3 flags:
+ * </p>
+ * <p>
+ *  - Imperceptible: The entity is completely invisible, including feature renderers.
+ * </p>
+ * <p>
+ *  - Indestructible: The entity cannot be damaged or destroyed.
+ * </p>
+ * <p>
+ *  - Immortal: The entity cannot die, but can take damage down to 1hp.
+ * </p>
+ */
 public class ExtraFlagsComponent implements AutoSyncedComponent {
     private final Entity entity;
     private byte flags = 0;
@@ -35,6 +63,7 @@ public class ExtraFlagsComponent implements AutoSyncedComponent {
     };
     public static final Event<HaveFlagCallback> SHOULD_BE_IMPERCEPTIBLE = EventFactory.createArrayBacked(HaveFlagCallback.class, callbacks -> (world, entity) -> CALLBACK_RESULT.apply(callbacks, world, entity));
     public static final Event<HaveFlagCallback> SHOULD_BE_INDESTRUCTIBLE = EventFactory.createArrayBacked(HaveFlagCallback.class, callbacks -> (world, entity) -> CALLBACK_RESULT.apply(callbacks, world, entity));
+    public static final Event<HaveFlagCallback> SHOULD_BE_IMMORTAL = EventFactory.createArrayBacked(HaveFlagCallback.class, callbacks -> (world, entity) -> CALLBACK_RESULT.apply(callbacks, world, entity));
 
     public ExtraFlagsComponent(Entity entity) {
         this.entity = entity;
@@ -86,9 +115,31 @@ public class ExtraFlagsComponent implements AutoSyncedComponent {
         this.refreshFlags();
     }
 
+    public boolean isImmortal() {
+        return MMath.getByteFlag(this.flags, 2);
+    }
+
+    private void setImmortal(boolean immortal) {
+        if (immortal == this.isImmortal()) return;
+        this.flags = MMath.setByteFlag(this.flags, 2, immortal);
+        this.sync();
+    }
+
+    public boolean hasImmortalCommand() {
+        return MMath.getByteFlag(this.commandFlags, 2);
+    }
+
+    public void setImmortalCommand(boolean immortal) {
+        if (immortal == this.hasImmortalCommand()) return;
+        this.commandFlags = MMath.setByteFlag(this.commandFlags, 2, immortal);
+        this.sync();
+        this.refreshFlags();
+    }
+
     public void refreshFlags() {
         this.setImperceptible(SHOULD_BE_IMPERCEPTIBLE.invoker().shouldHaveFlag(this.entity.getWorld(), this.entity).isAccepted());
         this.setIndestructible(SHOULD_BE_INDESTRUCTIBLE.invoker().shouldHaveFlag(this.entity.getWorld(), this.entity).isAccepted());
+        this.setImmortal(SHOULD_BE_IMMORTAL.invoker().shouldHaveFlag(this.entity.getWorld(), this.entity).isAccepted());
     }
 
     @Override
@@ -118,6 +169,124 @@ public class ExtraFlagsComponent implements AutoSyncedComponent {
             }
             return ActionResult.PASS;
         });
+        SHOULD_BE_IMMORTAL.register((world, entity) -> {
+            var component = MiaLib.EXTRA_FLAGS.get(entity);
+            if (component.hasImmortalCommand()) {
+                return ActionResult.SUCCESS;
+            }
+            return ActionResult.PASS;
+        });
+        CommandRegistrationCallback.EVENT.register((dispatcher, reg, env) -> dispatcher.register(
+                CommandManager.literal("vanish").requires(source -> source.hasPermissionLevel(2))
+                        .then(CommandManager.argument("enabled", BoolArgumentType.bool())
+                                .then(CommandManager.argument("targets", EntityArgumentType.entities())
+                                        .executes(ctx -> {
+                                            var enabled = BoolArgumentType.getBool(ctx, "enabled");
+                                            var targets = EntityArgumentType.getEntities(ctx, "targets");
+                                            for (var target : targets) {
+                                                var component = MiaLib.EXTRA_FLAGS.get(target);
+                                                component.setImperceptibleCommand(enabled);
+                                            }
+                                            ctx.getSource().sendFeedback(() -> Text.translatable("commands.mialib.vanish." + (enabled ? "enabled" : "disabled") + (targets.size() == 1 ? ".single" : ".multiple"), targets.size() == 1 ? targets.iterator().next().getDisplayName() : targets.size()), true);
+                                            return targets.size();
+                                        })
+                                ).executes(ctx -> {
+                                    var enabled = BoolArgumentType.getBool(ctx, "enabled");
+                                    var user = ctx.getSource().getPlayer();
+                                    if (user != null) {
+                                        var component = MiaLib.EXTRA_FLAGS.get(user);
+                                        component.setImperceptibleCommand(enabled);
+                                        ctx.getSource().sendFeedback(() -> Text.translatable("commands.mialib.vanish." + (enabled ? "enabled" : "disabled") + ".self", user.getDisplayName()), true);
+                                        return 1;
+                                    }
+                                    return 0;
+                                })
+                        ).executes(ctx -> {
+                            var user = ctx.getSource().getPlayer();
+                            if (user != null) {
+                                var component = MiaLib.EXTRA_FLAGS.get(user);
+                                var enabled = !component.hasImperceptibleCommand();
+                                component.setImperceptibleCommand(enabled);
+                                ctx.getSource().sendFeedback(() -> Text.translatable("commands.mialib.vanish." + (enabled ? "enabled" : "disabled") + ".self", user.getDisplayName()), true);
+                                return 1;
+                            }
+                            return 0;
+                        })
+        ));
+        CommandRegistrationCallback.EVENT.register((dispatcher, reg, env) -> dispatcher.register(
+                CommandManager.literal("indestructible").requires(source -> source.hasPermissionLevel(2))
+                        .then(CommandManager.argument("enabled", BoolArgumentType.bool())
+                                .then(CommandManager.argument("targets", EntityArgumentType.entities())
+                                        .executes(ctx -> {
+                                            var enabled = BoolArgumentType.getBool(ctx, "enabled");
+                                            var targets = EntityArgumentType.getEntities(ctx, "targets");
+                                            for (var target : targets) {
+                                                var component = MiaLib.EXTRA_FLAGS.get(target);
+                                                component.setIndestructibleCommand(enabled);
+                                            }
+                                            ctx.getSource().sendFeedback(() -> Text.translatable("commands.mialib.indestructible." + (enabled ? "enabled" : "disabled") + (targets.size() == 1 ? ".single" : ".multiple"), targets.size() == 1 ? targets.iterator().next().getDisplayName() : targets.size()), true);
+                                            return targets.size();
+                                        })
+                                ).executes(ctx -> {
+                                    var enabled = BoolArgumentType.getBool(ctx, "enabled");
+                                    var user = ctx.getSource().getPlayer();
+                                    if (user != null) {
+                                        var component = MiaLib.EXTRA_FLAGS.get(user);
+                                        component.setIndestructibleCommand(enabled);
+                                        ctx.getSource().sendFeedback(() -> Text.translatable("commands.mialib.indestructible." + (enabled ? "enabled" : "disabled") + ".self", user.getDisplayName()), true);
+                                        return 1;
+                                    }
+                                    return 0;
+                                })
+                        ).executes(ctx -> {
+                            var user = ctx.getSource().getPlayer();
+                            if (user != null) {
+                                var component = MiaLib.EXTRA_FLAGS.get(user);
+                                var enabled = !component.hasIndestructibleCommand();
+                                component.setIndestructibleCommand(enabled);
+                                ctx.getSource().sendFeedback(() -> Text.translatable("commands.mialib.indestructible." + (enabled ? "enabled" : "disabled") + ".self", user.getDisplayName()), true);
+                                return 1;
+                            }
+                            return 0;
+                        })
+        ));
+        CommandRegistrationCallback.EVENT.register((dispatcher, reg, env) -> dispatcher.register(
+                CommandManager.literal("immortal").requires(source -> source.hasPermissionLevel(2))
+                        .then(CommandManager.argument("enabled", BoolArgumentType.bool())
+                                .then(CommandManager.argument("targets", EntityArgumentType.entities())
+                                        .executes(ctx -> {
+                                            var enabled = BoolArgumentType.getBool(ctx, "enabled");
+                                            var targets = EntityArgumentType.getEntities(ctx, "targets");
+                                            for (var target : targets) {
+                                                var component = MiaLib.EXTRA_FLAGS.get(target);
+                                                component.setImmortalCommand(enabled);
+                                            }
+                                            ctx.getSource().sendFeedback(() -> Text.translatable("commands.mialib.immortal." + (enabled ? "enabled" : "disabled") + (targets.size() == 1 ? ".single" : ".multiple"), targets.size() == 1 ? targets.iterator().next().getDisplayName() : targets.size()), true);
+                                            return targets.size();
+                                        })
+                                ).executes(ctx -> {
+                                    var enabled = BoolArgumentType.getBool(ctx, "enabled");
+                                    var user = ctx.getSource().getPlayer();
+                                    if (user != null) {
+                                        var component = MiaLib.EXTRA_FLAGS.get(user);
+                                        component.setImmortalCommand(enabled);
+                                        ctx.getSource().sendFeedback(() -> Text.translatable("commands.mialib.immortal." + (enabled ? "enabled" : "disabled") + ".self", user.getDisplayName()), true);
+                                        return 1;
+                                    }
+                                    return 0;
+                                })
+                        ).executes(ctx -> {
+                            var user = ctx.getSource().getPlayer();
+                            if (user != null) {
+                                var component = MiaLib.EXTRA_FLAGS.get(user);
+                                var enabled = !component.hasImmortalCommand();
+                                component.setImmortalCommand(enabled);
+                                ctx.getSource().sendFeedback(() -> Text.translatable("commands.mialib.immortal." + (enabled ? "enabled" : "disabled") + ".self", user.getDisplayName()), true);
+                                return 1;
+                            }
+                            return 0;
+                        })
+        ));
     }
 
     @FunctionalInterface

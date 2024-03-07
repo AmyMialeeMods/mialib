@@ -48,12 +48,19 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * Fabric Data Generator with all many fabric data providers pre-included.
+ */
+@SuppressWarnings("unused")
 public abstract class MDataGen implements DataGeneratorEntrypoint {
-	public static final Model SPAWN_EGG = new Model(Optional.of(new Identifier("item/template_spawn_egg")), Optional.empty());
+	private static boolean initialized = false;
 
 	@Override
 	public void onInitializeDataGenerator(@NotNull FabricDataGenerator generator) {
-		MRegistry.tryBuildAll("%s Datagen".formatted(generator.getModId()));
+		if (!initialized) {
+			MRegistry.tryBuildAll("%s Datagen".formatted(generator.getModId()));
+			initialized = true;
+		}
 		var pack = generator.createPack();
 		pack.addProvider((dataOutput, future) -> new MAdvancementProvider(this, dataOutput));
 		pack.addProvider((dataOutput, future) -> new MBlockLootTableProvider(this, dataOutput));
@@ -62,6 +69,7 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		pack.addProvider((dataOutput, future) -> new MModelProvider(this, dataOutput));
 		pack.addProvider((dataOutput, future) -> new MRecipeProvider(this, dataOutput));
 		pack.addProvider((dataOutput, future) -> new MFlatLevelGeneratorPresetProvider(this, dataOutput, future));
+		// Tag Providers
 		pack.addProvider((dataOutput, future) -> new MBlockTagProvider(this, dataOutput, future));
 		pack.addProvider((dataOutput, future) -> new MItemTagProvider(this, dataOutput, future));
 		pack.addProvider((dataOutput, future) -> new MFluidTagProvider(this, dataOutput, future));
@@ -85,6 +93,8 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 
 	protected void generateRecipes(MRecipeProvider provider, RecipeExporter exporter) {}
 
+	protected void generateFlatLevelGeneratorPresets(MFlatLevelGeneratorPresetProvider provider, Consumer<FlatLevelGeneratorPresetData> consumer) {}
+
 	protected void generateBlockTags(MBlockTagProvider provider, RegistryWrapper.WrapperLookup arg) {}
 
 	protected void generateItemTags(MItemTagProvider provider, RegistryWrapper.WrapperLookup arg) {}
@@ -99,20 +109,6 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 
 	protected void generateFlatLevelGeneratorPresetTags(MFlatLevelGeneratorPresetTagProvider provider, RegistryWrapper.WrapperLookup arg) {}
 
-	protected void generateFlatLevelGeneratorPresets(MFlatLevelGeneratorPresetProvider provider, Consumer<FlatLevelGeneratorPresetData> consumer) {}
-
-	private static @NotNull Advancement emptyAdvancement(String id) {
-		return emptyAdvancement(new Identifier(id));
-	}
-
-	private static @NotNull Advancement emptyAdvancement(Identifier id) {
-		return new Advancement(Optional.of(id), Optional.empty(), null, Map.of(), null, false);
-	}
-
-	private static LootTable.Builder makeItemWithRange(ItemConvertible item, int min, int max) {
-		return LootTable.builder().pool(LootPool.builder().rolls(ConstantLootNumberProvider.create(1.0F)).with(ItemEntry.builder(item).apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(min, max)))));
-	}
-
 	protected static class MAdvancementProvider extends FabricAdvancementProvider {
 		private final MDataGen dataGen;
 
@@ -124,6 +120,14 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		@Override
 		public void generateAdvancement(Consumer<AdvancementEntry> consumer) {
 			this.dataGen.generateAdvancements(this, consumer);
+		}
+
+		public @NotNull Advancement emptyAdvancement(String id) {
+			return this.emptyAdvancement(new Identifier(id));
+		}
+
+		public @NotNull Advancement emptyAdvancement(Identifier id) {
+			return new Advancement(Optional.of(id), Optional.empty(), null, Map.of(), null, false);
 		}
 	}
 
@@ -138,6 +142,10 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		@Override
 		public void generate() {
 			this.dataGen.generateBlockLootTables(this);
+		}
+
+		public LootTable.Builder makeItemWithRange(ItemConvertible item, int min, int max) {
+			return LootTable.builder().pool(LootPool.builder().rolls(ConstantLootNumberProvider.create(1.0F)).with(ItemEntry.builder(item).apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(min, max)))));
 		}
 	}
 
@@ -154,8 +162,12 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 			this.dataGen.generateTranslations(this, builder);
 		}
 
-		public String getTagTranslationKey(@NotNull TagKey<?> tag) {
-			return "tag." + tag.id().getNamespace() + "." + tag.id().getPath();
+		public String getTagTranslationKey(@NotNull TagKey<?> key) {
+			return this.translatePrefix("tag." + key.registry().getValue().getPath() + ".", key.id());
+		}
+
+		public String translatePrefix(String prefix, @NotNull Identifier id) {
+			return prefix + id.getNamespace() + "." + id.getPath().replace('/', '.');
 		}
 
 		public String getSubtitleKey(@NotNull SoundEvent event) {
@@ -169,8 +181,8 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		public String[] getDamageKeys(String damageName) {
 			return new String[] {
 					"death.attack." + damageName,
-					"death.attack." + damageName + ".player",
-					"death.attack." + damageName + ".item"
+					"death.attack." + damageName + ".item",
+					"death.attack." + damageName + ".player"
 			};
 		}
 	}
@@ -187,9 +199,14 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		public void accept(BiConsumer<Identifier, LootTable.Builder> consumer) {
 			this.dataGen.generateLootTables(this, consumer);
 		}
+
+		public LootTable.Builder makeItemWithRange(ItemConvertible item, int min, int max) {
+			return LootTable.builder().pool(LootPool.builder().rolls(ConstantLootNumberProvider.create(1.0F)).with(ItemEntry.builder(item).apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(min, max)))));
+		}
 	}
 
 	protected static class MModelProvider extends FabricModelProvider {
+		public static final Model SPAWN_EGG = new Model(Optional.of(new Identifier("item/template_spawn_egg")), Optional.empty());
 		private final MDataGen dataGen;
 
 		public MModelProvider(MDataGen gen, FabricDataOutput output) {
@@ -360,7 +377,7 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		private final DataOutput.PathResolver pathResolver;
         private final CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture;
 
-		public MFlatLevelGeneratorPresetProvider(MDataGen gen, FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+		public MFlatLevelGeneratorPresetProvider(MDataGen gen, @NotNull FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
 			this.dataGen = gen;
             this.registriesFuture = registriesFuture;
 			this.pathResolver = output.getResolver(DataOutput.OutputType.DATA_PACK, "worldgen/flat_level_generator_preset");

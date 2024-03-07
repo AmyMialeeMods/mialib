@@ -1,6 +1,5 @@
 package xyz.amymialee.mialib.mixin.client;
 
-import com.google.common.base.MoreObjects;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -67,7 +66,8 @@ public abstract class GameOptionsMixin {
 
                 @Override
                 public String visitString(String key, String current) {
-                    return MoreObjects.firstNonNull(this.find(key), current);
+                    var string = this.find(key);
+                    return string != null ? string : current;
                 }
 
                 @Override

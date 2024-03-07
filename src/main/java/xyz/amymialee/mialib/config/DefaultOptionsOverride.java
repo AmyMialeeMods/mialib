@@ -1,6 +1,7 @@
 package xyz.amymialee.mialib.config;
 
 import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.util.MDir;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -11,12 +12,16 @@ import java.util.Map;
 /**
  * Default Options Overrides are read from %APPDATA%/.mialib/defaultoptions.yaml
  * These will override unset options, allowing for skipping basic setup steps.
+ * They will never be written to by the mod and can only be changed manually by the user.
  */
 public class DefaultOptionsOverride {
     private static final Map<String, String> defaultOverrides = new HashMap<>();
 
+    /**
+     * Load the default options from the defaultoptions.yaml file in the %APPDATA%/.mialib/ directory.
+     */
     public static void loadConfig() {
-        var mialibFile = MialibDir.getMialibFile("defaultoptions.yaml");
+        var mialibFile = MDir.getMialibFile("defaultoptions.yaml");
         try (var reader = new BufferedReader(new FileReader(mialibFile))) {
             String line;
             while ((line = reader.readLine()) != null) {

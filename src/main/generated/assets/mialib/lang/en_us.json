@@ -1,4 +1,10 @@
 {
+  "commands.mialib.immortal.disabled.multiple": "§7Immortality §cdisabled§7 for %s",
+  "commands.mialib.immortal.disabled.self": "§7Immortality §cdisabled§7 for self",
+  "commands.mialib.immortal.disabled.single": "§7Immortality §cdisabled§7 for %s",
+  "commands.mialib.immortal.enabled.multiple": "§7Immortality §aenabled§7 for %s",
+  "commands.mialib.immortal.enabled.self": "§7Immortality §aenabled§7 for self",
+  "commands.mialib.immortal.enabled.single": "§7Immortality §aenabled§7 for %s",
   "commands.mialib.indestructible.disabled.multiple": "§7Indestructibility §cdisabled§7 for %s",
   "commands.mialib.indestructible.disabled.self": "§7Indestructibility §cdisabled§7 for self",
   "commands.mialib.indestructible.disabled.single": "§7Indestructibility §cdisabled§7 for %s",

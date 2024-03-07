@@ -12,6 +12,9 @@ import xyz.amymialee.mialib.MiaLib;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Stores cooldowns tied to identifiers.
+ */
 public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingComponent {
 	private final PlayerEntity player;
 	private final Map<Identifier, Entry> cooldowns = new HashMap<>();
@@ -19,10 +22,6 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 
 	public IdCooldownComponent(PlayerEntity player) {
 		this.player = player;
-	}
-
-	public static @NotNull IdCooldownComponent get(PlayerEntity player) {
-		return MiaLib.ID_COOLDOWN_COMPONENT.get(player);
 	}
 
 	public void sync() {
@@ -44,6 +43,9 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 		return this.cooldowns.containsKey(id);
 	}
 
+	/**
+	 * @return Number of ticks remaining on the cooldown.
+	 */
 	public int getCooldown(Identifier id) {
 		var entry = this.cooldowns.get(id);
 		if (entry == null) {
@@ -52,6 +54,9 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 		return entry.endTick - entry.startTick;
 	}
 
+	/**
+	 * @return A value between 0.0 and 1.0 representing the cooldown progress.
+	 */
 	public float getCooldown(Identifier id, float tickDelta) {
 		if (!this.cooldowns.containsKey(id)) {
 			return 0.0f;
@@ -86,7 +91,7 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
+	public void writeToNbt(@NotNull NbtCompound tag) {
 		tag.putInt("tick", this.tick);
 		var compound = new NbtCompound();
 		for (var id : this.cooldowns.keySet()) {

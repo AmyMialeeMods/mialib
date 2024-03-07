@@ -5,7 +5,10 @@ import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.enchantment.ProtectionEnchantment;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.TntEntity;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,27 +20,36 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.amymialee.mialib.MiaLib;
 import xyz.amymialee.mialib.util.QuadConsumer;
+import xyz.amymialee.mialib.util.QuinConsumer;
 import xyz.amymialee.mialib.util.TriConsumer;
 import xyz.amymialee.mialib.util.TriFunction;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.*;
 
+import static net.minecraft.world.explosion.Explosion.getExposure;
+
+@SuppressWarnings("unused")
 public class Detonation {
-    public static final Detonation CREEPER = new Detonation().setDestructionRadius(() -> 3d).setEntityRadius(() -> 3d).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 6f).seal();
-    public static final Detonation TNT = new Detonation().setDestructionRadius(() -> 4d).setEntityRadius(() -> 4d).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 8f).seal();
-    public static final Detonation CHARGED_CREEPER = new Detonation().setDestructionRadius(() -> 6d).setEntityRadius(() -> 6d).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 10f).seal();
-    public static final Detonation END_CRYSTAL = new Detonation().setDestructionRadius(() -> 6d).setEntityRadius(() -> 6d).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 12f).seal();
+    public static final Detonation CREEPER = new Detonation().setDestructionRadius(() -> 3d).setEntityRadius(() -> 3d * 2 + 1).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 3f * 14f).seal();
+    public static final Detonation TNT = new Detonation().setDestructionRadius(() -> 4d).setEntityRadius(() -> 4d * 2 + 1).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 4f * 14f).seal();
+    public static final Detonation CHARGED_CREEPER = new Detonation().setDestructionRadius(() -> 6d).setEntityRadius(() -> 6d * 2 + 1).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 6f * 14f).seal();
+    public static final Detonation END_CRYSTAL = new Detonation().setDestructionRadius(() -> 6d).setEntityRadius(() -> 6d * 2 + 1).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 6f * 14f).seal();
+    private static final double GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
     /**
      * Formula for entity interaction falloff
      * Always returns a value between 0 and 1
@@ -85,10 +97,11 @@ public class Detonation {
     /**
      * Damages entities in the detonation.
      */
-    protected QuadConsumer<Double, Entity, Entity, Entity> damageEntity = (distance, target, attacker, projectile) -> {
-        var damage = this.damage.get() * this.falloff.apply(distance, this.entityRadius.get());
-        if (damage > 0) {
-            target.damage(target.getDamageSources().create(this.damageType.apply(distance), attacker, projectile), (float) damage);
+    protected QuinConsumer<Double, Vec3d, Entity, Entity, Entity> damageEntity = (distance, pos, target, attacker, projectile) -> {
+        if (!target.isImmuneToExplosion()) {
+            var falloff = this.falloff.apply(distance, this.entityRadius.get()) * getExposure(pos, target);
+            var damage = (float) ((falloff * falloff + falloff) / this.damage.get() + 1.0);
+            target.damage(target.getDamageSources().create(this.damageType.apply(distance), attacker, projectile), damage);
         }
     };
     /**
@@ -202,12 +215,12 @@ public class Detonation {
         return this.entityPredicate.test(entity);
     }
 
-    public QuadConsumer<Double, Entity, Entity, Entity> getDamageEntityAction() {
+    public QuinConsumer<Double, Vec3d, Entity, Entity, Entity> getDamageEntityAction() {
         return this.damageEntity;
     }
 
-    public void applyDamageToEntity(double distance, Entity target, Entity attacker, Entity projectile) {
-        this.damageEntity.accept(distance, target, attacker, projectile);
+    public void applyDamageToEntity(double distance, Vec3d explosionPos, Entity target, Entity attacker, Entity projectile) {
+        this.damageEntity.accept(distance, explosionPos, target, attacker, projectile);
     }
 
     public TriConsumer<Double, Vec3d, Entity> getPushbackEntityAction() {
@@ -408,7 +421,7 @@ public class Detonation {
         return this;
     }
 
-    public Detonation setEntityDamageAction(QuadConsumer<Double, Entity, Entity, Entity> damageEntity) {
+    public Detonation setEntityDamageAction(QuinConsumer<Double, Vec3d, Entity, Entity, Entity> damageEntity) {
         if (this.sealed) {
             MiaLib.LOGGER.error("Tried to set entity damage action on a sealed detonation");
             return this;
@@ -454,6 +467,10 @@ public class Detonation {
     }
 
     public Detonation seal() {
+        if (this.sealed) {
+            MiaLib.LOGGER.error("Tried to seal an already sealed detonation");
+            return this;
+        }
         this.sealed = true;
         return this;
     }
@@ -491,41 +508,30 @@ public class Detonation {
         var destructionRadius = this.getDestructionRadius();
         if (destructionRadius > 0) {
             var affectedBlocks = new HashMap<BlockPos, BlockState>();
-            for (var i = 0; i < destructionRadius * 4; i++) {
-                for (var j = 0; j < destructionRadius * 4; j++) {
-                    for (var k = 0; k < destructionRadius * 4; k++) {
-                        if (i == 0 || i == 15 || j == 0 || j == 15 || k == 0 || k == 15) {
-                            double d = (float) i / 15.0f * 2.0f - 1.0f;
-                            double e = (float) j / 15.0f * 2.0f - 1.0f;
-                            double f = (float) k / 15.0f * 2.0f - 1.0f;
-                            var g = Math.sqrt(d * d + e * e + f * f);
-                            d /= g;
-                            e /= g;
-                            f /= g;
-                            var m = pos.x;
-                            var n = pos.y;
-                            var o = pos.z;
-                            for (var h = destructionRadius * (0.7f + world.random.nextFloat() * 0.6f); 0.0f < h; h -= 0.225f) {
-                                var blockPos = new BlockPos((int) m, (int) n, (int) o);
-                                if (!world.isInBuildLimit(blockPos)) break;
-                                var distance = pos.distanceTo(Vec3d.ofCenter(blockPos));
-                                var blockState = world.getBlockState(blockPos);
-                                var fluidState = world.getFluidState(blockPos);
-                                if (!blockState.isAir() || !fluidState.isEmpty()) {
-                                    h -= Math.max(blockState.getBlock().getBlastResistance(), fluidState.getBlastResistance()) * (1 - this.getSoftening(distance));
-                                }
-                                if (h > 0.0f) {
-                                    if (!affectedBlocks.containsKey(blockPos)) affectedBlocks.put(blockPos, this.getReplacementBlock(world, blockPos, pos));
-                                }
-                                m += d * (double) 0.3f;
-                                n += e * (double) 0.3f;
-                                o += f * (double) 0.3f;
-                            }
-                        }
+            var rays = distributeRays(destructionRadius);
+            var rayPotency = rays.size() / 1408f;
+            for (var ray : rays) {
+                var m = pos.x;
+                var n = pos.y;
+                var o = pos.z;
+                for (var h = destructionRadius * (0.7f + world.random.nextFloat() * 0.6f); h > 0.0f; h -= 0.225f) {
+                    var blockPos = new BlockPos((int) m, (int) n, (int) o);
+                    if (!world.isInBuildLimit(blockPos)) break;
+                    var blockState = world.getBlockState(blockPos);
+                    var fluidState = world.getFluidState(blockPos);
+                    if (!blockState.isAir() || !fluidState.isEmpty()) {
+                        h -= (Math.max(blockState.getBlock().getBlastResistance(), fluidState.getBlastResistance()) * (1 - this.getSoftening(pos.distanceTo(Vec3d.ofCenter(blockPos)))) + 0.3f) * rayPotency * 0.3f;
                     }
+                    if (h > 0.0f && !affectedBlocks.containsKey(blockPos)) {
+                        affectedBlocks.put(blockPos, this.getReplacementBlock(world, blockPos, pos));
+                    }
+                    m += ray.x * (double) 0.3f;
+                    n += ray.y * (double) 0.3f;
+                    o += ray.z * (double) 0.3f;
                 }
             }
             DETONATION_DESTRUCTION.invoker().modifyInteractions(world, pos, this, affectedBlocks);
+            var tool = owner instanceof LivingEntity living ? living.getMainHandStack() : ItemStack.EMPTY;
             for (var pair : affectedBlocks.entrySet()) {
                 var blockPos = pair.getKey();
                 var distance = pos.distanceTo(Vec3d.ofCenter(blockPos));
@@ -535,9 +541,9 @@ public class Detonation {
                     var blockEntity = blockState.hasBlockEntity() ? world.getBlockEntity(blockPos) : null;
                     var builder = new LootContextParameterSet.Builder(world)
                             .add(LootContextParameters.ORIGIN, Vec3d.ofCenter(blockPos))
-                            .add(LootContextParameters.TOOL, ItemStack.EMPTY)
-                            .addOptional(LootContextParameters.BLOCK_ENTITY, blockEntity)
-                            .addOptional(LootContextParameters.THIS_ENTITY, owner);
+                            .addOptional(LootContextParameters.TOOL, tool)
+                            .addOptional(LootContextParameters.THIS_ENTITY, owner)
+                            .addOptional(LootContextParameters.BLOCK_ENTITY, blockEntity);
                     blockState.onStacksDropped(world, blockPos, ItemStack.EMPTY, owner instanceof PlayerEntity);
                     blockState.getDroppedStacks(builder).forEach(stack -> Block.dropStack(world, blockPos, stack));
                     world.setBlockState(blockPos, replacement, Block.NOTIFY_ALL);
@@ -545,19 +551,61 @@ public class Detonation {
             }
         }
         var entityRadius = this.getEntityRadius();
-        var entities = world.getOtherEntities(null, Box.of(pos, entityRadius * 2, entityRadius * 2, entityRadius * 2), this.entityPredicate);
+        var entities = world.getOtherEntities(null, Box.of(pos, entityRadius, entityRadius, entityRadius), this.getEntityPredicate());
         for (var entity : entities) {
             var distance = pos.distanceTo(entity.getPos());
-            this.applyDamageToEntity(distance, entity, owner, projectile);
+            this.applyDamageToEntity(distance, pos, entity, owner, projectile);
             this.applyEntityPushback(distance, pos, entity);
             this.applyEntityEffects(distance, pos, entity);
         }
     }
 
-    public static final Event<DetonationDestructionCallback> DETONATION_DESTRUCTION = EventFactory.createArrayBacked(DetonationDestructionCallback.class, callbacks -> (world, pos, detonation, blocks) -> {
-        for (var callback : callbacks) {
-            callback.modifyInteractions(world, pos, detonation, blocks);
+    public static @NotNull List<Vec3d> distributeRays(double explosionRadius) {
+        var numberOfRays = 256 * explosionRadius;
+        var rays = new ArrayList<Vec3d>();
+        for (var i = 0; i < numberOfRays; i++) {
+            var y = 1 - (i / (numberOfRays - 1)) * 2;
+            var radius = Math.sqrt(1 - y * y);
+            var theta = GOLDEN_ANGLE * i;
+            var x = Math.cos(theta) * radius;
+            var z = Math.sin(theta) * radius;
+            rays.add(new Vec3d(x, y, z).normalize());
         }
+        return rays;
+    }
+
+    public static float getExposure(Vec3d source, @NotNull Entity entity) {
+        var box = entity.getBoundingBox();
+        var d = 1.0 / ((box.maxX - box.minX) * 2.0 + 1.0);
+        var e = 1.0 / ((box.maxY - box.minY) * 2.0 + 1.0);
+        var f = 1.0 / ((box.maxZ - box.minZ) * 2.0 + 1.0);
+        var g = (1.0 - Math.floor(1.0 / d) * d) / 2.0;
+        var h = (1.0 - Math.floor(1.0 / f) * f) / 2.0;
+        if (!(d < 0.0) && !(e < 0.0) && !(f < 0.0)) {
+            var i = 0;
+            var j = 0;
+            for (var k = 0.0; k <= 1.0; k += d) {
+                for (var l = 0.0; l <= 1.0; l += e) {
+                    for (var m = 0.0; m <= 1.0; m += f) {
+                        var n = MathHelper.lerp(k, box.minX, box.maxX);
+                        var o = MathHelper.lerp(l, box.minY, box.maxY);
+                        var p = MathHelper.lerp(m, box.minZ, box.maxZ);
+                        var vec3d = new Vec3d(n + g, o, p + h);
+                        if (entity.getWorld().raycast(new RaycastContext(vec3d, source, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, entity)).getType() == HitResult.Type.MISS) {
+                            i++;
+                        }
+                        j++;
+                    }
+                }
+            }
+            return (float) i / (float) j;
+        } else {
+            return 0.0F;
+        }
+    }
+
+    public static final Event<DetonationDestructionCallback> DETONATION_DESTRUCTION = EventFactory.createArrayBacked(DetonationDestructionCallback.class, callbacks -> (world, pos, detonation, blocks) -> {
+        for (var callback : callbacks) callback.modifyInteractions(world, pos, detonation, blocks);
     });
 
     @FunctionalInterface

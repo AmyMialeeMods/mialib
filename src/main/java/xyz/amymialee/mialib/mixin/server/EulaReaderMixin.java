@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.amymialee.mialib.MiaLib;
-import xyz.amymialee.mialib.config.MialibDir;
 import xyz.amymialee.mialib.config.MialibProperties;
+import xyz.amymialee.mialib.util.MDir;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,7 +39,7 @@ public abstract class EulaReaderMixin {
             var accepted = false;
             if (MialibProperties.eulaAccepted.get()) {
                 accepted = true;
-                MiaLib.LOGGER.info("Automatically agreed to the Minecraft EULA (https://aka.ms/MinecraftEULA) using saved value in %s.".formatted(MialibDir.getMialibPath("mialib.yaml")));
+                MiaLib.LOGGER.info("Automatically agreed to the Minecraft EULA (https://aka.ms/MinecraftEULA) using saved value in %s.".formatted(MDir.getMialibPath("mialib.yaml")));
             }
             if (!accepted) {
                 MiaLib.LOGGER.info("Enter \"true\" to agree to the Minecraft EULA (https://aka.ms/MinecraftEULA).");
