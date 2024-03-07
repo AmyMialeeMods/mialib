@@ -17,7 +17,6 @@
     "PlayerEntityMixin",
     "RecipeManagerMixin",
     "ServerRecipeBookMixin",
-    "SharedConstantsMixin",
     "interfaces.ItemEntityMixin",
     "interfaces.ItemGroupMixin",
     "interfaces.ItemMixin",
