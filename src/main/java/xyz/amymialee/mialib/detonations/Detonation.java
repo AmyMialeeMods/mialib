@@ -5,10 +5,8 @@ import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.enchantment.ProtectionEnchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.TntEntity;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,7 +28,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.amymialee.mialib.MiaLib;
-import xyz.amymialee.mialib.util.QuadConsumer;
 import xyz.amymialee.mialib.util.QuinConsumer;
 import xyz.amymialee.mialib.util.TriConsumer;
 import xyz.amymialee.mialib.util.TriFunction;
@@ -41,14 +38,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.*;
 
-import static net.minecraft.world.explosion.Explosion.getExposure;
-
 @SuppressWarnings("unused")
 public class Detonation {
+    public static final Detonation GHAST_FIREBALL = new Detonation().setDestructionRadius(() -> 1d).setEntityRadius(() -> 3d).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 14f).seal(); //TODO: Needs Fire
+    public static final Detonation WITHER_SKULL = new Detonation().setDestructionRadius(() -> 1d).setEntityRadius(() -> 3d).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 14f).seal(); //TODO: Needs Wither
     public static final Detonation CREEPER = new Detonation().setDestructionRadius(() -> 3d).setEntityRadius(() -> 3d * 2 + 1).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 3f * 14f).seal();
     public static final Detonation TNT = new Detonation().setDestructionRadius(() -> 4d).setEntityRadius(() -> 4d * 2 + 1).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 4f * 14f).seal();
+    public static final Detonation BED = new Detonation().setDestructionRadius(() -> 5d).setEntityRadius(() -> 5d * 2 + 1).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 5f * 14f).seal(); //TODO: Needs Fire
+    public static final Detonation RESPAWN_ANCHOR = new Detonation().setDestructionRadius(() -> 5d).setEntityRadius(() -> 5d * 2 + 1).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 5f * 14f).seal(); //TODO: Needs Fire
     public static final Detonation CHARGED_CREEPER = new Detonation().setDestructionRadius(() -> 6d).setEntityRadius(() -> 6d * 2 + 1).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 6f * 14f).seal();
     public static final Detonation END_CRYSTAL = new Detonation().setDestructionRadius(() -> 6d).setEntityRadius(() -> 6d * 2 + 1).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 6f * 14f).seal();
+    public static final Detonation WITHER_SPAWN = new Detonation().setDestructionRadius(() -> 7d).setEntityRadius(() -> 7d * 2 + 1).setHorizontalPushback(() -> 1d).setVerticalPushback(() -> 1d).setDamage(() -> 7f * 14f).seal();
     private static final double GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
     /**
      * Formula for entity interaction falloff
