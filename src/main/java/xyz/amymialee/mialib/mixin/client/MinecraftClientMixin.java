@@ -5,7 +5,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.GameOptions;
 import org.jetbrains.annotations.Nullable;
@@ -15,10 +14,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import xyz.amymialee.mialib.MiaLib;
-import xyz.amymialee.mialib.config.MialibProperties;
-
-import java.util.List;
-import java.util.function.Function;
 
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {
@@ -28,11 +23,11 @@ public class MinecraftClientMixin {
 	@Unique private boolean mialib$holding = false;
 	@Unique private boolean mialib$using = false;
 
-	@WrapOperation(method = "createInitScreens", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0))
-	private boolean mialib$skipNarrator(List<Function<Runnable, Screen>> instance, Object screen, Operation<Boolean> original) {
-		if (MialibProperties.skipNarrator.get()) return false;
-		return original.call(instance, screen);
-	}
+//	@WrapOperation(method = "createInitScreens", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0))
+//	private boolean mialib$skipNarrator(List<Function<Runnable, Screen>> instance, Object screen, Operation<Boolean> original) {
+//		if (MialibProperties.skipNarrator.get()) return false;
+//		return original.call(instance, screen);
+//	}
 
 	@WrapOperation(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V"))
 	private void mialib$holding(MinecraftClient instance, boolean bl, Operation<Void> original) {
