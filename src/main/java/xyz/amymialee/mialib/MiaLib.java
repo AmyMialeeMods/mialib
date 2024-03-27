@@ -44,6 +44,12 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
     public static final TagKey<Item> UNCRAFTABLE = TagKey.of(Registries.ITEM.getKey(), id("uncraftable"));
     public static final TagKey<Item> UNBREAKABLE = TagKey.of(Registries.ITEM.getKey(), id("unbreakable"));
 
+    // MValue Ideas
+    // Fire Aspect Auto Smelt
+    // Piglin Nether Portal Spawning Toggle
+    // Nether Portal Functionality Toggle
+    // End Portal Functionality Toggle
+
     @Override
     public void onInitialize() {
         CommandRegistrationCallback.EVENT.register((dispatcher, reg, env) -> {

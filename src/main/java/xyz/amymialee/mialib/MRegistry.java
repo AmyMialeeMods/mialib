@@ -36,6 +36,7 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.StatType;
@@ -113,6 +114,14 @@ public class MRegistry {
 	}
 
 	@SafeVarargs
+	public final Item registerItem(String path, Item item, RegistryKey<ItemGroup> @NotNull ... groups) {
+		for (var group : groups) {
+			this.addToItemGroup(Registries.ITEM_GROUP.get(group), content -> content.add(item));
+		}
+		return this.register(path, item);
+	}
+
+	@SafeVarargs
 	public final Item registerItem(String path, Item item, Consumer<Item> @NotNull ... groups) {
 		for (var group : groups) {
 			this.itemGroupRegistrations.add(() -> group.accept(item));
@@ -125,6 +134,13 @@ public class MRegistry {
 	}
 
 	public Block registerBlockWithItem(String path, Block block, ItemGroup @NotNull ... groups) {
+		this.register(path, block);
+		this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups);
+		return block;
+	}
+
+	@SafeVarargs
+	public final Block registerBlockWithItem(String path, Block block, RegistryKey<ItemGroup> @NotNull ... groups) {
 		this.register(path, block);
 		this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups);
 		return block;
