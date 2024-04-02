@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.util;
+package xyz.amymialee.mialib.util.runnables;
 
 @FunctionalInterface
 public interface QuadFunction<A, B, C, D, E> {

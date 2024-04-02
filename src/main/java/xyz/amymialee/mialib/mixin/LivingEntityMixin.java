@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.amymialee.mialib.MiaLib;
 import xyz.amymialee.mialib.MiaLibEvents;
 
 @Mixin(LivingEntity.class)
@@ -27,14 +26,8 @@ public abstract class LivingEntityMixin extends Entity {
         super(type, world);
     }
 
-    @WrapOperation(method = "tickStatusEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V"))
-    private void mialib$noParticles(World instance, ParticleEffect parameters, double x, double y, double z, double velocityX, double velocityY, double velocityZ, @NotNull Operation<Void> original) {
-        if (MiaLib.EXTRA_FLAGS.get(this).isImperceptible()) return;
-        original.call(instance, parameters, x, y, z, velocityX, velocityY, velocityZ);
-    }
-
     @Inject(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isSleeping()Z"), cancellable = true)
-    protected void mialib$modifyDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir, @Local(ordinal = 0) LocalFloatRef amountLocal) {
+    protected void mialib$modifyDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir, @Local(ordinal = 0, argsOnly = true) LocalFloatRef amountLocal) {
         if (this.blockedByShield(source)) {
             return;
         }
@@ -44,5 +37,11 @@ public abstract class LivingEntityMixin extends Entity {
         } else {
             cir.setReturnValue(false);
         }
+    }
+
+    @WrapOperation(method = "tickStatusEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V"))
+    private void mialib$noParticles(World instance, ParticleEffect parameters, double x, double y, double z, double velocityX, double velocityY, double velocityZ, @NotNull Operation<Void> original) {
+        if (this.mialib$isImperceptible()) return;
+        original.call(instance, parameters, x, y, z, velocityX, velocityY, velocityZ);
     }
 }

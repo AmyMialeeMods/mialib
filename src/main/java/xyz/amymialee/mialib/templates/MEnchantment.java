@@ -8,9 +8,9 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemStack;
-import xyz.amymialee.mialib.util.QuadConsumer;
-import xyz.amymialee.mialib.util.QuadFunction;
-import xyz.amymialee.mialib.util.TriFunction;
+import xyz.amymialee.mialib.util.runnables.QuadConsumer;
+import xyz.amymialee.mialib.util.runnables.QuadFunction;
+import xyz.amymialee.mialib.util.runnables.TriFunction;
 
 import java.util.function.BiFunction;
 

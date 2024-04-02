@@ -38,10 +38,10 @@
     "cardinal-components": [
       "mialib:identifier_cooldown",
       "mialib:holding",
-      "mialib:extra_flags",
-      "mialib:mvalue_manager"
+      "mialib:extra_flags"
     ],
     "loom:injected_interfaces": {
+      "net/minecraft/class_1297": ["xyz/amymialee/mialib/interfaces/MEntity"],
       "net/minecraft/class_1792": ["xyz/amymialee/mialib/interfaces/MItem"],
       "net/minecraft/class_1542": ["xyz/amymialee/mialib/interfaces/MItemEntity"],
       "net/minecraft/class_1761": ["xyz/amymialee/mialib/interfaces/MItemGroup"],

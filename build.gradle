@@ -13,7 +13,7 @@ group = project.maven_group
 repositories {
     maven {
         description = "Maven for Cardinal Components"
-        url = "https://maven.ladysnake.org/releases"
+        url = "https://maven.ladysnake.org/releases/"
     }
     maven {
         description = "Maven for ModMenu and EMI"

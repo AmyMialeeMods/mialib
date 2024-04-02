@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.util;
+package xyz.amymialee.mialib.util.runnables;
 
 import org.jetbrains.annotations.NotNull;
 

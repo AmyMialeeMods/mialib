@@ -36,6 +36,19 @@ public class MiaLibDataGen extends MDataGen {
                 builder.add("commands.mialib.immortal." + enabled.getLeft() + "." + single.getLeft(), "§7Immortality " + enabled.getRight() + "§7 for " + single.getRight());
             }
         }
+        builder.add("mialib.screen.mvalues", "Mialib Value Editor");
+        builder.add("mialib.screen.mvalues.page", "Page %2d/%2d");
+        builder.add(MiaLib.MIALIB_CATEGORY.getTranslationKey(), "Mialib");
+        builder.add(MiaLib.CREATIVE_NO_SLEEP.getTranslationKey(), "Creative No Sleep");
+        builder.add(MiaLib.CREATIVE_NO_SLEEP.getDescriptionTranslationKey(), "Creative players don't need to sleep to skip the night");
+        builder.add(MiaLib.FIRE_ASPECT_AUTO_SMELT.getTranslationKey(), "Fire Aspect Auto Smelt");
+        builder.add(MiaLib.FIRE_ASPECT_AUTO_SMELT.getDescriptionTranslationKey(), "Fire Aspect smelts broken blocks");
+        builder.add(MiaLib.DISABLE_PIGLIN_PORTAL_SPAWNING.getTranslationKey(), "Disable Piglin Spawning");
+        builder.add(MiaLib.DISABLE_PIGLIN_PORTAL_SPAWNING.getDescriptionTranslationKey(), "Disables piglins spawning from nether portals");
+        builder.add(MiaLib.DISABLE_NETHER_PORTALS.getTranslationKey(), "Disable Nether Portals");
+        builder.add(MiaLib.DISABLE_NETHER_PORTALS.getDescriptionTranslationKey(), "Disables nether portals");
+        builder.add(MiaLib.DISABLE_END_PORTALS.getTranslationKey(), "Disable End Portals");
+        builder.add(MiaLib.DISABLE_END_PORTALS.getDescriptionTranslationKey(), "Disables end portals");
     }
 
     @Override

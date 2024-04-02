@@ -10,11 +10,14 @@ import dev.onyxstudios.cca.api.v3.scoreboard.ScoreboardComponentInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.Vec3ArgumentType;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.command.CommandManager;
@@ -28,6 +31,9 @@ import xyz.amymialee.mialib.cca.ExtraFlagsComponent;
 import xyz.amymialee.mialib.cca.HoldingComponent;
 import xyz.amymialee.mialib.cca.IdCooldownComponent;
 import xyz.amymialee.mialib.detonations.Detonation;
+import xyz.amymialee.mialib.mvalues.MValue;
+import xyz.amymialee.mialib.mvalues.MValueCategory;
+import xyz.amymialee.mialib.mvalues.MValueManager;
 
 import java.util.Optional;
 
@@ -43,12 +49,13 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
     public static final TagKey<Item> UNDESTROYABLE = TagKey.of(Registries.ITEM.getKey(), id("damage_immune"));
     public static final TagKey<Item> UNCRAFTABLE = TagKey.of(Registries.ITEM.getKey(), id("uncraftable"));
     public static final TagKey<Item> UNBREAKABLE = TagKey.of(Registries.ITEM.getKey(), id("unbreakable"));
-
-    // MValue Ideas
-    // Fire Aspect Auto Smelt
-    // Piglin Nether Portal Spawning Toggle
-    // Nether Portal Functionality Toggle
-    // End Portal Functionality Toggle
+    // MValues
+    public static final MValueCategory MIALIB_CATEGORY = new MValueCategory(id("mialib"), Items.DIAMOND.getDefaultStack(), new Identifier("textures/block/purple_concrete.png"));
+    public static final MValue.MValueBoolean CREATIVE_NO_SLEEP = MValue.ofBoolean(MIALIB_CATEGORY, id("creative_no_sleep"), Items.RED_BED.getDefaultStack(), false);
+    public static final MValue.MValueBoolean FIRE_ASPECT_AUTO_SMELT = MValue.ofBoolean(MIALIB_CATEGORY, id("fire_aspect_auto_smelt"), Items.FIRE_CHARGE.getDefaultStack(), false);
+    public static final MValue.MValueBoolean DISABLE_PIGLIN_PORTAL_SPAWNING = MValue.ofBoolean(MIALIB_CATEGORY, id("disable_piglin_portal_spawning"), Items.GOLD_NUGGET.getDefaultStack(), false);
+    public static final MValue.MValueBoolean DISABLE_NETHER_PORTALS = MValue.ofBoolean(MIALIB_CATEGORY, id("disable_nether_portals"), Items.OBSIDIAN.getDefaultStack(), false);
+    public static final MValue.MValueBoolean DISABLE_END_PORTALS = MValue.ofBoolean(MIALIB_CATEGORY, id("disable_end_portals"), Items.END_PORTAL_FRAME.getDefaultStack(), false);
 
     @Override
     public void onInitialize() {
@@ -72,6 +79,9 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
             if (stack.getItem().mialib$shouldSmelt(world, state, pos, blockEntity, entity, stack)) {
                 return ActionResult.SUCCESS;
             }
+            if (FIRE_ASPECT_AUTO_SMELT.getValue() && entity instanceof LivingEntity living && EnchantmentHelper.getFireAspect(living) > 0) {
+                return ActionResult.SUCCESS;
+            }
             return ActionResult.PASS;
         });
         MiaLibEvents.DAMAGE_PREVENTION.register((entity, source) -> {
@@ -90,6 +100,19 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
                 livingEntity.getMainHandStack().getItem().mialib$killEntity(world, livingEntity.getMainHandStack(), livingEntity, killedEntity);
             }
         });
+        ServerPlayNetworking.registerGlobalReceiver(MValue.MVALUE_SYNC, ((server, player, handler, buf, responseSender) -> {
+            if (!player.hasPermissionLevel(4)) return;
+            var id = buf.readIdentifier();
+            var nbt = buf.readNbt();
+            server.execute(() -> {
+                var mValue = MValueManager.get(id);
+                if (mValue != null) {
+                    mValue.readNbt(nbt);
+                    mValue.syncAll();
+                    MValueManager.saveConfig();
+                }
+            });
+        }));
     }
 
     @Override

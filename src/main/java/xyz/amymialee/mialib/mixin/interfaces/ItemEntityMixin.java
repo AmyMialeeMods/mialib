@@ -24,11 +24,13 @@ public abstract class ItemEntityMixin implements MItemEntity {
         }
     }
 
+    @Override
     @Unique
     public int mialib$getMergeDelay() {
         return this.mergeDelay;
     }
 
+    @Override
     @Unique
     public void mialib$setMergeDelay(int mergeDelay) {
         this.mergeDelay = mergeDelay;

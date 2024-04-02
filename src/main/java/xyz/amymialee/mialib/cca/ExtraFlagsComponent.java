@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.MiaLib;
 import xyz.amymialee.mialib.util.MMath;
-import xyz.amymialee.mialib.util.TriFunction;
+import xyz.amymialee.mialib.util.runnables.TriFunction;
 
 /**
  * <p>
