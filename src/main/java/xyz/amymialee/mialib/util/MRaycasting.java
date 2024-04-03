@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.raycasting;
+package xyz.amymialee.mialib.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;

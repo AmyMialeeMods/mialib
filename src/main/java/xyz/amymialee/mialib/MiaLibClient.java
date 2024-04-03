@@ -12,6 +12,7 @@ import net.minecraft.entity.LivingEntity;
 import xyz.amymialee.mialib.mvalues.MValue;
 import xyz.amymialee.mialib.mvalues.MValueManager;
 import xyz.amymialee.mialib.mvalues.MValueScreen;
+import xyz.amymialee.mialib.templates.MRegistry;
 
 public class MiaLibClient implements ClientModInitializer {
     public static LivingEntity renderingEntityWithItem = null;
@@ -24,7 +25,7 @@ public class MiaLibClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        MRegistry.tryBuildAll("Mialib Client");
+        MRegistry.tryBuildAll("%s Client".formatted(MiaLib.MOD_NAME));
         ClientPlayNetworking.registerGlobalReceiver(MiaLib.id("floaty"), (minecraftClient, playNetworkHandler, packetByteBuf, packetSender) -> {
             var stack = packetByteBuf.readItemStack();
             minecraftClient.execute(() -> minecraftClient.gameRenderer.showFloatingItem(stack));

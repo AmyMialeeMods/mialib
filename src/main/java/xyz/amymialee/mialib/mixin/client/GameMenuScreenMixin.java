@@ -41,7 +41,7 @@ public class GameMenuScreenMixin extends Screen {
     @Inject(method = "initWidgets", at = @At("TAIL"))
     private void mialib$mvalues(CallbackInfo ci, @Share("button") @NotNull LocalRef<ButtonWidget> ref) {
         if (this.client == null || this.client.player == null || !this.client.player.hasPermissionLevel(4)) return;
-        var button = this.addDrawableChild(new ButtonWidget(ref.get().getX() - 20 - 4, ref.get().getY(), 20, 20, Text.translatable("mialib.screen.mvalues"), (b) -> this.client.setScreen(new MValueScreen()), Supplier::get) {
+        var button = this.addDrawableChild(new ButtonWidget(ref.get().getX() - 20 - 4, ref.get().getY(), 20, 20, Text.translatable("%s.screen.mvalues".formatted(MiaLib.MOD_ID)), (b) -> this.client.setScreen(new MValueScreen()), Supplier::get) {
             @Override
             public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
                 super.renderButton(context, mouseX, mouseY, delta);
@@ -51,6 +51,6 @@ public class GameMenuScreenMixin extends Screen {
             @Override
             public void drawMessage(DrawContext context, TextRenderer textRenderer, int color) {}
         });
-        button.setTooltip(Tooltip.of(Text.translatable("mialib.screen.mvalues")));
+        button.setTooltip(Tooltip.of(Text.translatable("%s.screen.mvalues".formatted(MiaLib.MOD_ID))));
     }
 }

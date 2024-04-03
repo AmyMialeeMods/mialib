@@ -25,7 +25,7 @@ public class MialibProperties {
      */
     public static void loadConfig() {
         loaded = true;
-        var mialibFile = MDir.getMialibFile("mialib.yaml");
+        var mialibFile = MDir.getMialibFile("%s.yaml".formatted(MiaLib.MOD_ID));
         try (var reader = new BufferedReader(new FileReader(mialibFile))) {
             String line;
             while ((line = reader.readLine()) != null) {

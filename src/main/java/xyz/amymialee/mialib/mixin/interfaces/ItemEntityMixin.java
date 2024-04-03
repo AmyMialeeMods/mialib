@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.amymialee.mialib.interfaces.MItemEntity;
+import xyz.amymialee.mialib.util.interfaces.MItemEntity;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin implements MItemEntity {

@@ -39,7 +39,7 @@ public abstract class EulaReaderMixin {
             var accepted = false;
             if (MialibProperties.eulaAccepted.get()) {
                 accepted = true;
-                MiaLib.LOGGER.info("Automatically agreed to the Minecraft EULA (https://aka.ms/MinecraftEULA) using saved value in %s.".formatted(MDir.getMialibPath("mialib.yaml")));
+                MiaLib.LOGGER.info("Automatically agreed to the Minecraft EULA (https://aka.ms/MinecraftEULA) using saved value in %s.".formatted(MDir.getMialibPath("%s.yaml".formatted(MiaLib.MOD_ID))));
             }
             if (!accepted) {
                 MiaLib.LOGGER.info("Enter \"true\" to agree to the Minecraft EULA (https://aka.ms/MinecraftEULA).");

@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib;
+package xyz.amymialee.mialib.events;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;

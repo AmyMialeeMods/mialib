@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.interfaces;
+package xyz.amymialee.mialib.util.interfaces;
 
 public interface MEntity {
     default boolean mialib$isImperceptible() {

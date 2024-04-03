@@ -6,7 +6,7 @@ import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import xyz.amymialee.mialib.detonations.Detonation;
-import xyz.amymialee.mialib.interfaces.MWorld;
+import xyz.amymialee.mialib.util.interfaces.MWorld;
 
 @Mixin(ServerWorld.class)
 public class ServerWorldMixin implements MWorld {

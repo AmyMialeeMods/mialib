@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.interfaces;
+package xyz.amymialee.mialib.util.interfaces;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;

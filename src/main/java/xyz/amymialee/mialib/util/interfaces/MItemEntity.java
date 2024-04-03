@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.interfaces;
+package xyz.amymialee.mialib.util.interfaces;
 
 public interface MItemEntity {
     default int mialib$getMergeDelay() {

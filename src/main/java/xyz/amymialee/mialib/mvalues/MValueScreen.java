@@ -35,7 +35,7 @@ public class MValueScreen extends Screen {
     private int mvaluePage = 0;
 
     public MValueScreen() {
-        super(Text.translatable("mialib.screen.mvalues"));
+        super(Text.translatable("%s.screen.mvalues".formatted(MiaLib.MOD_ID)));
     }
 
     @Override
@@ -52,12 +52,12 @@ public class MValueScreen extends Screen {
             this.widgets.add(this.addDrawableChild(MVALUE_WIDGETS.get(value.getClass()).apply(x, y, value)));
         }
         if (list.size() > 12) {
-            this.addDrawableChild(new MValuePageWidget(this.width / 2 - 1, this.height / 2 + 87, true, Text.translatable("mialib.screen.mvalues.page", this.mvaluePage + 1, list.size() / 12 + 1),
+            this.addDrawableChild(new MValuePageWidget(this.width / 2 - 1, this.height / 2 + 87, true, Text.translatable("%s.screen.mvalues.page".formatted(MiaLib.MOD_ID), this.mvaluePage + 1, list.size() / 12 + 1),
                     list.size() <= (1 + this.mvaluePage) * 12 ? null : button -> {
                         this.mvaluePage++;
                         this.clearAndInit();
                     }));
-            this.addDrawableChild(new MValuePageWidget(this.width / 2 - 11, this.height / 2 + 87, false, Text.translatable("mialib.screen.mvalues.page", this.mvaluePage + 1, list.size() / 12 + 1),
+            this.addDrawableChild(new MValuePageWidget(this.width / 2 - 11, this.height / 2 + 87, false, Text.translatable("%s.screen.mvalues.page".formatted(MiaLib.MOD_ID), this.mvaluePage + 1, list.size() / 12 + 1),
                     this.mvaluePage <= 0 ? null : button -> {
                         this.mvaluePage--;
                         this.clearAndInit();
@@ -76,12 +76,12 @@ public class MValueScreen extends Screen {
             }));
         }
         if (categories.size() > 12) {
-            this.addDrawableChild(new MValuePageWidget(this.width / 2 + 174 + 11, this.height / 2 - 76, true, Text.translatable("mialib.screen.mvalues.page", this.selectedCategoryPage + 1, categories.size() / 12 + 1),
+            this.addDrawableChild(new MValuePageWidget(this.width / 2 + 174 + 11, this.height / 2 - 76, true, Text.translatable("%s.screen.mvalues.page".formatted(MiaLib.MOD_ID), this.selectedCategoryPage + 1, categories.size() / 12 + 1),
                     list.size() <= (1 + this.selectedCategoryPage) * 12 ? null : button -> {
                         this.selectedCategoryPage++;
                         this.clearAndInit();
                     }));
-            this.addDrawableChild(new MValuePageWidget(this.width / 2 + 174 + 1, this.height / 2 - 76, false, Text.translatable("mialib.screen.mvalues.page", this.selectedCategoryPage + 1, categories.size() / 12 + 1),
+            this.addDrawableChild(new MValuePageWidget(this.width / 2 + 174 + 1, this.height / 2 - 76, false, Text.translatable("%s.screen.mvalues.page".formatted(MiaLib.MOD_ID), this.selectedCategoryPage + 1, categories.size() / 12 + 1),
                     this.selectedCategoryPage <= 0 ? null : button -> {
                         this.selectedCategoryPage--;
                         this.clearAndInit();
@@ -95,6 +95,7 @@ public class MValueScreen extends Screen {
 
     @Override
     public void render(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
+        this.renderBackground(context);
         context.getMatrices().push();
         context.enableScissor(this.width / 2 - 194, this.height / 2 - 62, this.width / 2 + 194, this.height / 2 + 88);
         for (var x = 0; x <= this.width; x += 16) {

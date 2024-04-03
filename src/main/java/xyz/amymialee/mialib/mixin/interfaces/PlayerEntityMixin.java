@@ -7,7 +7,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import xyz.amymialee.mialib.MiaLib;
-import xyz.amymialee.mialib.interfaces.MPlayerEntity;
+import xyz.amymialee.mialib.util.interfaces.MPlayerEntity;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends Entity implements MPlayerEntity {

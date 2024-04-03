@@ -13,7 +13,7 @@ import net.minecraft.world.gen.FlatLevelGeneratorPreset;
 import net.minecraft.world.gen.FlatLevelGeneratorPresets;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
 import org.jetbrains.annotations.NotNull;
-import xyz.amymialee.mialib.data.MDataGen;
+import xyz.amymialee.mialib.templates.MDataGen;
 
 import java.util.function.Consumer;
 
@@ -31,14 +31,14 @@ public class MiaLibDataGen extends MDataGen {
         builder.add(provider.getTagTranslationKey(MiaLib.UNBREAKABLE), "Unbreakable");
         for (var single : new Pair[]{new Pair<>("self", "self"), new Pair<>("single", "%s entity"), new Pair<>("multiple", "%s entities")}) {
             for (var enabled : new Pair[]{new Pair<>("enabled", "§aenabled"), new Pair<>("disabled", "§cdisabled")}) {
-                builder.add("commands.mialib.vanish." + enabled.getLeft() + "." + single.getLeft(), "§7Vanish " + enabled.getRight() + "§7 for " + single.getRight());
-                builder.add("commands.mialib.indestructible." + enabled.getLeft() + "." + single.getLeft(), "§7Indestructibility " + enabled.getRight() + "§7 for " + single.getRight());
-                builder.add("commands.mialib.immortal." + enabled.getLeft() + "." + single.getLeft(), "§7Immortality " + enabled.getRight() + "§7 for " + single.getRight());
+                builder.add("commands.%s.vanish.%s.%s".formatted(MiaLib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Vanish %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
+                builder.add("commands.%s.indestructible.%s.%s".formatted(MiaLib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Indestructibility %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
+                builder.add("commands.%s.immortal.%s.%s".formatted(MiaLib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Immortality %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
             }
         }
-        builder.add("mialib.screen.mvalues", "Mialib Value Editor");
-        builder.add("mialib.screen.mvalues.page", "Page %2d/%2d");
-        builder.add(MiaLib.MIALIB_CATEGORY.getTranslationKey(), "Mialib");
+        builder.add("%s.screen.mvalues".formatted(MiaLib.MOD_ID), "%s Value Editor".formatted(MiaLib.MOD_NAME));
+        builder.add("%s.screen.mvalues.page".formatted(MiaLib.MOD_ID), "Page %2d/%2d");
+        builder.add(MiaLib.MIALIB_CATEGORY.getTranslationKey(), MiaLib.MOD_NAME);
         builder.add(MiaLib.CREATIVE_NO_SLEEP.getTranslationKey(), "Creative No Sleep");
         builder.add(MiaLib.CREATIVE_NO_SLEEP.getDescriptionTranslationKey(), "Creative players don't need to sleep to skip the night");
         builder.add(MiaLib.FIRE_ASPECT_AUTO_SMELT.getTranslationKey(), "Fire Aspect Auto Smelt");
@@ -49,6 +49,8 @@ public class MiaLibDataGen extends MDataGen {
         builder.add(MiaLib.DISABLE_NETHER_PORTALS.getDescriptionTranslationKey(), "Disables nether portals");
         builder.add(MiaLib.DISABLE_END_PORTALS.getTranslationKey(), "Disable End Portals");
         builder.add(MiaLib.DISABLE_END_PORTALS.getDescriptionTranslationKey(), "Disables end portals");
+        builder.add("category.%s".formatted(MiaLib.MOD_ID), MiaLib.MOD_NAME);
+        builder.add("key.%s.mvalues".formatted(MiaLib.MOD_ID), "Open %s Value Editor".formatted(MiaLib.MOD_NAME));
     }
 
     @Override

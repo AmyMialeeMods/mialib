@@ -11,6 +11,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.argument.Vec3ArgumentType;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -31,6 +32,7 @@ import xyz.amymialee.mialib.cca.ExtraFlagsComponent;
 import xyz.amymialee.mialib.cca.HoldingComponent;
 import xyz.amymialee.mialib.cca.IdCooldownComponent;
 import xyz.amymialee.mialib.detonations.Detonation;
+import xyz.amymialee.mialib.events.MiaLibEvents;
 import xyz.amymialee.mialib.mvalues.MValue;
 import xyz.amymialee.mialib.mvalues.MValueCategory;
 import xyz.amymialee.mialib.mvalues.MValueManager;
@@ -39,7 +41,8 @@ import java.util.Optional;
 
 public class MiaLib implements ModInitializer, EntityComponentInitializer, ScoreboardComponentInitializer {
     public static final String MOD_ID = "mialib";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static final String MOD_NAME = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow().getMetadata().getName();
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
     // Components
     public static final ComponentKey<IdCooldownComponent> ID_COOLDOWN_COMPONENT = ComponentRegistry.getOrCreate(id("identifier_cooldown"), IdCooldownComponent.class);
     public static final ComponentKey<HoldingComponent> HOLDING = ComponentRegistry.getOrCreate(id("holding"), HoldingComponent.class);
@@ -50,7 +53,7 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
     public static final TagKey<Item> UNCRAFTABLE = TagKey.of(Registries.ITEM.getKey(), id("uncraftable"));
     public static final TagKey<Item> UNBREAKABLE = TagKey.of(Registries.ITEM.getKey(), id("unbreakable"));
     // MValues
-    public static final MValueCategory MIALIB_CATEGORY = new MValueCategory(id("mialib"), Items.DIAMOND.getDefaultStack(), new Identifier("textures/block/purple_concrete.png"));
+    public static final MValueCategory MIALIB_CATEGORY = new MValueCategory(id(MOD_ID), Items.DIAMOND.getDefaultStack(), new Identifier("textures/block/purple_concrete.png"));
     public static final MValue.MValueBoolean CREATIVE_NO_SLEEP = MValue.ofBoolean(MIALIB_CATEGORY, id("creative_no_sleep"), Items.RED_BED.getDefaultStack(), false);
     public static final MValue.MValueBoolean FIRE_ASPECT_AUTO_SMELT = MValue.ofBoolean(MIALIB_CATEGORY, id("fire_aspect_auto_smelt"), Items.FIRE_CHARGE.getDefaultStack(), false);
     public static final MValue.MValueBoolean DISABLE_PIGLIN_PORTAL_SPAWNING = MValue.ofBoolean(MIALIB_CATEGORY, id("disable_piglin_portal_spawning"), Items.GOLD_NUGGET.getDefaultStack(), false);
@@ -61,10 +64,15 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer, Score
     public void onInitialize() {
         CommandRegistrationCallback.EVENT.register((dispatcher, reg, env) -> {
             for (var detonation : new Pair[]{
+                    new Pair<>("ghast_fireball", Detonation.GHAST_FIREBALL),
+                    new Pair<>("wither_skull", Detonation.WITHER_SKULL),
                     new Pair<>("creeper", Detonation.CREEPER),
                     new Pair<>("tnt", Detonation.TNT),
+                    new Pair<>("bed", Detonation.BED),
+                    new Pair<>("respawn_anchor", Detonation.RESPAWN_ANCHOR),
                     new Pair<>("charged_creeper", Detonation.CHARGED_CREEPER),
-                    new Pair<>("end_crystal", Detonation.END_CRYSTAL)}) {
+                    new Pair<>("end_crystal", Detonation.END_CRYSTAL),
+                    new Pair<>("wither_spawn", Detonation.WITHER_SPAWN)}) {
                 dispatcher.register(CommandManager.literal("detonate").requires(source -> source.hasPermissionLevel(2))
                         .then(CommandManager.literal((String) detonation.getLeft()).then(CommandManager.argument("pos", Vec3ArgumentType.vec3())
                                 .executes(context -> {

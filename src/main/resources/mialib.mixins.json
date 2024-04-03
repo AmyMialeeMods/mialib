@@ -34,22 +34,22 @@
     "interfaces.WorldMixin"
   ],
   "client": [
-    "client.ClientPlayerEntityMixin",
     "client.DrawContextMixin",
     "client.EntityRenderDispatcherMixin",
+    "client.GameMenuScreenMixin",
     "client.GameOptionsMixin",
     "client.HeldItemFeatureRendererMixin",
     "client.HeldItemRendererMixin",
     "client.ItemRendererMixin",
     "client.MinecraftClientMixin",
-    "client.GameMenuScreenMixin",
     "client.PlayerEntityRendererMixin",
     "client.ResourcePackManagerMixin",
     "interfaces.ClientWorldMixin"
   ],
   "server": [
     "server.EulaReaderMixin",
-    "server.ResourcePackManagerMixin"
+    "server.ResourcePackManagerMixin",
+    "server.ServerPropertiesHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

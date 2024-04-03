@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.data;
+package xyz.amymialee.mialib.templates;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -38,7 +38,6 @@ import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.gen.FlatLevelGeneratorPreset;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
 import org.jetbrains.annotations.NotNull;
-import xyz.amymialee.mialib.MRegistry;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;

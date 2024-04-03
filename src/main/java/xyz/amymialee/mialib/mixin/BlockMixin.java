@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import xyz.amymialee.mialib.MiaLib;
-import xyz.amymialee.mialib.MiaLibEvents;
+import xyz.amymialee.mialib.events.MiaLibEvents;
 
 import java.util.ArrayList;
 import java.util.List;
