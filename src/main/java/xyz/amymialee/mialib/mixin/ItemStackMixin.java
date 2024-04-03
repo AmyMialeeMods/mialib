@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.modules.ItemModule;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
@@ -19,7 +19,7 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "isDamageable", at = @At("HEAD"), cancellable = true)
     private void mialib$disableDamageable(CallbackInfoReturnable<Boolean> cir) {
-        if (this.isIn(MiaLib.UNBREAKABLE)) {
+        if (this.isIn(ItemModule.UNBREAKABLE)) {
             cir.setReturnValue(false);
         }
     }

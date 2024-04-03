@@ -13,6 +13,7 @@ import net.minecraft.world.gen.FlatLevelGeneratorPreset;
 import net.minecraft.world.gen.FlatLevelGeneratorPresets;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
 import org.jetbrains.annotations.NotNull;
+import xyz.amymialee.mialib.modules.ItemModule;
 import xyz.amymialee.mialib.templates.MDataGen;
 
 import java.util.function.Consumer;
@@ -25,10 +26,10 @@ public class MiaLibDataGen extends MDataGen {
     protected void generateTranslations(@NotNull MLanguageProvider provider, FabricLanguageProvider.@NotNull TranslationBuilder builder) {
         builder.add("flat_world_preset." + DEV_READY.getValue().toTranslationKey(), "Dev Ready");
         builder.add("flat_world_preset." + BLAST_PROOF.getValue().toTranslationKey(), "Blast Proof");
-        builder.add(provider.getTagTranslationKey(MiaLib.SOUL_FIRE_SMELTING), "Soul Fire Smelting");
-        builder.add(provider.getTagTranslationKey(MiaLib.UNDESTROYABLE), "Undestroyable");
-        builder.add(provider.getTagTranslationKey(MiaLib.UNCRAFTABLE), "Uncraftable");
-        builder.add(provider.getTagTranslationKey(MiaLib.UNBREAKABLE), "Unbreakable");
+        builder.add(provider.getTagTranslationKey(ItemModule.SOUL_FIRE_SMELTING), "Soul Fire Smelting");
+        builder.add(provider.getTagTranslationKey(ItemModule.UNDESTROYABLE), "Undestroyable");
+        builder.add(provider.getTagTranslationKey(ItemModule.UNCRAFTABLE), "Uncraftable");
+        builder.add(provider.getTagTranslationKey(ItemModule.UNBREAKABLE), "Unbreakable");
         for (var single : new Pair[]{new Pair<>("self", "self"), new Pair<>("single", "%s entity"), new Pair<>("multiple", "%s entities")}) {
             for (var enabled : new Pair[]{new Pair<>("enabled", "§aenabled"), new Pair<>("disabled", "§cdisabled")}) {
                 builder.add("commands.%s.vanish.%s.%s".formatted(MiaLib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Vanish %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
@@ -55,15 +56,15 @@ public class MiaLibDataGen extends MDataGen {
 
     @Override
     protected void generateItemTags(MDataGen.@NotNull MItemTagProvider provider, RegistryWrapper.WrapperLookup arg) {
-        provider.getOrCreateTagBuilder(MiaLib.SOUL_FIRE_SMELTING)
+        provider.getOrCreateTagBuilder(ItemModule.SOUL_FIRE_SMELTING)
                 .add(Items.ANCIENT_DEBRIS, Items.NETHERITE_SCRAP, Items.NETHERITE_INGOT, Items.NETHERITE_BLOCK)
                 .add(Items.NETHERITE_SWORD, Items.NETHERITE_PICKAXE, Items.NETHERITE_AXE, Items.NETHERITE_SHOVEL, Items.NETHERITE_HOE)
                 .add(Items.NETHERITE_HELMET, Items.NETHERITE_CHESTPLATE, Items.NETHERITE_LEGGINGS, Items.NETHERITE_BOOTS)
                 .add(Items.SOUL_CAMPFIRE, Items.SOUL_LANTERN, Items.SOUL_TORCH)
                 .add(Items.SOUL_SAND, Items.SOUL_SOIL);
-        provider.getOrCreateTagBuilder(MiaLib.UNDESTROYABLE);
-        provider.getOrCreateTagBuilder(MiaLib.UNCRAFTABLE);
-        provider.getOrCreateTagBuilder(MiaLib.UNBREAKABLE);
+        provider.getOrCreateTagBuilder(ItemModule.UNDESTROYABLE);
+        provider.getOrCreateTagBuilder(ItemModule.UNCRAFTABLE);
+        provider.getOrCreateTagBuilder(ItemModule.UNBREAKABLE);
     }
 
     @Override

@@ -29,9 +29,6 @@
     ],
     "cardinal-components-entity": [
       "xyz.amymialee.mialib.MiaLib"
-    ],
-    "cardinal-components-scoreboard": [
-      "xyz.amymialee.mialib.MiaLib"
     ]
   },
   "custom": {

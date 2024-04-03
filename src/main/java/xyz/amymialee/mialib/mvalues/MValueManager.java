@@ -8,6 +8,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.modules.NetworkingModule;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
@@ -26,7 +27,7 @@ public class MValueManager {
         INSTANCE = this;
         ScoreboardSyncCallback.EVENT.register((player, tracked) -> {
             for (var key : MVALUES.values()) {
-                key.sync(player);
+                NetworkingModule.syncMValue(key, player);
             }
         });
         loadConfig();

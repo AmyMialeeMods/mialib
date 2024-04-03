@@ -2,100 +2,99 @@ package xyz.amymialee.mialib.mvalues;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.MiaLib;
-import xyz.amymialee.mialib.util.runnables.HoldingSupplier;
+import xyz.amymialee.mialib.modules.NetworkingModule;
+import xyz.amymialee.mialib.modules.client.NetworkingClientModule;
+import xyz.amymialee.mialib.util.runnables.HoldingFunction;
 
 import java.util.Objects;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public abstract class MValue<T> {
     public static final Identifier MVALUE_SYNC = MiaLib.id("mvalue_sync");
     public final Identifier id;
-    public final Supplier<ItemStack> stackSupplier;
+    public final Function<MValue<T>, ItemStack> stackFunction;
 
-    public MValue(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier) {
+    public MValue(MValueCategory category, Identifier id, Function<MValue<T>, ItemStack> stackFunction) {
         this.id = id;
-        this.stackSupplier = stackSupplier;
+        this.stackFunction = stackFunction;
         MValueManager.register(category, this);
     }
 
-    public static MValue.@NotNull MValueBoolean ofBoolean(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, boolean defaultValue) {
+    public static MValue.@NotNull MValueBoolean ofBoolean(MValueCategory category, Identifier id, Function<MValue<Boolean>, ItemStack> stackSupplier, boolean defaultValue) {
         return new MValueBoolean(category, id, stackSupplier, defaultValue);
     }
 
-    public static MValue.@NotNull MValueInteger ofInteger(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, int defaultValue) {
+    public static MValue.@NotNull MValueInteger ofInteger(MValueCategory category, Identifier id, Function<MValue<Integer>, ItemStack> stackSupplier, int defaultValue) {
         return new MValueInteger(category, id, stackSupplier, defaultValue);
     }
 
-    public static MValue.@NotNull MValueInteger ofInteger(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, int defaultValue, int min, int max) {
+    public static MValue.@NotNull MValueInteger ofInteger(MValueCategory category, Identifier id, Function<MValue<Integer>, ItemStack> stackSupplier, int defaultValue, int min, int max) {
         return new MValueInteger(category, id, stackSupplier, defaultValue, min, max);
     }
 
-    public static MValue.@NotNull MValueLong ofLong(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, long defaultValue) {
+    public static MValue.@NotNull MValueLong ofLong(MValueCategory category, Identifier id, Function<MValue<Long>, ItemStack> stackSupplier, long defaultValue) {
         return new MValueLong(category, id, stackSupplier, defaultValue);
     }
 
-    public static MValue.@NotNull MValueLong ofLong(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, long defaultValue, long min, long max) {
+    public static MValue.@NotNull MValueLong ofLong(MValueCategory category, Identifier id, Function<MValue<Long>, ItemStack> stackSupplier, long defaultValue, long min, long max) {
         return new MValueLong(category, id, stackSupplier, defaultValue, min, max);
     }
 
-    public static MValue.@NotNull MValueFloat ofFloat(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, float defaultValue) {
+    public static MValue.@NotNull MValueFloat ofFloat(MValueCategory category, Identifier id, Function<MValue<Float>, ItemStack> stackSupplier, float defaultValue) {
         return new MValueFloat(category, id, stackSupplier, defaultValue);
     }
 
-    public static MValue.@NotNull MValueFloat ofFloat(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, float defaultValue, float min, float max) {
+    public static MValue.@NotNull MValueFloat ofFloat(MValueCategory category, Identifier id, Function<MValue<Float>, ItemStack> stackSupplier, float defaultValue, float min, float max) {
         return new MValueFloat(category, id, stackSupplier, defaultValue, min, max);
     }
 
-    public static MValue.@NotNull MValueDouble ofDouble(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, double defaultValue) {
+    public static MValue.@NotNull MValueDouble ofDouble(MValueCategory category, Identifier id, Function<MValue<Double>, ItemStack> stackSupplier, double defaultValue) {
         return new MValueDouble(category, id, stackSupplier, defaultValue);
     }
 
-    public static MValue.@NotNull MValueDouble ofDouble(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, double defaultValue, double min, double max) {
+    public static MValue.@NotNull MValueDouble ofDouble(MValueCategory category, Identifier id, Function<MValue<Double>, ItemStack> stackSupplier, double defaultValue, double min, double max) {
         return new MValueDouble(category, id, stackSupplier, defaultValue, min, max);
     }
 
     public static MValue.@NotNull MValueBoolean ofBoolean(MValueCategory category, Identifier id, ItemStack stack, boolean defaultValue) {
-        return new MValueBoolean(category, id, new HoldingSupplier<>(stack), defaultValue);
+        return new MValueBoolean(category, id, new HoldingFunction<>(stack), defaultValue);
     }
 
     public static MValue.@NotNull MValueInteger ofInteger(MValueCategory category, Identifier id, ItemStack stack, int defaultValue) {
-        return new MValueInteger(category, id, new HoldingSupplier<>(stack), defaultValue);
+        return new MValueInteger(category, id, new HoldingFunction<>(stack), defaultValue);
     }
 
     public static MValue.@NotNull MValueInteger ofInteger(MValueCategory category, Identifier id, ItemStack stack, int defaultValue, int min, int max) {
-        return new MValueInteger(category, id, new HoldingSupplier<>(stack), defaultValue, min, max);
+        return new MValueInteger(category, id, new HoldingFunction<>(stack), defaultValue, min, max);
     }
 
     public static MValue.@NotNull MValueLong ofLong(MValueCategory category, Identifier id, ItemStack stack, long defaultValue) {
-        return new MValueLong(category, id, new HoldingSupplier<>(stack), defaultValue);
+        return new MValueLong(category, id, new HoldingFunction<>(stack), defaultValue);
     }
 
     public static MValue.@NotNull MValueLong ofLong(MValueCategory category, Identifier id, ItemStack stack, long defaultValue, long min, long max) {
-        return new MValueLong(category, id, new HoldingSupplier<>(stack), defaultValue, min, max);
+        return new MValueLong(category, id, new HoldingFunction<>(stack), defaultValue, min, max);
     }
 
     public static MValue.@NotNull MValueFloat ofFloat(MValueCategory category, Identifier id, ItemStack stack, float defaultValue) {
-        return new MValueFloat(category, id, new HoldingSupplier<>(stack), defaultValue);
+        return new MValueFloat(category, id, new HoldingFunction<>(stack), defaultValue);
     }
 
     public static MValue.@NotNull MValueFloat ofFloat(MValueCategory category, Identifier id, ItemStack stack, float defaultValue, float min, float max) {
-        return new MValueFloat(category, id, new HoldingSupplier<>(stack), defaultValue, min, max);
+        return new MValueFloat(category, id, new HoldingFunction<>(stack), defaultValue, min, max);
     }
 
     public static MValue.@NotNull MValueDouble ofDouble(MValueCategory category, Identifier id, ItemStack stack, double defaultValue) {
-        return new MValueDouble(category, id, new HoldingSupplier<>(stack), defaultValue);
+        return new MValueDouble(category, id, new HoldingFunction<>(stack), defaultValue);
     }
 
     public static MValue.@NotNull MValueDouble ofDouble(MValueCategory category, Identifier id, ItemStack stack, double defaultValue, double min, double max) {
-        return new MValueDouble(category, id, new HoldingSupplier<>(stack), defaultValue, min, max);
+        return new MValueDouble(category, id, new HoldingFunction<>(stack), defaultValue, min, max);
     }
 
     public String getTranslationKey() {
@@ -108,21 +107,23 @@ public abstract class MValue<T> {
 
     public void syncAll() {
         for (var player : MValueManager.INSTANCE.server.getPlayerManager().getPlayerList()) {
-            this.sync(player);
+            NetworkingModule.syncMValue(this, player);
         }
     }
 
-    public void sync(ServerPlayerEntity player) {
-        var buf = PacketByteBufs.create();
-        buf.writeIdentifier(this.id);
-        buf.writeNbt(this.writeNbt(new NbtCompound()));
-        ServerPlayNetworking.send(player, MVALUE_SYNC, buf);
+    public ItemStack getStack() {
+        return this.stackFunction.apply(this);
     }
 
     public void setValue(T value) {
         this.setValueInternal(value);
         this.syncAll();
         MValueManager.saveConfig();
+    }
+
+    public void sendValue(T value) {
+        this.setValueInternal(value);
+        NetworkingClientModule.sendMValueChange(this);
     }
 
     public abstract T getValue();
@@ -141,8 +142,8 @@ public abstract class MValue<T> {
         public final boolean defaultValue;
         private boolean value;
 
-        public MValueBoolean(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, boolean defaultValue) {
-            super(category, id, stackSupplier);
+        public MValueBoolean(MValueCategory category, Identifier id, Function<MValue<Boolean>, ItemStack> stackFunction, boolean defaultValue) {
+            super(category, id, stackFunction);
             this.defaultValue = defaultValue;
             this.value = this.defaultValue;
         }
@@ -180,8 +181,8 @@ public abstract class MValue<T> {
     }
 
     public abstract static class MValueMinMax<T extends Number> extends MValue<T> {
-        public MValueMinMax(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier) {
-            super(category, id, stackSupplier);
+        public MValueMinMax(MValueCategory category, Identifier id, Function<MValue<T>, ItemStack> stackFunction) {
+            super(category, id, stackFunction);
         }
 
         public abstract T getMin();
@@ -195,12 +196,12 @@ public abstract class MValue<T> {
         public final int max;
         private int value;
 
-        public MValueInteger(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, int defaultValue) {
-            this(category, id, stackSupplier, defaultValue, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        public MValueInteger(MValueCategory category, Identifier id, Function<MValue<Integer>, ItemStack> stackFunction, int defaultValue) {
+            this(category, id, stackFunction, defaultValue, Integer.MIN_VALUE, Integer.MAX_VALUE);
         }
 
-        public MValueInteger(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, int defaultValue, int min, int max) {
-            super(category, id, stackSupplier);
+        public MValueInteger(MValueCategory category, Identifier id, Function<MValue<Integer>, ItemStack> stackFunction, int defaultValue, int min, int max) {
+            super(category, id, stackFunction);
             this.defaultValue = defaultValue;
             this.value = this.defaultValue;
             this.min = min;
@@ -255,12 +256,12 @@ public abstract class MValue<T> {
         public final long max;
         private long value;
 
-        public MValueLong(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, long defaultValue) {
-            this(category, id, stackSupplier, defaultValue, Long.MIN_VALUE, Long.MAX_VALUE);
+        public MValueLong(MValueCategory category, Identifier id, Function<MValue<Long>, ItemStack> stackFunction, long defaultValue) {
+            this(category, id, stackFunction, defaultValue, Long.MIN_VALUE, Long.MAX_VALUE);
         }
 
-        public MValueLong(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, long defaultValue, long min, long max) {
-            super(category, id, stackSupplier);
+        public MValueLong(MValueCategory category, Identifier id, Function<MValue<Long>, ItemStack> stackFunction, long defaultValue, long min, long max) {
+            super(category, id, stackFunction);
             this.defaultValue = defaultValue;
             this.value = this.defaultValue;
             this.min = min;
@@ -315,12 +316,12 @@ public abstract class MValue<T> {
         public final float max;
         private float value;
 
-        public MValueFloat(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, float defaultValue) {
-            this(category, id, stackSupplier, defaultValue, Float.MIN_VALUE, Float.MAX_VALUE);
+        public MValueFloat(MValueCategory category, Identifier id, Function<MValue<Float>, ItemStack> stackFunction, float defaultValue) {
+            this(category, id, stackFunction, defaultValue, Float.MIN_VALUE, Float.MAX_VALUE);
         }
 
-        public MValueFloat(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, float defaultValue, float min, float max) {
-            super(category, id, stackSupplier);
+        public MValueFloat(MValueCategory category, Identifier id, Function<MValue<Float>, ItemStack> stackFunction, float defaultValue, float min, float max) {
+            super(category, id, stackFunction);
             this.defaultValue = defaultValue;
             this.value = this.defaultValue;
             this.min = min;
@@ -375,12 +376,12 @@ public abstract class MValue<T> {
         public final double max;
         private double value;
 
-        public MValueDouble(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, double defaultValue) {
-            this(category, id, stackSupplier, defaultValue, Double.MIN_VALUE, Double.MAX_VALUE);
+        public MValueDouble(MValueCategory category, Identifier id, Function<MValue<Double>, ItemStack> stackFunction, double defaultValue) {
+            this(category, id, stackFunction, defaultValue, Double.MIN_VALUE, Double.MAX_VALUE);
         }
 
-        public MValueDouble(MValueCategory category, Identifier id, Supplier<ItemStack> stackSupplier, double defaultValue, double min, double max) {
-            super(category, id, stackSupplier);
+        public MValueDouble(MValueCategory category, Identifier id, Function<MValue<Double>, ItemStack> stackFunction, double defaultValue, double min, double max) {
+            super(category, id, stackFunction);
             this.defaultValue = defaultValue;
             this.value = this.defaultValue;
             this.min = min;

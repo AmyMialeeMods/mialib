@@ -1,8 +1,9 @@
 package xyz.amymialee.mialib.cca;
 
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.NotNull;
@@ -13,6 +14,7 @@ import xyz.amymialee.mialib.MiaLib;
  * Also provides the amount of time they have been held.
  */
 public class HoldingComponent implements AutoSyncedComponent, CommonTickingComponent {
+	public static final ComponentKey<HoldingComponent> KEY = ComponentRegistry.getOrCreate(MiaLib.id("holding"), HoldingComponent.class);
 	private final PlayerEntity player;
 	private boolean attacking = false;
 	private boolean using = false;
@@ -24,7 +26,7 @@ public class HoldingComponent implements AutoSyncedComponent, CommonTickingCompo
 	}
 
 	public void sync() {
-		MiaLib.HOLDING.sync(this.player);
+		KEY.sync(this.player);
 	}
 
 	public boolean isAttacking() {
@@ -81,16 +83,5 @@ public class HoldingComponent implements AutoSyncedComponent, CommonTickingCompo
 		tag.putBoolean("using", this.using);
 		tag.putInt("tickAttacking", this.tickAttacking);
 		tag.putInt("tickUsing", this.tickUsing);
-	}
-
-	static {
-		ServerPlayNetworking.registerGlobalReceiver(MiaLib.id("attacking"), (server, player, handler, buf, responseSender) -> {
-			var holding = buf.readBoolean();
-			server.execute(() -> player.mialib$setHoldingAttack(holding));
-		});
-		ServerPlayNetworking.registerGlobalReceiver(MiaLib.id("using"), (server, player, handler, buf, responseSender) -> {
-			var holding = buf.readBoolean();
-			server.execute(() -> player.mialib$setHoldingUse(holding));
-		});
 	}
 }

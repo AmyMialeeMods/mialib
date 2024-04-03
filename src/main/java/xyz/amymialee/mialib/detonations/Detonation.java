@@ -1,7 +1,5 @@
 package xyz.amymialee.mialib.detonations;
 
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -31,6 +29,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.events.DetonationEvents;
 import xyz.amymialee.mialib.util.runnables.QuinConsumer;
 import xyz.amymialee.mialib.util.runnables.TriConsumer;
 import xyz.amymialee.mialib.util.runnables.TriFunction;
@@ -38,7 +37,6 @@ import xyz.amymialee.mialib.util.runnables.TriFunction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.*;
 
 @SuppressWarnings("unused")
@@ -546,7 +544,7 @@ public class Detonation {
                     o += ray.z * (double) 0.3f;
                 }
             }
-            DETONATION_DESTRUCTION.invoker().modifyInteractions(world, pos, this, affectedBlocks);
+            DetonationEvents.DETONATION_DESTRUCTION.invoker().modifyInteractions(world, pos, this, affectedBlocks);
             var tool = owner instanceof LivingEntity living ? living.getMainHandStack() : ItemStack.EMPTY;
             for (var pair : affectedBlocks.entrySet()) {
                 var blockPos = pair.getKey();
@@ -618,14 +616,5 @@ public class Detonation {
         } else {
             return 0.0F;
         }
-    }
-
-    public static final Event<DetonationDestructionCallback> DETONATION_DESTRUCTION = EventFactory.createArrayBacked(DetonationDestructionCallback.class, callbacks -> (world, pos, detonation, blocks) -> {
-        for (var callback : callbacks) callback.modifyInteractions(world, pos, detonation, blocks);
-    });
-
-    @FunctionalInterface
-    public interface DetonationDestructionCallback {
-        void modifyInteractions(ServerWorld world, Vec3d pos, Detonation detonation, Map<BlockPos, BlockState> blocks);
     }
 }

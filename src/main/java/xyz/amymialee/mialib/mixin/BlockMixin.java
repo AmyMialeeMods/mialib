@@ -21,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import xyz.amymialee.mialib.MiaLib;
 import xyz.amymialee.mialib.events.MiaLibEvents;
+import xyz.amymialee.mialib.modules.ItemModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class BlockMixin {
             var hasSmeltable = hasSmeltable(world, originalResult);
             if (hasSmeltable) {
                 world.playSound(null, pos, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
-                world.spawnParticles(stack.isIn(MiaLib.SOUL_FIRE_SMELTING) ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 8, 0.25D, 0.25D, 0.25D, 0.025D);
+                world.spawnParticles(stack.isIn(ItemModule.SOUL_FIRE_SMELTING) ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 8, 0.25D, 0.25D, 0.25D, 0.025D);
                 return smeltList(world, originalResult);
             }
         }

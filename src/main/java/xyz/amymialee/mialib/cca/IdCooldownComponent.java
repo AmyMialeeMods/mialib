@@ -1,5 +1,7 @@
 package xyz.amymialee.mialib.cca;
 
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,6 +18,7 @@ import java.util.Map;
  * Stores cooldowns tied to identifiers.
  */
 public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingComponent {
+	public static final ComponentKey<IdCooldownComponent> KEY = ComponentRegistry.getOrCreate(MiaLib.id("identifier_cooldown"), IdCooldownComponent.class);
 	private final PlayerEntity player;
 	private final Map<Identifier, Entry> cooldowns = new HashMap<>();
 	private int tick;
@@ -25,7 +28,7 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 	}
 
 	public void sync() {
-		MiaLib.ID_COOLDOWN_COMPONENT.sync(this.player);
+		KEY.sync(this.player);
 	}
 
 	@Override

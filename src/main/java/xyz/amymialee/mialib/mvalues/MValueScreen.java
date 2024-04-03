@@ -1,8 +1,6 @@
 package xyz.amymialee.mialib.mvalues;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.navigation.GuiNavigationType;
@@ -13,7 +11,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.input.KeyCodes;
 import net.minecraft.client.sound.SoundManager;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -165,7 +162,7 @@ public class MValueScreen extends Screen {
     public abstract static class MValueButton<T, K extends MValue<T>> extends ClickableWidget {
         protected final K value;
 
-        public MValueButton(int x, int y, K value) {
+        public MValueButton(int x, int y, @NotNull K value) {
             super(x, y, 190, 20, Text.translatable(value.getTranslationKey()));
             this.value = value;
             this.refreshFromValue();
@@ -192,13 +189,6 @@ public class MValueScreen extends Screen {
         public void appendClickableNarrations(NarrationMessageBuilder builder) {
             this.appendDefaultNarrations(builder);
         }
-
-        public void sendChange() {
-            var buf = PacketByteBufs.create();
-            buf.writeIdentifier(this.value.id);
-            buf.writeNbt(this.value.writeNbt(new NbtCompound()));
-            ClientPlayNetworking.send(MValue.MVALUE_SYNC, buf);
-        }
     }
 
     public static class MValueBooleanButton extends MValueButton<Boolean, MValue.MValueBoolean> {
@@ -218,7 +208,7 @@ public class MValueScreen extends Screen {
             RenderSystem.enableBlend();
             RenderSystem.enableDepthTest();
             context.drawNineSlicedTexture(WIDGETS_TEXTURE, this.getX(), this.getY(), 20, this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY());
-            context.drawItem(this.value.stackSupplier.get(), this.getX() + 2, this.getY() + 2);
+            context.drawItem(this.value.getStack(), this.getX() + 2, this.getY() + 2);
             context.drawNineSlicedTexture(WIDGETS_TEXTURE, this.getX() + 20, this.getY(), this.getWidth() - 20, this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY());
             context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             drawScrollableText(context, minecraftClient.textRenderer, this.getMessage(), this.getX() + 22, this.getY(), this.getX() + this.getWidth() - 2, this.getY() + this.getHeight(), (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
@@ -226,8 +216,7 @@ public class MValueScreen extends Screen {
 
         @Override
         public void onClick(double mouseX, double mouseY) {
-            this.value.setValueInternal(!this.value.getValue());
-            this.sendChange();
+            this.value.sendValue(!this.value.getValue());
         }
 
         @Override
@@ -235,8 +224,7 @@ public class MValueScreen extends Screen {
             if (this.active && this.visible) {
                 if (KeyCodes.isToggle(keyCode)) {
                     this.playDownSound(MinecraftClient.getInstance().getSoundManager());
-                    this.value.setValueInternal(!this.value.getValue());
-                    this.sendChange();
+                    this.value.sendValue(!this.value.getValue());
                     return true;
                 }
             }
@@ -272,7 +260,7 @@ public class MValueScreen extends Screen {
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableDepthTest();
             context.drawNineSlicedTexture(WIDGETS_TEXTURE, this.getX(), this.getY(), 20, this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY());
-            context.drawItem(this.value.stackSupplier.get(), this.getX() + 2, this.getY() + 2);
+            context.drawItem(this.value.getStack(), this.getX() + 2, this.getY() + 2);
             context.drawNineSlicedTexture(TEXTURE, this.getX() + 20, this.getY(), this.getWidth() - 20, this.getHeight(), 20, 4, 200, 20, 0, this.getYImage());
             context.drawNineSlicedTexture(TEXTURE, this.getX() + 20 + (int)(this.sliderValue * (double)((this.width - 20) - 8)), this.getY(), 8, 20, 20, 4, 200, 20, 0, this.getTextureV());
             context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -351,8 +339,7 @@ public class MValueScreen extends Screen {
         protected void setValue(double value) {
             var clamped = MathHelper.clamp(value, 0.0, 1.0);
             if (clamped != this.sliderValue) {
-                this.value.setValueInternal((int) Math.round(clamped * (this.value.getMax() - this.value.getMin()) + this.value.getMin()));
-                this.sendChange();
+                this.value.sendValue((int) Math.round(clamped * (this.value.getMax() - this.value.getMin()) + this.value.getMin()));
             }
         }
     }
@@ -372,8 +359,7 @@ public class MValueScreen extends Screen {
         protected void setValue(double value) {
             var clamped = MathHelper.clamp(value, 0.0, 1.0);
             if (clamped != this.sliderValue) {
-                this.value.setValueInternal(Math.round(clamped * (this.value.getMax() - this.value.getMin()) + this.value.getMin()));
-                this.sendChange();
+                this.value.sendValue(Math.round(clamped * (this.value.getMax() - this.value.getMin()) + this.value.getMin()));
             }
         }
     }
@@ -393,8 +379,7 @@ public class MValueScreen extends Screen {
         protected void setValue(double value) {
             var clamped = MathHelper.clamp(value, 0.0, 1.0);
             if (clamped != this.sliderValue) {
-                this.value.setValueInternal((float) (clamped * (this.value.getMax() - this.value.getMin()) + this.value.getMin()));
-                this.sendChange();
+                this.value.sendValue((float) (clamped * (this.value.getMax() - this.value.getMin()) + this.value.getMin()));
             }
         }
     }
@@ -414,8 +399,7 @@ public class MValueScreen extends Screen {
         protected void setValue(double value) {
             var clamped = MathHelper.clamp(value, 0.0, 1.0);
             if (clamped != this.sliderValue) {
-                this.value.setValueInternal(clamped * (this.value.getMax() - this.value.getMin()) + this.value.getMin());
-                this.sendChange();
+                this.value.sendValue(clamped * (this.value.getMax() - this.value.getMin()) + this.value.getMin());
             }
         }
     }
