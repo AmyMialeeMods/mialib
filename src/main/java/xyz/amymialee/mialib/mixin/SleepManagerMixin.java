@@ -13,6 +13,6 @@ import xyz.amymialee.mialib.MiaLib;
 public class SleepManagerMixin {
     @WrapOperation(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;isSpectator()Z"))
     private boolean mialib$shouldCountForSleepTotal(ServerPlayerEntity instance, @NotNull Operation<Boolean> original) {
-        return original.call(instance) || instance.mialib$isImperceptible() || (instance.isCreative() && MiaLib.CREATIVE_NO_SLEEP.getValue());
+        return original.call(instance) || (instance.isCreative() && MiaLib.CREATIVE_NO_SLEEP.getValue());
     }
 }
