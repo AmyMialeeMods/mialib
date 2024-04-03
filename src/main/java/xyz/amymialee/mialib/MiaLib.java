@@ -44,7 +44,7 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer {
 
     @Override
     public void registerEntityComponentFactories(@NotNull EntityComponentFactoryRegistry registry) {
-        registry.registerFor(PlayerEntity.class, IdCooldownComponent.KEY, IdCooldownComponent::new);
+        registry.beginRegistration(PlayerEntity.class, IdCooldownComponent.KEY).end(IdCooldownComponent::new);
         registry.beginRegistration(PlayerEntity.class, HoldingComponent.KEY).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(HoldingComponent::new);
         registry.beginRegistration(Entity.class, ExtraFlagsComponent.KEY).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(ExtraFlagsComponent::new);
     }
