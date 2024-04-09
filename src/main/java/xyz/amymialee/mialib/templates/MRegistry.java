@@ -193,7 +193,7 @@ public class MRegistry {
 	public <T> T register(Identifier id, T thing) {
 		if (this.built) {
 			var error = new IllegalStateException("Tried to register " + id + " to the " + this.namespace + " MRegistry after it was built!");
-			MiaLib.LOGGER.error("Failed to register " + id + " to the " + this.namespace + " MRegistry after it was built!", error);
+            MiaLib.LOGGER.error("Failed to register {} to the {} MRegistry after it was built!", id, this.namespace, error);
 			throw error;
 		}
 		var registered = false;
@@ -211,7 +211,7 @@ public class MRegistry {
 		}
 		if (!registered) {
 			var error = new IllegalStateException("Failed to register " + id + " to the " + this.namespace + " MRegistry!");
-			MiaLib.LOGGER.error("Failed to register " + id + " to the " + this.namespace + " MRegistry!", error);
+            MiaLib.LOGGER.error("Failed to register {} to the {} MRegistry!", id, this.namespace, error);
 			throw error;
 		}
 		return thing;
@@ -220,7 +220,7 @@ public class MRegistry {
 	@SuppressWarnings("unchecked")
 	public <T> void build() {
 		if (this.built) {
-			MiaLib.LOGGER.warn("Tried to build the " + this.namespace + " MRegistry twice!");
+            MiaLib.LOGGER.warn("Tried to build the {} MRegistry twice!", this.namespace);
 			return;
 		}
 		this.built = true;

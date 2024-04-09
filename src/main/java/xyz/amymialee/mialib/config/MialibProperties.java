@@ -17,8 +17,8 @@ import java.util.List;
 public class MialibProperties {
     private static final List<MProperty<?>> properties = new ArrayList<>();
     private static boolean loaded = false;
-    public static MBooleanProperty eulaAccepted = new MBooleanProperty("eula_accepted", false);
-    public static MBooleanProperty skipNarrator = new MBooleanProperty("skip_narrator", false);
+    public static final MBooleanProperty eulaAccepted = new MBooleanProperty("eula_accepted", false);
+    public static final MBooleanProperty skipNarrator = new MBooleanProperty("skip_narrator", false);
 
     /**
      * Load the mialib properties from the mialib.yaml file in the %APPDATA%/.mialib/ directory.

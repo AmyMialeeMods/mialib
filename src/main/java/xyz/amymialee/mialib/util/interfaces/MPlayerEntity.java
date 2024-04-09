@@ -2,6 +2,7 @@ package xyz.amymialee.mialib.util.interfaces;
 
 import net.minecraft.util.Identifier;
 
+@SuppressWarnings("unused")
 public interface MPlayerEntity {
     default boolean mialib$isCoolingDown(Identifier id) {
         return false;

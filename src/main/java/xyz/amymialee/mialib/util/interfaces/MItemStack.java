@@ -6,6 +6,7 @@ import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 public interface MItemStack {
 	default ItemStack mialib$enchantStack(Enchantment enchantment) {
 		return this.mialib$enchantStack(enchantment, 1);

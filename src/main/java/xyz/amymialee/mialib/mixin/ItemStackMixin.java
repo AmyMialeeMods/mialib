@@ -24,6 +24,7 @@ public abstract class ItemStackMixin {
         }
     }
 
+    @SuppressWarnings("UnreachableCode")
     @Inject(method = "getName", at = @At("RETURN"), cancellable = true)
     private void getName(CallbackInfoReturnable<Text> cir) {
         var color = this.getItem().mialib$getNameColor((ItemStack) (Object) this);

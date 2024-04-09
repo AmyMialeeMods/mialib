@@ -17,11 +17,11 @@ public class ClientWorldMixin implements MWorld {
 
     @Override
     public void mialib$detonate(Detonation detonation, Vec3d pos, Entity owner) {
-        MiaLib.LOGGER.error("Tried to detonate a detonation on the client!");
+        MiaLib.LOGGER.error("Tried to detonate a detonation on the client with owner!");
     }
 
     @Override
     public void mialib$detonate(Detonation detonation, Vec3d pos, Entity owner, Entity projectile) {
-        MiaLib.LOGGER.error("Tried to detonate a detonation on the client!");
+        MiaLib.LOGGER.error("Tried to detonate a detonation on the client with projectile!");
     }
 }

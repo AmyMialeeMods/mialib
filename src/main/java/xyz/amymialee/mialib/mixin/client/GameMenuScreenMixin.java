@@ -27,6 +27,7 @@ import java.util.function.Supplier;
 public class GameMenuScreenMixin extends Screen {
     @Unique private static final Identifier LOGO_TEXTURE = MiaLib.id("textures/gui/logo.png");
 
+    @SuppressWarnings("unused")
     protected GameMenuScreenMixin(Text title) {
         super(title);
     }

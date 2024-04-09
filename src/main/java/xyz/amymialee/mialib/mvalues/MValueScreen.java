@@ -124,7 +124,7 @@ public class MValueScreen extends Screen {
         private final boolean next;
 
         public MValuePageWidget(int x, int y, boolean next, Text text, PressAction consumer) {
-            super(x, y, 11, 12, text, consumer, ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
+            super(x, y, 11, 12, text, consumer, DEFAULT_NARRATION_SUPPLIER);
             this.next = next;
             this.active = consumer != null;
         }
@@ -144,7 +144,7 @@ public class MValueScreen extends Screen {
         public final MValueCategory category;
 
         public MValueCategoryWidget(int x, int y, MValueCategory value, Text text, PressAction consumer) {
-            super(x, y, 28, 32, text, consumer, ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
+            super(x, y, 28, 32, text, consumer, DEFAULT_NARRATION_SUPPLIER);
             this.category = value;
             this.active = consumer != null;
         }

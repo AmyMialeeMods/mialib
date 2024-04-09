@@ -10,10 +10,12 @@ import xyz.amymialee.mialib.MiaLib;
 import xyz.amymialee.mialib.modules.NetworkingModule;
 import xyz.amymialee.mialib.modules.client.NetworkingClientModule;
 import xyz.amymialee.mialib.util.runnables.HoldingFunction;
+import xyz.amymialee.mialib.util.runnables.mvalues.MBooleanFunction;
 
 import java.util.Objects;
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 public abstract class MValue<T> {
     public static final Identifier MVALUE_SYNC = MiaLib.id("mvalue_sync");
     public final Identifier id;
@@ -63,6 +65,10 @@ public abstract class MValue<T> {
 
     public static MValue.@NotNull MValueBoolean ofBoolean(MValueCategory category, Identifier id, ItemStack stack, boolean defaultValue) {
         return new MValueBoolean(category, id, new HoldingFunction<>(stack), defaultValue);
+    }
+
+    public static MValue.@NotNull MValueBoolean ofBoolean(MValueCategory category, Identifier id, ItemStack stackEnabled, ItemStack stackDisabled, boolean defaultValue) {
+        return new MValueBoolean(category, id, new MBooleanFunction(stackEnabled, stackDisabled), defaultValue);
     }
 
     public static MValue.@NotNull MValueInteger ofInteger(MValueCategory category, Identifier id, ItemStack stack, int defaultValue) {
@@ -180,6 +186,7 @@ public abstract class MValue<T> {
         }
     }
 
+    @SuppressWarnings("unused")
     public abstract static class MValueMinMax<T extends Number> extends MValue<T> {
         public MValueMinMax(MValueCategory category, Identifier id, Function<MValue<T>, ItemStack> stackFunction) {
             super(category, id, stackFunction);

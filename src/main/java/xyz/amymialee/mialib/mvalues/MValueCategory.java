@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class MValueCategory {
     public final List<MValue<?>> values = new ArrayList<>();
     public final Identifier id;

@@ -15,6 +15,7 @@ public abstract class ItemEntityMixin implements MItemEntity {
 
     @Shadow private int itemAge;
 
+    @SuppressWarnings("UnreachableCode")
     @Inject(method = "tryMerge(Lnet/minecraft/entity/ItemEntity;)V", at = @At("HEAD"), cancellable = true)
     private void mialib$delayedMerge(ItemEntity other, CallbackInfo ci) {
         if ((Object) this instanceof ItemEntity) {

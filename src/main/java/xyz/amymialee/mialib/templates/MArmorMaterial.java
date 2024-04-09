@@ -10,6 +10,7 @@ import xyz.amymialee.mialib.MiaLib;
 
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 public class MArmorMaterial implements ArmorMaterial {
     public static final MArmorMaterial EMPTY = new MArmorMaterial(MiaLib.MOD_ID);
     private final String name;

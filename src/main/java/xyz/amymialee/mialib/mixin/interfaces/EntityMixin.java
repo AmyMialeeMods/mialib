@@ -2,7 +2,6 @@ package xyz.amymialee.mialib.mixin.interfaces;
 
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
-import xyz.amymialee.mialib.MiaLib;
 import xyz.amymialee.mialib.cca.ExtraFlagsComponent;
 import xyz.amymialee.mialib.util.interfaces.MEntity;
 

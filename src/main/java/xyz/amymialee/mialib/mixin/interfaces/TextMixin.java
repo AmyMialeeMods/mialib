@@ -4,6 +4,7 @@ import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import xyz.amymialee.mialib.util.interfaces.MText;
 
+@SuppressWarnings("UnnecessarilyQualifiedStaticUsage")
 @Mixin(Text.class)
 public interface TextMixin extends MText {
     @Override

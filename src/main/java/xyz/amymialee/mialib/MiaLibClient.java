@@ -8,6 +8,7 @@ import xyz.amymialee.mialib.modules.client.ClientInputModule;
 import xyz.amymialee.mialib.modules.client.NetworkingClientModule;
 import xyz.amymialee.mialib.templates.MRegistry;
 
+@SuppressWarnings("unused")
 public class MiaLibClient implements ClientModInitializer {
     public static LivingEntity renderingEntityWithItem = null;
     public static ModelTransformationMode currentMode = ModelTransformationMode.NONE;

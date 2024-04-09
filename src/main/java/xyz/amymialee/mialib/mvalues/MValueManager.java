@@ -13,7 +13,10 @@ import xyz.amymialee.mialib.modules.NetworkingModule;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MValueManager {
     private static final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("mvalues.json");
@@ -76,7 +79,7 @@ public class MValueManager {
                     try {
                         values.getValue().readJson(data.get(values.getKey().toString()));
                     } catch (Exception e) {
-                        MiaLib.LOGGER.info("Error loading mvalue data for " + values.getKey().toString());
+                        MiaLib.LOGGER.info("Error loading mvalue data for {}", values.getKey().toString());
                         MiaLib.LOGGER.info(e.toString());
                     }
                 }

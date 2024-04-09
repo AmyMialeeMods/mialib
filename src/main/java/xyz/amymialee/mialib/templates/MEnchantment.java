@@ -14,6 +14,7 @@ import xyz.amymialee.mialib.util.runnables.TriFunction;
 
 import java.util.function.BiFunction;
 
+@SuppressWarnings("unused")
 public class MEnchantment extends Enchantment {
 	private BiFunction<MEnchantment, Integer, Integer> minLevel = (enchantment, original) -> original;
 	private BiFunction<MEnchantment, Integer, Integer> maxLevel = (enchantment, original) -> original;

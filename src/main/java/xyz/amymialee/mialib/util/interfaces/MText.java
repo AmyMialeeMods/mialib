@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface MText {
 	default Text mialib$withColor(int color) {
 		return Text.empty();

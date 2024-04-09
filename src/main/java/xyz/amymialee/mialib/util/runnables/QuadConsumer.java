@@ -2,6 +2,7 @@ package xyz.amymialee.mialib.util.runnables;
 
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 @FunctionalInterface
 public interface QuadConsumer<A, B, C, D> {
     void accept(A a, B b, C c, D d);

@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("SameReturnValue")
 public interface MItem {
     Identifier[] EMPTY = new Identifier[0];
 

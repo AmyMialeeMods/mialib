@@ -40,7 +40,7 @@ public abstract class GameOptionsMixin {
                     if (string != null) {
                         var jsonReader = new JsonReader(new StringReader(string.isEmpty() ? "\"\"" : string));
                         var dataResult = option.getCodec().parse(JsonOps.INSTANCE, JsonParser.parseReader(jsonReader));
-                        dataResult.error().ifPresent(partialResult -> MiaLib.LOGGER.error("Error parsing default option value " + string + " for option " + option + ": " + partialResult.message()));
+                        dataResult.error().ifPresent(partialResult -> MiaLib.LOGGER.error("Error parsing default option value {} for option {}: {}", string, option, partialResult.message()));
                         dataResult.result().ifPresent(option::setValue);
                     }
                 }

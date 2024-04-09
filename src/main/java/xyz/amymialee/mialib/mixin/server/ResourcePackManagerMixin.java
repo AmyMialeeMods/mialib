@@ -12,6 +12,7 @@ import xyz.amymialee.mialib.util.MDir;
 
 @Mixin(ResourcePackManager.class)
 public class ResourcePackManagerMixin {
+    @SuppressWarnings("SuspiciousSystemArraycopy")
     @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableSet;copyOf([Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;"))
     private ImmutableSet<ResourcePackProvider> mialib$moreDirs(Object @NotNull [] array, @NotNull Operation<ImmutableSet<ResourcePackProvider>> operation) {
         var universalDir = MDir.getMialibPath("datapacks/universal");
