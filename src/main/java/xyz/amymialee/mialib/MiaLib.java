@@ -27,7 +27,7 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer {
     public static final String MOD_ID = "mialib";
     public static final String MOD_NAME = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow().getMetadata().getName();
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
-    // MValues
+    /* MValues */
     public static final MValueCategory MIALIB_CATEGORY = new MValueCategory(id(MOD_ID), Items.DIAMOND.getDefaultStack(), new Identifier("textures/block/purple_concrete.png"));
     public static final MValue.MValueBoolean CREATIVE_NO_SLEEP = MValue.ofBoolean(MIALIB_CATEGORY, id("creative_no_sleep"), Items.BLUE_BED.getDefaultStack(), Items.RED_BED.getDefaultStack(), false);
     public static final MValue.MValueBoolean FIRE_ASPECT_AUTO_SMELT = MValue.ofBoolean(MIALIB_CATEGORY, id("fire_aspect_auto_smelt"), Items.FIRE_CHARGE.getDefaultStack(), Items.COAL.getDefaultStack(), false);
@@ -45,7 +45,7 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer {
 
     @Override
     public void registerEntityComponentFactories(@NotNull EntityComponentFactoryRegistry registry) {
-        registry.beginRegistration(PlayerEntity.class, IdCooldownComponent.KEY).end(IdCooldownComponent::new);
+        registry.beginRegistration(PlayerEntity.class, IdCooldownComponent.KEY).respawnStrategy(RespawnCopyStrategy.LOSSLESS_ONLY).end(IdCooldownComponent::new);
         registry.beginRegistration(PlayerEntity.class, HoldingComponent.KEY).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(HoldingComponent::new);
         registry.beginRegistration(Entity.class, ExtraFlagsComponent.KEY).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(ExtraFlagsComponent::new);
     }
