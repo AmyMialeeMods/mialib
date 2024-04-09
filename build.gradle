@@ -36,8 +36,8 @@ dependencies {
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
+    publications { //noinspection GroovyAssignabilityCheck
+        mavenJava(MavenPublication) { //noinspection GroovyAssignabilityCheck
             from components.java
         }
     }
@@ -46,7 +46,7 @@ publishing {
             name = "willBlRepositoryReleases"
             url = "https://maven.willbl.dev/releases"
             credentials(PasswordCredentials)
-            authentication {
+            authentication { //noinspection GroovyAssignabilityCheck
                 basic(BasicAuthentication)
             }
         }
