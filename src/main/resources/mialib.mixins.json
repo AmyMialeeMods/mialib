@@ -33,6 +33,7 @@
     "interfaces.WorldMixin"
   ],
   "client": [
+    "client.AddServerScreenMixin",
     "client.DrawContextMixin",
     "client.EntityRenderDispatcherMixin",
     "client.GameMenuScreenMixin",
@@ -41,9 +42,12 @@
     "client.HeldItemRendererMixin",
     "client.ItemRendererMixin",
     "client.MinecraftClientMixin",
+    "client.MultiplayerScreenMixin",
+    "client.MultiplayerServerListWidgetMixin",
     "client.PlayerEntityRendererMixin",
     "client.ResourcePackManagerMixin",
-    "interfaces.ClientWorldMixin"
+    "interfaces.ClientWorldMixin",
+    "interfaces.ServerListMixin"
   ],
   "server": [
     "server.EulaReaderMixin",

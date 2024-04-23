@@ -52,6 +52,9 @@ public class MiaLibDataGen extends MDataGen {
         builder.add(MiaLib.DISABLE_END_PORTALS.getDescriptionTranslationKey(), "Disables end portals");
         builder.add("category.%s".formatted(MiaLib.MOD_ID), MiaLib.MOD_NAME);
         builder.add("key.%s.mvalues".formatted(MiaLib.MOD_ID), "Open %s Value Editor".formatted(MiaLib.MOD_NAME));
+        builder.add("%s.servers".formatted(MiaLib.MOD_ID), "Mialib Servers");
+        builder.add("%s.mialib_server.true".formatted(MiaLib.MOD_ID), "Save to Mialib Server File: §aTrue");
+        builder.add("%s.mialib_server.false".formatted(MiaLib.MOD_ID), "Save to Mialib Server File: §cFalse");
     }
 
     @Override

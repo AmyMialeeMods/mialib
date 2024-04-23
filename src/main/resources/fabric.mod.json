@@ -44,6 +44,7 @@
       "net/minecraft/class_1761": ["xyz/amymialee/mialib/util/interfaces/MItemGroup"],
       "net/minecraft/class_1799": ["xyz/amymialee/mialib/util/interfaces/MItemStack"],
       "net/minecraft/class_1657": ["xyz/amymialee/mialib/util/interfaces/MPlayerEntity"],
+      "net/minecraft/class_641": ["xyz/amymialee/mialib/util/interfaces/MServerList"],
       "net/minecraft/class_1291": ["xyz/amymialee/mialib/util/interfaces/MStatusEffect"],
       "net/minecraft/class_2561": ["xyz/amymialee/mialib/util/interfaces/MText"],
       "net/minecraft/class_1937": ["xyz/amymialee/mialib/util/interfaces/MWorld"]

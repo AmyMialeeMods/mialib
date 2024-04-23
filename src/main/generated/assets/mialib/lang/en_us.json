@@ -1,4 +1,5 @@
 {
+  "category.mialib": "Mialib",
   "commands.mialib.immortal.disabled.multiple": "§7Immortality §cdisabled§7 for %s entities",
   "commands.mialib.immortal.disabled.self": "§7Immortality §cdisabled§7 for self",
   "commands.mialib.immortal.disabled.single": "§7Immortality §cdisabled§7 for %s entity",
@@ -19,8 +20,12 @@
   "commands.mialib.vanish.enabled.single": "§7Vanish §aenabled§7 for %s entity",
   "flat_world_preset.mialib.blast_proof": "Blast Proof",
   "flat_world_preset.mialib.dev_ready": "Dev Ready",
+  "key.mialib.mvalues": "Open Mialib Value Editor",
+  "mialib.mialib_server.false": "Save to Mialib Server File: §cFalse",
+  "mialib.mialib_server.true": "Save to Mialib Server File: §aTrue",
   "mialib.screen.mvalues": "Mialib Value Editor",
   "mialib.screen.mvalues.page": "Page %2d/%2d",
+  "mialib.servers": "Mialib Servers",
   "mvalue.mialib.creative_no_sleep": "Creative No Sleep",
   "mvalue.mialib.creative_no_sleep.desc": "Creative players don't need to sleep to skip the night",
   "mvalue.mialib.disable_end_portals": "Disable End Portals",
