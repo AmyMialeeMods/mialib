@@ -44,6 +44,7 @@
     "client.MinecraftClientMixin",
     "client.MultiplayerScreenMixin",
     "client.MultiplayerServerListWidgetMixin",
+    "client.MultiplayerServerListWidgetMixin$ServerEntryMixin",
     "client.PlayerEntityRendererMixin",
     "client.ResourcePackManagerMixin",
     "interfaces.ClientWorldMixin",

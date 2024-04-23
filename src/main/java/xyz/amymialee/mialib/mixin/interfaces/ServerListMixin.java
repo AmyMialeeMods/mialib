@@ -38,6 +38,8 @@ public abstract class ServerListMixin implements MServerList {
     @Shadow public abstract void saveFile();
     @Shadow @Final public List<ServerInfo> servers;
 
+    @Shadow public abstract ServerInfo get(int index);
+
     @Unique
     public List<ServerInfo> mialib$getMialibServers() {
         return this.mialibServers;
@@ -62,7 +64,13 @@ public abstract class ServerListMixin implements MServerList {
     private void mialib$saveMialibServers(CallbackInfo ci) {
         try {
             var serverList = new NbtList();
-            for (var serverInfo : this.mialibServers) {
+            for (var i = 0; i < this.mialibServers.size(); i++) {
+                var serverInfo = this.mialibServers.get(i);
+                if (serverInfo == null) {
+                    this.mialibServers.remove(i);
+                    i--;
+                    continue;
+                }
                 serverList.add(serverInfo.toNbt());
             }
             var serverCompound = new NbtCompound();
@@ -79,6 +87,8 @@ public abstract class ServerListMixin implements MServerList {
     public void mialib$getMialibServer(int index, CallbackInfoReturnable<ServerInfo> cir) {
         if (index >= this.servers.size()) cir.setReturnValue(this.mialibServers.get(index - this.servers.size()));
     }
+
+
 
     @Inject(method = "get(Ljava/lang/String;)Lnet/minecraft/client/network/ServerInfo;", at = @At("RETURN"), cancellable = true)
     private void mialib$getMialibServerByAddress(String address, @NotNull CallbackInfoReturnable<ServerInfo> cir) {
@@ -112,13 +122,19 @@ public abstract class ServerListMixin implements MServerList {
 
     @Inject(method = "swapEntries", at = @At("HEAD"), cancellable = true)
     public void mialib$swapMialibServerEntries(int index1, int index2, CallbackInfo ci) {
-        var isMialib1 = index1 >= this.servers.size();
-        var isMialib2 = index2 >= this.servers.size();
+        var isEitherSeparator = index1 == this.servers.size() || index2 == this.servers.size();
+        if (isEitherSeparator) {
+            ci.cancel();
+        }
+        var isMialib1 = index1 > this.servers.size();
+        var isMialib2 = index2 > this.servers.size();
         if (isMialib1 && isMialib2) {
-            var serverInfo = this.mialib$getMialibServer(index1);
-            this.mialibServers.set(index1, this.mialib$getMialibServer(index2));
-            this.mialibServers.set(index2, serverInfo);
+            var serverInfo = this.mialibServers.get(index1 - 1 - this.servers.size());
+            this.mialibServers.set(index1 - 1 - this.servers.size(), this.mialibServers.get(index2 - 1 - this.servers.size()));
+            this.mialibServers.set(index2 - 1 - this.servers.size(), serverInfo);
             this.saveFile();
+            ci.cancel();
+        } else if (isMialib1 != isMialib2) {
             ci.cancel();
         }
     }

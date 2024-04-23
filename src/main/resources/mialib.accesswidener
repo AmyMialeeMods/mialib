@@ -18,3 +18,6 @@ accessible field net/minecraft/client/option/ServerList servers Ljava/util/List;
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget screen Lnet/minecraft/client/gui/screen/multiplayer/MultiplayerScreen;
 accessible field net/minecraft/client/gui/screen/AddServerScreen server Lnet/minecraft/client/network/ServerInfo;
 accessible field net/minecraft/client/option/ServerList hiddenServers Ljava/util/List;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget SERVER_SELECTION_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerScreen serverListWidget Lnet/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget;
+accessible method net/minecraft/client/gui/widget/EntryListWidget getRowTop (I)I
