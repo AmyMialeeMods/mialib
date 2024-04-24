@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "xyz.amymialee.mialib.mixin",
   "compatibilityLevel": "JAVA_17",
+  "plugin": "xyz.amymialee.mialib.MiaLibMixinPlugin",
   "mixins": [
     "AnvilScreenHandlerMixin",
     "BlockMixin",

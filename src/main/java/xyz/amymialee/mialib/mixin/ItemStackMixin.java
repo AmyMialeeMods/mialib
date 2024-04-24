@@ -14,7 +14,6 @@ import xyz.amymialee.mialib.modules.ItemModule;
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
     @Shadow public abstract boolean isIn(TagKey<Item> tag);
-
     @Shadow public abstract Item getItem();
 
     @Inject(method = "isDamageable", at = @At("HEAD"), cancellable = true)
