@@ -61,25 +61,58 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 			initialized = true;
 		}
 		var pack = generator.createPack();
-		pack.addProvider((dataOutput, future) -> new MAdvancementProvider(this, dataOutput));
-		pack.addProvider((dataOutput, future) -> new MBlockLootTableProvider(this, dataOutput));
-		pack.addProvider((dataOutput, future) -> new MLanguageProvider(this, dataOutput));
-		pack.addProvider((dataOutput, future) -> new MLootTableProvider(this, dataOutput));
-		pack.addProvider((dataOutput, future) -> new MModelProvider(this, dataOutput));
-		pack.addProvider((dataOutput, future) -> new MRecipeProvider(this, dataOutput));
-		pack.addProvider((dataOutput, future) -> new MFlatLevelGeneratorPresetProvider(this, dataOutput, future));
+		var set = new HashSet<String>();
+		var methods = this.getClass().getDeclaredMethods();
+		for (var method : methods) {
+			set.add(method.getName());
+		}
+		if (set.contains("generateAdvancements")) {
+			pack.addProvider((dataOutput, future) -> new MAdvancementProvider(this, dataOutput));
+		}
+		if (set.contains("generateBlockLootTables")) {
+			pack.addProvider((dataOutput, future) -> new MBlockLootTableProvider(this, dataOutput));
+		}
+		if (set.contains("generateTranslations")) {
+			pack.addProvider((dataOutput, future) -> new MLanguageProvider(this, dataOutput));
+		}
+		if (set.contains("generateLootTables")) {
+			pack.addProvider((dataOutput, future) -> new MLootTableProvider(this, dataOutput));
+		}
+		if (set.contains("generateBlockStateModels") || set.contains("generateItemModels")) {
+			pack.addProvider((dataOutput, future) -> new MModelProvider(this, dataOutput));
+		}
+		if (set.contains("generateRecipes")) {
+			pack.addProvider((dataOutput, future) -> new MRecipeProvider(this, dataOutput));
+		}
+		if (set.contains("generateFlatLevelGeneratorPresets")) {
+			pack.addProvider((dataOutput, future) -> new MFlatLevelGeneratorPresetProvider(this, dataOutput, future));
+		}
 		/* Tag Providers */
-		pack.addProvider((dataOutput, future) -> new MBlockTagProvider(this, dataOutput, future));
-		pack.addProvider((dataOutput, future) -> new MItemTagProvider(this, dataOutput, future));
-		pack.addProvider((dataOutput, future) -> new MFluidTagProvider(this, dataOutput, future));
-		pack.addProvider((dataOutput, future) -> new MEntityTypeTagProvider(this, dataOutput, future));
-		pack.addProvider((dataOutput, future) -> new MGameEventTagProvider(this, dataOutput, future));
-		pack.addProvider((dataOutput, future) -> new MDamageTypeTagProvider(this, dataOutput, future));
-		pack.addProvider((dataOutput, future) -> new MFlatLevelGeneratorPresetTagProvider(this, dataOutput, future));
-		this.addExtraDataProviders(pack);
+		if (set.contains("generateBlockTags")) {
+			pack.addProvider((dataOutput, future) -> new MBlockTagProvider(this, dataOutput, future));
+		}
+		if (set.contains("generateItemTags")) {
+			pack.addProvider((dataOutput, future) -> new MItemTagProvider(this, dataOutput, future));
+		}
+		if (set.contains("generateFluidTags")) {
+			pack.addProvider((dataOutput, future) -> new MFluidTagProvider(this, dataOutput, future));
+		}
+		if (set.contains("generateEntityTypeTags")) {
+			pack.addProvider((dataOutput, future) -> new MEntityTypeTagProvider(this, dataOutput, future));
+		}
+		if (set.contains("generateGameEventTags")) {
+			pack.addProvider((dataOutput, future) -> new MGameEventTagProvider(this, dataOutput, future));
+		}
+		if (set.contains("generateDamageTypeTags")) {
+			pack.addProvider((dataOutput, future) -> new MDamageTypeTagProvider(this, dataOutput, future));
+		}
+		if (set.contains("generateFlatLevelGeneratorPresetTags")) {
+			pack.addProvider((dataOutput, future) -> new MFlatLevelGeneratorPresetTagProvider(this, dataOutput, future));
+		}
+		if (set.contains("addExtraDataProviders")) {
+			this.addExtraDataProviders(pack);
+		}
 	}
-
-	protected void addExtraDataProviders(FabricDataGenerator.Pack pack) {}
 
 	protected void generateAdvancements(MAdvancementProvider provider, Consumer<Advancement> consumer) {}
 
@@ -110,6 +143,8 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 	protected void generateDamageTypeTags(MDamageTypeTagProvider provider, RegistryWrapper.WrapperLookup arg) {}
 
 	protected void generateFlatLevelGeneratorPresetTags(MFlatLevelGeneratorPresetTagProvider provider, RegistryWrapper.WrapperLookup arg) {}
+
+	protected void addExtraDataProviders(FabricDataGenerator.Pack pack) {}
 
 	protected static class MAdvancementProvider extends FabricAdvancementProvider {
 		private final MDataGen dataGen;
