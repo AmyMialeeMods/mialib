@@ -10,6 +10,7 @@ public class MiaLibMixinPlugin implements BlankMixinPlugin {
         if (FabricLoader.getInstance().isModLoaded("connectormod")) {
             if (mixinClassName.endsWith("ResourcePackManagerMixin")) return false;
             if (mixinClassName.endsWith("EnchantmentHelperMixin")) return false;
+            if (mixinClassName.endsWith("MultiplayerServerListWidgetMixin")) return false;
         }
         return BlankMixinPlugin.super.shouldApplyMixin(targetClassName, mixinClassName);
     }
