@@ -30,6 +30,7 @@
     "interfaces.ItemStackMixin",
     "interfaces.PlayerEntityMixin",
     "interfaces.ServerWorldMixin",
+    "interfaces.StatusEffectMixin",
     "interfaces.TextMixin",
     "interfaces.WorldMixin"
   ],
