@@ -24,3 +24,8 @@ accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerLi
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget MOVE_UP_TEXTURE Lnet/minecraft/util/Identifier;
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget MOVE_DOWN_HIGHLIGHTED_TEXTURE Lnet/minecraft/util/Identifier;
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget MOVE_DOWN_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/widget/PressableWidget TEXTURES Lnet/minecraft/client/gui/screen/ButtonTextures;
+accessible field net/minecraft/client/gui/widget/SliderWidget HIGHLIGHTED_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/widget/SliderWidget TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/widget/SliderWidget HANDLE_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/widget/SliderWidget HANDLE_HIGHLIGHTED_TEXTURE Lnet/minecraft/util/Identifier;

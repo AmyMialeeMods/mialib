@@ -9,6 +9,8 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.PressableWidget;
+import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.input.KeyCodes;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.text.Text;
@@ -175,16 +177,6 @@ public class MValueScreen extends Screen {
             this.setTooltip(Tooltip.of(Text.translatable(this.value.getDescriptionTranslationKey())));
         }
 
-        protected int getTextureY() {
-            var i = 1;
-            if (!this.active) {
-                i = 0;
-            } else if (this.isSelected()) {
-                i = 2;
-            }
-            return 46 + i * 20;
-        }
-
         @Override
         public void appendClickableNarrations(NarrationMessageBuilder builder) {
             this.appendDefaultNarrations(builder);
@@ -207,9 +199,9 @@ public class MValueScreen extends Screen {
             context.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
             RenderSystem.enableBlend();
             RenderSystem.enableDepthTest();
-            context.drawNineSlicedTexture(WIDGETS_TEXTURE, this.getX(), this.getY(), 20, this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY());
+            context.drawGuiTexture(PressableWidget.TEXTURES.get(this.active, this.isSelected()), this.getX(), this.getY(), 20, this.getHeight());
             context.drawItem(this.value.getStack(), this.getX() + 2, this.getY() + 2);
-            context.drawNineSlicedTexture(WIDGETS_TEXTURE, this.getX() + 20, this.getY(), this.getWidth() - 20, this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY());
+            context.drawGuiTexture(PressableWidget.TEXTURES.get(this.active, this.isSelected()), this.getX() + 20, this.getY(), this.getWidth() - 20, this.getHeight());
             context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             drawScrollableText(context, minecraftClient.textRenderer, this.getMessage(), this.getX() + 22, this.getY(), this.getX() + this.getWidth() - 2, this.getY() + this.getHeight(), (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
         }
@@ -233,23 +225,12 @@ public class MValueScreen extends Screen {
     }
 
     public abstract static class MValueSliderButton<T extends Number, K extends MValue.MValueMinMax<T>> extends MValueButton<T, K> {
-        private static final Identifier TEXTURE = new Identifier("textures/gui/slider.png");
         protected double sliderValue;
         public boolean sliderFocused;
 
         protected MValueSliderButton(int x, int y, K value) {
             super(x, y, value);
             this.refreshFromValue();
-        }
-
-        private int getYImage() {
-            var i = this.isFocused() && !this.sliderFocused ? 1 : 0;
-            return i * 20;
-        }
-
-        private int getTextureV() {
-            var i = !this.hovered && !this.sliderFocused ? 2 : 3;
-            return i * 20;
         }
 
         @Override
@@ -259,10 +240,10 @@ public class MValueScreen extends Screen {
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableDepthTest();
-            context.drawNineSlicedTexture(WIDGETS_TEXTURE, this.getX(), this.getY(), 20, this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY());
+            context.drawGuiTexture(PressableWidget.TEXTURES.get(this.active, this.isSelected()), this.getX(), this.getY(), 20, this.getHeight());
             context.drawItem(this.value.getStack(), this.getX() + 2, this.getY() + 2);
-            context.drawNineSlicedTexture(TEXTURE, this.getX() + 20, this.getY(), this.getWidth() - 20, this.getHeight(), 20, 4, 200, 20, 0, this.getYImage());
-            context.drawNineSlicedTexture(TEXTURE, this.getX() + 20 + (int)(this.sliderValue * (double)((this.width - 20) - 8)), this.getY(), 8, 20, 20, 4, 200, 20, 0, this.getTextureV());
+            context.drawGuiTexture(this.isFocused() && !this.sliderFocused ? SliderWidget.HIGHLIGHTED_TEXTURE : SliderWidget.TEXTURE, this.getX() + 20, this.getY(), this.getWidth() - 20, this.getHeight());
+            context.drawGuiTexture(!this.hovered && !this.sliderFocused ? SliderWidget.HANDLE_TEXTURE : SliderWidget.HANDLE_HIGHLIGHTED_TEXTURE, this.getX() + 20 + (int)(this.sliderValue * (double)((this.width - 20) - 8)), this.getY(), 8, this.getHeight());
             context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             drawScrollableText(context, minecraftClient.textRenderer, this.getMessage(), this.getX() + 22, this.getY(), this.getX() + this.getWidth() - 2, this.getY() + this.getHeight(), (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
         }

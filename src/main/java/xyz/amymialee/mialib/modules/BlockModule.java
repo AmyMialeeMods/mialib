@@ -1,7 +1,6 @@
 package xyz.amymialee.mialib.modules;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.TagKey;
 import xyz.amymialee.mialib.MiaLib;

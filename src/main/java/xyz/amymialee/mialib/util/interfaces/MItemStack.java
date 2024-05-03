@@ -1,9 +1,7 @@
 package xyz.amymialee.mialib.util.interfaces;
 
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
-import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
