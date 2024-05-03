@@ -30,8 +30,8 @@ public class MultiplayerServerListWidgetMixin extends AlwaysSelectedEntryListWid
     @Unique private static MultiplayerServerListWidget cache;
     @Unique private static boolean spacerAdded;
 
-    public MultiplayerServerListWidgetMixin(MinecraftClient minecraftClient, int i, int j, int k, int l, int m) {
-        super(minecraftClient, i, j, k, l, m);
+    public MultiplayerServerListWidgetMixin(MinecraftClient minecraftClient, int i, int j, int k, int l) {
+        super(minecraftClient, i, j, k, l);
     }
 
     @Inject(method = "updateEntries", at = @At(value = "HEAD"))
@@ -89,16 +89,16 @@ public class MultiplayerServerListWidgetMixin extends AlwaysSelectedEntryListWid
                     var p = mouseY - y;
                     if (index > this.screen.getServerList().servers.size() + 1) {
                         if (o < 16 && p < 16) {
-                            context.drawTexture(MultiplayerServerListWidget.SERVER_SELECTION_TEXTURE, x, y, 96.0F, 32.0F, 32, 32, 256, 256);
+                            context.drawGuiTexture(MultiplayerServerListWidget.MOVE_UP_HIGHLIGHTED_TEXTURE, x, y, 32, 32);
                         } else {
-                            context.drawTexture(MultiplayerServerListWidget.SERVER_SELECTION_TEXTURE, x, y, 96.0F, 0.0F, 32, 32, 256, 256);
+                            context.drawGuiTexture(MultiplayerServerListWidget.MOVE_UP_TEXTURE, x, y, 32, 32);
                         }
                     }
                     if (index < this.screen.getServerList().size()) {
                         if (o < 16 && p > 16) {
-                            context.drawTexture(MultiplayerServerListWidget.SERVER_SELECTION_TEXTURE, x, y, 64.0F, 32.0F, 32, 32, 256, 256);
+                            context.drawGuiTexture(MultiplayerServerListWidget.MOVE_DOWN_HIGHLIGHTED_TEXTURE, x, y, 32, 32);
                         } else {
-                            context.drawTexture(MultiplayerServerListWidget.SERVER_SELECTION_TEXTURE, x, y, 64.0F, 0.0F, 32, 32, 256, 256);
+                            context.drawGuiTexture(MultiplayerServerListWidget.MOVE_DOWN_TEXTURE, x, y, 32, 32);
                         }
                     }
                 }
@@ -110,23 +110,23 @@ public class MultiplayerServerListWidgetMixin extends AlwaysSelectedEntryListWid
             return instance.servers.size();
         }
 
-        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 3))
-        private boolean mialib$mialibServerMoveIconRemoval1(DrawContext instance, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
+        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 3))
+        private boolean mialib$mialibServerMoveIconRemoval1(DrawContext instance, Identifier texture, int x, int y, int width, int height) {
             return !this.screen.getServerList().mialib$getMialibServers().contains(this.server);
         }
 
-        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 4))
-        private boolean mialib$mialibServerMoveIconRemoval2(DrawContext instance, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
+        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 4))
+        private boolean mialib$mialibServerMoveIconRemoval2(DrawContext instance, Identifier texture, int x, int y, int width, int height) {
             return !this.screen.getServerList().mialib$getMialibServers().contains(this.server);
         }
 
-        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 5))
-        private boolean mialib$mialibServerMoveIconRemoval3(DrawContext instance, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
+        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 5))
+        private boolean mialib$mialibServerMoveIconRemoval3(DrawContext instance, Identifier texture, int x, int y, int width, int height) {
             return !this.screen.getServerList().mialib$getMialibServers().contains(this.server);
         }
 
-        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 6))
-        private boolean mialib$mialibServerMoveIconRemoval4(DrawContext instance, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
+        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 6))
+        private boolean mialib$mialibServerMoveIconRemoval4(DrawContext instance, Identifier texture, int x, int y, int width, int height) {
             return !this.screen.getServerList().mialib$getMialibServers().contains(this.server);
         }
 

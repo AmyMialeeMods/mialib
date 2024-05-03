@@ -2,32 +2,31 @@ package xyz.amymialee.mialib.modules.client;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.MiaLib;
 import xyz.amymialee.mialib.mvalues.MValue;
 import xyz.amymialee.mialib.mvalues.MValueManager;
 import xyz.amymialee.mialib.mvalues.MValueScreen;
+import xyz.amymialee.mialib.networking.FloatyPayload;
+import xyz.amymialee.mialib.networking.MValueS2CPayload;
 
 public interface NetworkingClientModule {
     static void init() {
-        ClientPlayNetworking.registerGlobalReceiver(MiaLib.id("floaty"), (minecraftClient, playNetworkHandler, packetByteBuf, packetSender) -> {
-            var stack = packetByteBuf.readItemStack();
-            minecraftClient.execute(() -> minecraftClient.gameRenderer.showFloatingItem(stack));
-        });
-        ClientPlayNetworking.registerGlobalReceiver(MValue.MVALUE_SYNC, (client, playNetworkHandler, buf, packetSender) -> {
-            var id = buf.readIdentifier();
-            var nbt = buf.readNbt();
-            client.execute(() -> {
-                var mValue = MValueManager.get(id);
-                if (mValue != null) {
-                    mValue.readNbt(nbt);
-                    if (client.currentScreen instanceof MValueScreen screen) {
-                        screen.refreshWidgets();
-                    }
+        PayloadTypeRegistry.playS2C().register(FloatyPayload.ID, FloatyPayload.CODEC);
+        ClientPlayNetworking.registerGlobalReceiver(FloatyPayload.ID, (payload, context) -> context.client().execute(() -> context.client().gameRenderer.showFloatingItem(payload.stack())));
+
+        PayloadTypeRegistry.playS2C().register(MValueS2CPayload.ID, MValueS2CPayload.CODEC);
+        ClientPlayNetworking.registerGlobalReceiver(MValueS2CPayload.ID, (payload, context) -> context.client().execute(() -> {
+            var mValue = MValueManager.get(payload.id());
+            if (mValue != null) {
+                mValue.readNbt(payload.buf());
+                if (context.client().currentScreen instanceof MValueScreen screen) {
+                    screen.refreshWidgets();
                 }
-            });
-        });
+            }
+        }));
     }
 
     static void sendAttacking(boolean attacking) {

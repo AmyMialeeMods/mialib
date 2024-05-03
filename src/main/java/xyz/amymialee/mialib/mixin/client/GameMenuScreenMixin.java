@@ -44,8 +44,8 @@ public class GameMenuScreenMixin extends Screen {
         if (this.client == null || this.client.player == null || !this.client.player.hasPermissionLevel(4)) return;
         var button = this.addDrawableChild(new ButtonWidget(ref.get().getX() - 20 - 4, ref.get().getY(), 20, 20, Text.translatable("%s.screen.mvalues".formatted(MiaLib.MOD_ID)), (b) -> this.client.setScreen(new MValueScreen()), Supplier::get) {
             @Override
-            public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
-                super.renderButton(context, mouseX, mouseY, delta);
+            protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+                super.renderWidget(context, mouseX, mouseY, delta);
                 context.drawTexture(LOGO_TEXTURE, this.getX() + 2, this.getY() + 2, 16, 16, 0, 0, 16, 16, 16, 16);
             }
 

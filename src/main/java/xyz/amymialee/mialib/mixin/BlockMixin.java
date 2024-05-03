@@ -97,7 +97,7 @@ public class BlockMixin {
         fakeFurnace.setStack(0, input);
         var recipes = world.getRecipeManager().getAllMatches(RecipeType.SMELTING, fakeFurnace, world);
         for (var recipe : recipes) {
-            var result = recipe.getOutput(world.getRegistryManager());
+            var result = recipe.value().getResult(world.getRegistryManager());
             result.setCount(result.getCount() * input.getCount());
             return result;
         }

@@ -21,7 +21,7 @@ public class ServerRecipeBookMixin {
     private boolean mialib$ignoreRecipeInUncraftableTag(boolean original, Collection<Recipe<?>> recipes, ServerPlayerEntity player, @Local(ordinal = 0) Recipe<?> recipe) {
         if (!original) {
             var registries = player.getWorld().getRegistryManager();
-            var output = recipe.getOutput(registries);
+            var output = recipe.getResult(registries);
             return output.isIn(ItemModule.UNCRAFTABLE);
         }
         return false;
@@ -32,7 +32,7 @@ public class ServerRecipeBookMixin {
         var registries = player.getWorld().getRegistryManager();
         var recipes = player.getWorld().getRecipeManager();
         var out = new HashSet<>(original);
-        out.removeIf(i -> recipes.get(i).filter(r -> !(r.getOutput(registries).isIn(ItemModule.UNCRAFTABLE))).isEmpty());
+        out.removeIf(i -> recipes.get(i).filter(r -> !(r.value().getResult(registries).isIn(ItemModule.UNCRAFTABLE))).isEmpty());
         return out;
     }
 
@@ -41,7 +41,7 @@ public class ServerRecipeBookMixin {
         var registries = player.getWorld().getRegistryManager();
         var recipes = player.getWorld().getRecipeManager();
         var out = new HashSet<>(original);
-        out.removeIf(i -> recipes.get(i).filter(r -> !(r.getOutput(registries).isIn(ItemModule.UNCRAFTABLE))).isEmpty());
+        out.removeIf(i -> recipes.get(i).filter(r -> !(r.value().getResult(registries).isIn(ItemModule.UNCRAFTABLE))).isEmpty());
         return out;
     }
 }

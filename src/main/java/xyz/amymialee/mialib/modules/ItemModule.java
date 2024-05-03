@@ -10,6 +10,7 @@ public interface ItemModule {
     TagKey<Item> UNDESTROYABLE = TagKey.of(Registries.ITEM.getKey(), MiaLib.id("damage_immune"));
     TagKey<Item> UNCRAFTABLE = TagKey.of(Registries.ITEM.getKey(), MiaLib.id("uncraftable"));
     TagKey<Item> UNBREAKABLE = TagKey.of(Registries.ITEM.getKey(), MiaLib.id("unbreakable"));
+    TagKey<Item> EMPTY = TagKey.of(Registries.ITEM.getKey(), MiaLib.id("empty"));
 
     static void init() {}
 }

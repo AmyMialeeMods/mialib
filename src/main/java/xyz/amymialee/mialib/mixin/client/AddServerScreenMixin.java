@@ -4,8 +4,8 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.AddServerScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.multiplayer.AddServerScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -44,8 +44,8 @@ public class AddServerScreenMixin extends Screen {
                 b.setTooltip(Tooltip.of(Text.translatable((serverList.mialib$isEditingMialibServer() ? "%s.mialib_server.true" : "%s.mialib_server.false").formatted(MiaLib.MOD_ID))));
             }, Supplier::get) {
                 @Override
-                public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
-                    super.renderButton(context, mouseX, mouseY, delta);
+                protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+                    super.renderWidget(context, mouseX, mouseY, delta);
                     context.drawTexture(serverList.mialib$isEditingMialibServer() ? LOGO_TEXTURE : LOGO_GRAY_TEXTURE, this.getX() + 2, this.getY() + 2, 16, 16, 0, 0, 16, 16, 16, 16);
                 }
 

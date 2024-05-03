@@ -11,7 +11,7 @@ import xyz.amymialee.mialib.mvalues.MValueManager;
 
 public interface NetworkingModule {
     static void init() {
-        ServerPlayNetworking.registerGlobalReceiver(MValue.MVALUE_SYNC, ((server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(MValue.MVALUE_SYNC, ((payload, context) -> {
             if (!player.hasPermissionLevel(4)) return;
             var id = buf.readIdentifier();
             var nbt = buf.readNbt();
@@ -24,11 +24,11 @@ public interface NetworkingModule {
                 }
             });
         }));
-        ServerPlayNetworking.registerGlobalReceiver(MiaLib.id("attacking"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(MiaLib.id("attacking"), (payload, context) -> {
             var holding = buf.readBoolean();
             server.execute(() -> player.mialib$setHoldingAttack(holding));
         });
-        ServerPlayNetworking.registerGlobalReceiver(MiaLib.id("using"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(MiaLib.id("using"), (payload, context) -> {
             var holding = buf.readBoolean();
             server.execute(() -> player.mialib$setHoldingUse(holding));
         });

@@ -19,7 +19,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         super(entityType, world);
     }
 
-    @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getAttributeValue(Lnet/minecraft/entity/attribute/EntityAttribute;)D"), cancellable = true)
+    @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getAttributeValue(Lnet/minecraft/registry/entry/RegistryEntry;)D"), cancellable = true)
     public void mialib$customAttacks(@NotNull Entity target, CallbackInfo ci) {
         if (!target.isAttackable()) return;
         if (target instanceof EnderDragonPart) target = ((EnderDragonPart)target).owner;

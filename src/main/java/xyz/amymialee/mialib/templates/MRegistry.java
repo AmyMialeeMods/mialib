@@ -1,13 +1,13 @@
 package xyz.amymialee.mialib.templates;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.advancement.criterion.Criterion;
 import net.minecraft.block.Block;
-import net.minecraft.block.entity.BannerPattern;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.serialize.ArgumentSerializer;
+import net.minecraft.component.DataComponentType;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -24,6 +24,7 @@ import net.minecraft.entity.passive.CatVariant;
 import net.minecraft.entity.passive.FrogVariant;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.*;
+import net.minecraft.item.map.MapDecorationType;
 import net.minecraft.loot.condition.LootConditionType;
 import net.minecraft.loot.entry.LootPoolEntryType;
 import net.minecraft.loot.function.LootFunctionType;
@@ -32,11 +33,13 @@ import net.minecraft.loot.provider.number.LootNumberProviderType;
 import net.minecraft.loot.provider.score.LootScoreProviderType;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.potion.Potion;
+import net.minecraft.predicate.item.ItemSubPredicate;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.scoreboard.number.NumberFormatType;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.StatType;
@@ -136,21 +139,21 @@ public class MRegistry {
 
 	public Block registerBlockWithItem(String path, Block block, ItemGroup @NotNull ... groups) {
 		this.register(path, block);
-		this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups);
+		this.registerItem(path, new BlockItem(block, new Item.Settings()), groups);
 		return block;
 	}
 
 	@SafeVarargs
 	public final Block registerBlockWithItem(String path, Block block, RegistryKey<ItemGroup> @NotNull ... groups) {
 		this.register(path, block);
-		this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups);
+		this.registerItem(path, new BlockItem(block, new Item.Settings()), groups);
 		return block;
 	}
 
 	@SafeVarargs
 	public final Block registerBlockWithItem(String path, Block block, Consumer<Item> @NotNull ... groups) {
 		this.register(path, block);
-		this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups);
+		this.registerItem(path, new BlockItem(block, new Item.Settings()), groups);
 		return block;
 	}
 
@@ -172,7 +175,7 @@ public class MRegistry {
 			this.entityAttributeRegistrations.add(() -> FabricDefaultAttributeRegistry.register(entity, attributes));
 		}
 		if (eggData != null) {
-			var egg = new SpawnEggItem(entity, eggData.primaryColor, eggData.secondaryColor, new FabricItemSettings());
+			var egg = new SpawnEggItem(entity, eggData.primaryColor, eggData.secondaryColor, new Item.Settings());
 			this.register(path + "_spawn_egg", egg);
 			this.spawnEggs.put(entity, egg);
 		}
@@ -309,9 +312,15 @@ public class MRegistry {
 		DEFAULT_REGISTRIES.put(StructurePoolElementType.class, Registries.STRUCTURE_POOL_ELEMENT);
 		DEFAULT_REGISTRIES.put(CatVariant.class, Registries.CAT_VARIANT);
 		DEFAULT_REGISTRIES.put(FrogVariant.class, Registries.FROG_VARIANT);
-		DEFAULT_REGISTRIES.put(BannerPattern.class, Registries.BANNER_PATTERN);
 		DEFAULT_REGISTRIES.put(Instrument.class, Registries.INSTRUMENT);
+		DEFAULT_REGISTRIES.put(String.class, Registries.DECORATED_POT_PATTERN);
 		DEFAULT_REGISTRIES.put(ItemGroup.class, Registries.ITEM_GROUP);
+		DEFAULT_REGISTRIES.put(Criterion.class, Registries.CRITERION);
+		DEFAULT_REGISTRIES.put(NumberFormatType.class, Registries.NUMBER_FORMAT_TYPE);
+		DEFAULT_REGISTRIES.put(ArmorMaterial.class, Registries.ARMOR_MATERIAL);
+		DEFAULT_REGISTRIES.put(DataComponentType.class, Registries.DATA_COMPONENT_TYPE);
+		DEFAULT_REGISTRIES.put(ItemSubPredicate.Type.class, Registries.ITEM_SUB_PREDICATE_TYPE);
+		DEFAULT_REGISTRIES.put(MapDecorationType.class, Registries.MAP_DECORATION_TYPE);
 	}
 
 	public record EggData(int primaryColor, int secondaryColor) {

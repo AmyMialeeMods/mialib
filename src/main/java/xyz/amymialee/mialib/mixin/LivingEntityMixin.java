@@ -54,7 +54,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @WrapOperation(method = "clearStatusEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;onStatusEffectRemoved(Lnet/minecraft/entity/effect/StatusEffectInstance;)V"))
     private void mialib$unclearable(LivingEntity instance, @NotNull StatusEffectInstance effect, Operation<Void> original, @Share("shouldClear") @NotNull LocalBooleanRef shouldClear) {
-        shouldClear.set(effect.getEffectType().mialib$shouldBeCleared(instance, effect));
+        shouldClear.set(effect.getEffectType().value().mialib$shouldBeCleared(instance, effect));
         if (shouldClear.get()) {
             original.call(instance, effect);
         }

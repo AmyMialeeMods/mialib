@@ -3,10 +3,10 @@ package xyz.amymialee.mialib.mvalues;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import dev.onyxstudios.cca.api.v3.scoreboard.ScoreboardSyncCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
+import org.ladysnake.cca.api.v3.scoreboard.ScoreboardSyncCallback;
 import xyz.amymialee.mialib.MiaLib;
 import xyz.amymialee.mialib.modules.NetworkingModule;
 

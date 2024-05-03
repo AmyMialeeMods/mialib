@@ -8,11 +8,9 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -49,10 +47,6 @@ public interface MItem {
 
     default int mialib$enchantLevel(Enchantment enchantment, ItemStack stack, int level) {
         return level;
-    }
-
-    default ActionResult mialib$checkEnchantment(EnchantmentTarget target, Enchantment enchantment) {
-        return ActionResult.PASS;
     }
 
     default int mialib$getNameColor(ItemStack stack) {

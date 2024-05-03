@@ -1,14 +1,15 @@
 package xyz.amymialee.mialib.cca;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.ComponentRegistry;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.tick.CommonTickingComponent;
 import xyz.amymialee.mialib.MiaLib;
 
 import java.util.HashMap;
@@ -82,7 +83,7 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 	}
 
 	@Override
-	public void readFromNbt(@NotNull NbtCompound tag) {
+	public void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
 		this.tick = tag.getInt("tick");
 		this.cooldowns.clear();
 		var compound = tag.getCompound("cooldowns");
@@ -94,7 +95,7 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 	}
 
 	@Override
-	public void writeToNbt(@NotNull NbtCompound tag) {
+	public void writeToNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
 		tag.putInt("tick", this.tick);
 		var compound = new NbtCompound();
 		for (var id : this.cooldowns.keySet()) {

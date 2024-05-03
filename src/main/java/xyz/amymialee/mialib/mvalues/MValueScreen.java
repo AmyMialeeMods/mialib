@@ -92,7 +92,7 @@ public class MValueScreen extends Screen {
 
     @Override
     public void render(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context);
+        this.renderBackground(context, mouseX, mouseY, delta);
         context.getMatrices().push();
         context.enableScissor(this.width / 2 - 194, this.height / 2 - 62, this.width / 2 + 194, this.height / 2 + 88);
         for (var x = 0; x <= this.width; x += 16) {
@@ -130,10 +130,10 @@ public class MValueScreen extends Screen {
         }
 
         @Override
-        public void render(@NotNull DrawContext drawContext, int mouseX, int mouseY, float delta) {
-            drawContext.drawTexture(BUTTON_TEX, this.getX(), this.getY(), (this.active && this.isHovered() ? 22 : 0) + (this.next ? 11 : 0), this.active ? 0 : 12, 11, 12);
+        protected void renderWidget(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
+            context.drawTexture(BUTTON_TEX, this.getX(), this.getY(), (this.active && this.isHovered() ? 22 : 0) + (this.next ? 11 : 0), this.active ? 0 : 12, 11, 12);
             if (mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height) {
-                drawContext.drawTooltip(MinecraftClient.getInstance().textRenderer, this.getMessage(), mouseX, mouseY);
+                context.drawTooltip(MinecraftClient.getInstance().textRenderer, this.getMessage(), mouseX, mouseY);
             }
         }
     }
@@ -150,11 +150,11 @@ public class MValueScreen extends Screen {
         }
 
         @Override
-        public void render(@NotNull DrawContext drawContext, int mouseX, int mouseY, float delta) {
-            drawContext.drawTexture(this.active ? TAB_DESELECTED : TAB_SELECTED, this.getX(), this.getY(), 0, 0, 28, 32, 28, 32);
-            drawContext.drawItem(this.category.stackSupplier.get(), this.getX() + 5, this.getY() + 10);
+        protected void renderWidget(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
+            context.drawTexture(this.active ? TAB_DESELECTED : TAB_SELECTED, this.getX(), this.getY(), 0, 0, 28, 32, 28, 32);
+            context.drawItem(this.category.stackSupplier.get(), this.getX() + 5, this.getY() + 10);
             if (mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height) {
-                drawContext.drawTooltip(MinecraftClient.getInstance().textRenderer, this.getMessage(), mouseX, mouseY);
+                context.drawTooltip(MinecraftClient.getInstance().textRenderer, this.getMessage(), mouseX, mouseY);
             }
         }
     }
@@ -202,7 +202,7 @@ public class MValueScreen extends Screen {
         }
 
         @Override
-        protected void renderButton(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
+        protected void renderWidget(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
             var minecraftClient = MinecraftClient.getInstance();
             context.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
             RenderSystem.enableBlend();
@@ -253,7 +253,7 @@ public class MValueScreen extends Screen {
         }
 
         @Override
-        public void renderButton(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
+        protected void renderWidget(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
             var minecraftClient = MinecraftClient.getInstance();
             context.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
             RenderSystem.enableBlend();

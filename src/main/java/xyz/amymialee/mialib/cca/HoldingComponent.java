@@ -1,12 +1,13 @@
 package xyz.amymialee.mialib.cca;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import org.jetbrains.annotations.NotNull;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.ComponentRegistry;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.tick.CommonTickingComponent;
 import xyz.amymialee.mialib.MiaLib;
 
 /**
@@ -70,7 +71,7 @@ public class HoldingComponent implements AutoSyncedComponent, CommonTickingCompo
 	}
 
 	@Override
-	public void readFromNbt(@NotNull NbtCompound tag) {
+	public void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
 		this.attacking = tag.getBoolean("attacking");
 		this.using = tag.getBoolean("using");
 		this.tickAttacking = tag.getInt("tickAttacking");
@@ -78,7 +79,7 @@ public class HoldingComponent implements AutoSyncedComponent, CommonTickingCompo
 	}
 
 	@Override
-	public void writeToNbt(@NotNull NbtCompound tag) {
+	public void writeToNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
 		tag.putBoolean("attacking", this.attacking);
 		tag.putBoolean("using", this.using);
 		tag.putInt("tickAttacking", this.tickAttacking);

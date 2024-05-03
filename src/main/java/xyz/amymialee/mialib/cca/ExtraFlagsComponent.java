@@ -1,11 +1,12 @@
 package xyz.amymialee.mialib.cca;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import org.jetbrains.annotations.NotNull;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.ComponentRegistry;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import xyz.amymialee.mialib.MiaLib;
 import xyz.amymialee.mialib.events.ExtraFlagEvents;
 import xyz.amymialee.mialib.util.MMath;
@@ -117,13 +118,13 @@ public class ExtraFlagsComponent implements AutoSyncedComponent {
     }
 
     @Override
-    public void readFromNbt(@NotNull NbtCompound tag) {
+    public void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         this.flags = tag.getByte("flags");
         this.commandFlags = tag.getByte("commandFlags");
     }
 
     @Override
-    public void writeToNbt(@NotNull NbtCompound tag) {
+    public void writeToNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         tag.putByte("flags", this.flags);
         tag.putByte("commandFlags", this.commandFlags);
     }

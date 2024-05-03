@@ -3,7 +3,6 @@ package xyz.amymialee.mialib.mixin.interfaces;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.ServerList;
 import net.minecraft.nbt.NbtCompound;
@@ -24,7 +23,7 @@ import xyz.amymialee.mialib.MiaLib;
 import xyz.amymialee.mialib.util.MDir;
 import xyz.amymialee.mialib.util.interfaces.MServerList;
 
-import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,13 +33,12 @@ public abstract class ServerListMixin implements MServerList {
     @Unique private boolean isEditingMialibServer = false;
     @Unique private ServerInfo editTarget;
 
-    @Shadow @Final private MinecraftClient client;
     @Shadow public abstract void saveFile();
     @Shadow @Final public List<ServerInfo> servers;
 
     @Shadow public abstract ServerInfo get(int index);
 
-    @Unique
+    @Unique @Override
     public List<ServerInfo> mialib$getMialibServers() {
         return this.mialibServers;
     }
@@ -49,7 +47,7 @@ public abstract class ServerListMixin implements MServerList {
     private void mialib$loadMialibServers(CallbackInfo ci) {
         try {
             this.mialibServers.clear();
-            var serverFile = NbtIo.read(MDir.getMialibFile("mialibservers.dat"));
+            var serverFile = NbtIo.read(MDir.getMialibPath("mialibservers.dat"));
             if (serverFile == null) return;
             var servers = serverFile.getList("servers", NbtElement.COMPOUND_TYPE);
             for (var i = 0; i < servers.size(); i++) {
@@ -75,9 +73,9 @@ public abstract class ServerListMixin implements MServerList {
             }
             var serverCompound = new NbtCompound();
             serverCompound.put("servers", serverList);
-            var newFile = File.createTempFile("servers", ".dat", this.client.runDirectory);
+            var newFile = Files.createTempFile(MDir.getMialibPath(""), "mialibservers", ".dat");
             NbtIo.write(serverCompound, newFile);
-            Util.backupAndReplace(MDir.getMialibFile("mialibservers.dat"), newFile, MDir.getMialibFile("mialibservers.dat_old"));
+            Util.backupAndReplace(MDir.getMialibPath("mialibservers.dat"), newFile, MDir.getMialibPath("mialibservers.dat_old"));
         } catch (Exception e) {
             MiaLib.LOGGER.error("Couldn't save mialib server list", e);
         }

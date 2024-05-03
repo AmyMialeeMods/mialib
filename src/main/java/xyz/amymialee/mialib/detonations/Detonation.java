@@ -112,11 +112,9 @@ public class Detonation {
      * Damages entities in the detonation.
      */
     protected QuinConsumer<Double, Vec3d, Entity, Entity, Entity> damageEntity = (distance, pos, target, attacker, projectile) -> {
-        if (!target.isImmuneToExplosion()) {
-            var falloff = this.falloff.apply(distance, this.entityRadius.get()) * getExposure(pos, target);
-            var damage = (float) ((falloff * falloff + falloff) / this.damage.get() + 1.0);
-            target.damage(target.getDamageSources().create(this.damageType.apply(distance), attacker, projectile), damage);
-        }
+        var falloff = this.falloff.apply(distance, this.entityRadius.get()) * getExposure(pos, target);
+        var damage = (float) ((falloff * falloff + falloff) / this.damage.get() + 1.0);
+        target.damage(target.getDamageSources().create(this.damageType.apply(distance), attacker, projectile), damage);
     };
     /**
      * Pushes away entities in the detonation.
@@ -141,7 +139,7 @@ public class Detonation {
      * Effects for the detonation to have.
      */
     protected BiConsumer<ServerWorld, Vec3d> detonationEffects = (world, vec3d) -> {
-        world.playSound(null, vec3d.x, vec3d.y, vec3d.z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1.0f, 1.0f);
+        world.playSound(null, vec3d.x, vec3d.y, vec3d.z, SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundCategory.BLOCKS, 1.0f, 1.0f);
         world.spawnParticles(ParticleTypes.EXPLOSION_EMITTER, vec3d.x, vec3d.y, vec3d.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
     };
     /**

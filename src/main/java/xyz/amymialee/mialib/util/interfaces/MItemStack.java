@@ -1,5 +1,6 @@
 package xyz.amymialee.mialib.util.interfaces;
 
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.EnchantedBookItem;
@@ -44,22 +45,6 @@ public interface MItemStack {
 	static @NotNull ItemStack enchantStack(@NotNull ItemStack stack, @NotNull EnchantmentLevelEntry @NotNull ... enchantmentLevelEntry) {
 		for (var entry : enchantmentLevelEntry) {
 			stack.addEnchantment(entry.enchantment, entry.level);
-		}
-		return stack;
-	}
-
-	static @NotNull ItemStack enchantBook(@NotNull ItemStack stack, Enchantment enchantment) {
-		return enchantBook(stack, enchantment, 1);
-	}
-
-	static @NotNull ItemStack enchantBook(@NotNull ItemStack stack, Enchantment enchantment, int level) {
-		EnchantedBookItem.addEnchantment(stack, new EnchantmentLevelEntry(enchantment, level));
-		return stack;
-	}
-
-	static @NotNull ItemStack enchantBook(@NotNull ItemStack stack, @NotNull EnchantmentLevelEntry @NotNull ... enchantmentLevelEntry) {
-		for (var entry : enchantmentLevelEntry) {
-			EnchantedBookItem.addEnchantment(stack, entry);
 		}
 		return stack;
 	}

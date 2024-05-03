@@ -13,6 +13,7 @@ import net.minecraft.world.gen.FlatLevelGeneratorPreset;
 import net.minecraft.world.gen.FlatLevelGeneratorPresets;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
 import org.jetbrains.annotations.NotNull;
+import xyz.amymialee.mialib.modules.BlockModule;
 import xyz.amymialee.mialib.modules.ItemModule;
 import xyz.amymialee.mialib.templates.MDataGen;
 
@@ -23,7 +24,7 @@ public class MiaLibDataGen extends MDataGen {
     public static final RegistryKey<FlatLevelGeneratorPreset> BLAST_PROOF = FlatLevelGeneratorPresets.of(MiaLib.id("blast_proof").toString());
 
     @Override
-    protected void generateTranslations(@NotNull MLanguageProvider provider, FabricLanguageProvider.@NotNull TranslationBuilder builder) {
+    protected void generateTranslations(@NotNull MLanguageProvider provider, RegistryWrapper.WrapperLookup registryLookup, FabricLanguageProvider.TranslationBuilder builder) {
         builder.add("flat_world_preset." + DEV_READY.getValue().toTranslationKey(), "Dev Ready");
         builder.add("flat_world_preset." + BLAST_PROOF.getValue().toTranslationKey(), "Blast Proof");
         builder.add(provider.getTagTranslationKey(ItemModule.SOUL_FIRE_SMELTING), "Soul Fire Smelting");
@@ -68,6 +69,12 @@ public class MiaLibDataGen extends MDataGen {
         provider.getOrCreateTagBuilder(ItemModule.UNDESTROYABLE);
         provider.getOrCreateTagBuilder(ItemModule.UNCRAFTABLE);
         provider.getOrCreateTagBuilder(ItemModule.UNBREAKABLE);
+        provider.getOrCreateTagBuilder(ItemModule.EMPTY);
+    }
+
+    @Override
+    protected void generateBlockTags(@NotNull MBlockTagProvider provider, RegistryWrapper.WrapperLookup arg) {
+        provider.getOrCreateTagBuilder(BlockModule.EMPTY);
     }
 
     @Override

@@ -15,9 +15,12 @@ accessible method net/minecraft/client/option/GameOptions isFalse (Ljava/lang/St
 accessible method net/minecraft/client/gui/screen/Screen clearAndInit ()V
 accessible method net/minecraft/client/gui/widget/EntryListWidget addEntry (Lnet/minecraft/client/gui/widget/EntryListWidget$Entry;)I
 accessible field net/minecraft/client/option/ServerList servers Ljava/util/List;
-accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget screen Lnet/minecraft/client/gui/screen/multiplayer/MultiplayerScreen;
-accessible field net/minecraft/client/gui/screen/AddServerScreen server Lnet/minecraft/client/network/ServerInfo;
 accessible field net/minecraft/client/option/ServerList hiddenServers Ljava/util/List;
-accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget SERVER_SELECTION_TEXTURE Lnet/minecraft/util/Identifier;
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerScreen serverListWidget Lnet/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget;
 accessible method net/minecraft/client/gui/widget/EntryListWidget getRowTop (I)I
+accessible field net/minecraft/client/gui/screen/multiplayer/AddServerScreen server Lnet/minecraft/client/network/ServerInfo;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget screen Lnet/minecraft/client/gui/screen/multiplayer/MultiplayerScreen;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget MOVE_UP_HIGHLIGHTED_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget MOVE_UP_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget MOVE_DOWN_HIGHLIGHTED_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget MOVE_DOWN_TEXTURE Lnet/minecraft/util/Identifier;
