@@ -3,6 +3,7 @@ package xyz.amymialee.mialib.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerRecipeBook;
 import net.minecraft.util.Identifier;
@@ -18,10 +19,10 @@ import java.util.Set;
 @Mixin(ServerRecipeBook.class)
 public class ServerRecipeBookMixin {
     @ModifyExpressionValue(method = "unlockRecipes", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/Recipe;isIgnoredInRecipeBook()Z"))
-    private boolean mialib$ignoreRecipeInUncraftableTag(boolean original, Collection<Recipe<?>> recipes, ServerPlayerEntity player, @Local(ordinal = 0) Recipe<?> recipe) {
+    private boolean mialib$ignoreRecipeInUncraftableTag(boolean original, Collection<Recipe<?>> recipes, ServerPlayerEntity player, @Local(ordinal = 0) RecipeEntry<?> recipe) {
         if (!original) {
             var registries = player.getWorld().getRegistryManager();
-            var output = recipe.getResult(registries);
+            var output = recipe.value().getResult(registries);
             return output.isIn(ItemModule.UNCRAFTABLE);
         }
         return false;

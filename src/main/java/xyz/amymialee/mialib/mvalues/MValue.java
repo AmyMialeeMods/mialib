@@ -7,8 +7,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.MiaLib;
-import xyz.amymialee.mialib.modules.NetworkingModule;
-import xyz.amymialee.mialib.modules.client.NetworkingClientModule;
+import xyz.amymialee.mialib.networking.MValueC2SPayload;
+import xyz.amymialee.mialib.networking.MValueS2CPayload;
 import xyz.amymialee.mialib.util.runnables.HoldingFunction;
 import xyz.amymialee.mialib.util.runnables.mvalues.MBooleanFunction;
 
@@ -113,7 +113,7 @@ public abstract class MValue<T> {
 
     public void syncAll() {
         for (var player : MValueManager.INSTANCE.server.getPlayerManager().getPlayerList()) {
-            NetworkingModule.syncMValue(this, player);
+            MValueS2CPayload.send(this, player);
         }
     }
 
@@ -129,7 +129,7 @@ public abstract class MValue<T> {
 
     public void sendValue(T value) {
         this.setValueInternal(value);
-        NetworkingClientModule.sendMValueChange(this);
+        MValueC2SPayload.send(this);
     }
 
     public abstract T getValue();

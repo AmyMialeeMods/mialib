@@ -94,8 +94,9 @@ public class MValueScreen extends Screen {
 
     @Override
     public void render(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
         context.getMatrices().push();
+        context.getMatrices().translate(0, 0, -1);
         context.enableScissor(this.width / 2 - 194, this.height / 2 - 62, this.width / 2 + 194, this.height / 2 + 88);
         for (var x = 0; x <= this.width; x += 16) {
             for (var y = 0; y <= this.height; y += 16) {
@@ -106,7 +107,6 @@ public class MValueScreen extends Screen {
         RenderSystem.enableBlend();
         context.drawTexture(WINDOW_TEXTURE, this.width / 2 - 203, this.height / 2 - 80, 0, 0, 406, 177, 406, 177);
         context.getMatrices().pop();
-        super.render(context, mouseX, mouseY, delta);
         var y = this.height / 2 - 74;
         context.drawText(this.textRenderer, this.title, this.width / 2 - 192, y, 4210752, false);
         var categoryTitle = Text.translatable(this.selectedCategory.getTranslationKey());

@@ -5,11 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "xyz.amymialee.mialib.MiaLibMixinPlugin",
   "mixins": [
-    "AnvilScreenHandlerMixin",
     "BlockMixin",
-    "EnchantCommandMixin",
     "EnchantmentHelperMixin",
-    "EnchantRandomlyLootFunctionMixin",
     "EndPortalBlockMixin",
     "EntityMixin",
     "ItemEntityMixin",

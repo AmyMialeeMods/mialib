@@ -12,7 +12,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import xyz.amymialee.mialib.config.MialibProperties;
-import xyz.amymialee.mialib.modules.client.NetworkingClientModule;
+import xyz.amymialee.mialib.networking.AttackingC2SPayload;
+import xyz.amymialee.mialib.networking.UsingC2SPayload;
 
 import java.util.List;
 import java.util.function.Function;
@@ -34,12 +35,12 @@ public class MinecraftClientMixin {
 		var attacking = this.options.attackKey.isPressed();
 		if (attacking != this.mialib$attacking) {
 			this.mialib$attacking = attacking;
-			NetworkingClientModule.sendAttacking(attacking);
+			AttackingC2SPayload.send(attacking);
 		}
 		var using = this.options.useKey.isPressed();
 		if (using != this.mialib$using) {
 			this.mialib$using = using;
-			NetworkingClientModule.sendUsing(using);
+			UsingC2SPayload.send(using);
 		}
 		original.call(instance, bl);
 	}

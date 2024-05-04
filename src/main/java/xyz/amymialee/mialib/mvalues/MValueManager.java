@@ -8,7 +8,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import org.ladysnake.cca.api.v3.scoreboard.ScoreboardSyncCallback;
 import xyz.amymialee.mialib.MiaLib;
-import xyz.amymialee.mialib.modules.NetworkingModule;
+import xyz.amymialee.mialib.networking.MValueS2CPayload;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
@@ -30,7 +30,7 @@ public class MValueManager {
         INSTANCE = this;
         ScoreboardSyncCallback.EVENT.register((player, tracked) -> {
             for (var key : MVALUES.values()) {
-                NetworkingModule.syncMValue(key, player);
+                MValueS2CPayload.send(key, player);
             }
         });
         loadConfig();
