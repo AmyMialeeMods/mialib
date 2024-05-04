@@ -4,7 +4,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.templates.BlankMixinPlugin;
 
-public class MiaLibMixinPlugin implements BlankMixinPlugin {
+public class MialibMixinPlugin implements BlankMixinPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, @NotNull String mixinClassName) {
         if (FabricLoader.getInstance().isModLoaded("connectormod")) {

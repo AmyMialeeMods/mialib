@@ -7,7 +7,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import org.ladysnake.cca.api.v3.scoreboard.ScoreboardSyncCallback;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.networking.MValueS2CPayload;
 
 import java.io.FileNotFoundException;
@@ -47,7 +47,7 @@ public class MValueManager {
 
     public static void register(MValueCategory category, MValue<?> mValue) {
         if (INSTANCE != null) {
-            MiaLib.LOGGER.error("MValue registered after component initialization, this leads to value loss!");
+            Mialib.LOGGER.error("MValue registered after component initialization, this leads to value loss!");
             throw new RuntimeException("MValue registered after component initialization, this leads to value loss!");
         }
         MVALUES.put(mValue.id, mValue);
@@ -65,7 +65,7 @@ public class MValueManager {
             var jsonData = gson.toJson(json);
             Files.writeString(configFile, jsonData);
         } catch (Exception e) {
-            MiaLib.LOGGER.info(e.toString());
+            Mialib.LOGGER.info(e.toString());
         }
     }
 
@@ -79,16 +79,16 @@ public class MValueManager {
                     try {
                         values.getValue().readJson(data.get(values.getKey().toString()));
                     } catch (Exception e) {
-                        MiaLib.LOGGER.info("Error loading mvalue data for {}", values.getKey().toString());
-                        MiaLib.LOGGER.info(e.toString());
+                        Mialib.LOGGER.info("Error loading mvalue data for {}", values.getKey().toString());
+                        Mialib.LOGGER.info(e.toString());
                     }
                 }
             }
         } catch (FileNotFoundException e) {
-            MiaLib.LOGGER.info("MValue data not found.");
+            Mialib.LOGGER.info("MValue data not found.");
         } catch (Exception e) {
-            MiaLib.LOGGER.info("Error loading mvalue data.");
-            MiaLib.LOGGER.info(e.toString());
+            Mialib.LOGGER.info("Error loading mvalue data.");
+            Mialib.LOGGER.info(e.toString());
         }
     }
 }

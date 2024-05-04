@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import xyz.amymialee.mialib.events.MiaLibEvents;
+import xyz.amymialee.mialib.events.MialibEvents;
 import xyz.amymialee.mialib.modules.ItemModule;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class BlockMixin {
 
     @WrapOperation(method = "dropStacks(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/entity/BlockEntity;Lnet/minecraft/entity/Entity;Lnet/minecraft/item/ItemStack;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getDroppedStacks(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/entity/BlockEntity;Lnet/minecraft/entity/Entity;Lnet/minecraft/item/ItemStack;)Ljava/util/List;"))
     private static List<ItemStack> mialib$autoSmelting(BlockState state, ServerWorld world, BlockPos pos, BlockEntity blockEntity, Entity entity, ItemStack stack, @NotNull Operation<List<ItemStack>> original) {
-        var result = MiaLibEvents.SMELT_BROKEN_BLOCK.invoker().shouldSmeltBlock(world, state, pos, blockEntity, entity, stack);
+        var result = MialibEvents.SMELT_BROKEN_BLOCK.invoker().shouldSmeltBlock(world, state, pos, blockEntity, entity, stack);
         var originalResult = original.call(state, world, pos, blockEntity, entity, stack);
         if (result == ActionResult.SUCCESS) {
             var hasSmeltable = hasSmeltable(world, originalResult);
@@ -49,7 +49,7 @@ public class BlockMixin {
 
     @WrapOperation(method = "dropStacks(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/WorldAccess;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/entity/BlockEntity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getDroppedStacks(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/entity/BlockEntity;)Ljava/util/List;"))
     private static List<ItemStack> mialib$autoSmelting(BlockState state, ServerWorld world, BlockPos pos, BlockEntity blockEntity, @NotNull Operation<List<ItemStack>> original) {
-        var result = MiaLibEvents.SMELT_BROKEN_BLOCK.invoker().shouldSmeltBlock(world, state, pos, blockEntity, null, ItemStack.EMPTY);
+        var result = MialibEvents.SMELT_BROKEN_BLOCK.invoker().shouldSmeltBlock(world, state, pos, blockEntity, null, ItemStack.EMPTY);
         var originalResult = original.call(state, world, pos, blockEntity);
         if (result == ActionResult.SUCCESS) {
             var hasSmeltable = hasSmeltable(world, originalResult);

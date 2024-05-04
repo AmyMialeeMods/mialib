@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public interface MiaLibEvents {
+public interface MialibEvents {
     Event<SmeltBrokenBlockCallback> SMELT_BROKEN_BLOCK = EventFactory.createArrayBacked(SmeltBrokenBlockCallback.class, callbacks -> (world, state, pos, blockEntity, entity, stack) -> {
         for (var callback : callbacks) {
             var result = callback.shouldSmeltBlock(world, state, pos, blockEntity, entity, stack);

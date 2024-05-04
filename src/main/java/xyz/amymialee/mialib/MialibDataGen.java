@@ -19,9 +19,9 @@ import xyz.amymialee.mialib.templates.MDataGen;
 
 import java.util.function.Consumer;
 
-public class MiaLibDataGen extends MDataGen {
-    public static final RegistryKey<FlatLevelGeneratorPreset> DEV_READY = FlatLevelGeneratorPresets.of(MiaLib.id("dev_ready").toString());
-    public static final RegistryKey<FlatLevelGeneratorPreset> BLAST_PROOF = FlatLevelGeneratorPresets.of(MiaLib.id("blast_proof").toString());
+public class MialibDataGen extends MDataGen {
+    public static final RegistryKey<FlatLevelGeneratorPreset> DEV_READY = FlatLevelGeneratorPresets.of(Mialib.id("dev_ready").toString());
+    public static final RegistryKey<FlatLevelGeneratorPreset> BLAST_PROOF = FlatLevelGeneratorPresets.of(Mialib.id("blast_proof").toString());
 
     @Override
     protected void generateTranslations(@NotNull MLanguageProvider provider, RegistryWrapper.WrapperLookup registryLookup, FabricLanguageProvider.TranslationBuilder builder) {
@@ -33,29 +33,29 @@ public class MiaLibDataGen extends MDataGen {
         builder.add(provider.getTagTranslationKey(ItemModule.UNBREAKABLE), "Unbreakable");
         for (var single : new Pair[]{new Pair<>("self", "self"), new Pair<>("single", "%s entity"), new Pair<>("multiple", "%s entities")}) {
             for (var enabled : new Pair[]{new Pair<>("enabled", "§aenabled"), new Pair<>("disabled", "§cdisabled")}) {
-                builder.add("commands.%s.vanish.%s.%s".formatted(MiaLib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Vanish %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
-                builder.add("commands.%s.indestructible.%s.%s".formatted(MiaLib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Indestructibility %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
-                builder.add("commands.%s.immortal.%s.%s".formatted(MiaLib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Immortality %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
+                builder.add("commands.%s.vanish.%s.%s".formatted(Mialib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Vanish %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
+                builder.add("commands.%s.indestructible.%s.%s".formatted(Mialib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Indestructibility %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
+                builder.add("commands.%s.immortal.%s.%s".formatted(Mialib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Immortality %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
             }
         }
-        builder.add("%s.screen.mvalues".formatted(MiaLib.MOD_ID), "%s Value Editor".formatted(MiaLib.MOD_NAME));
-        builder.add("%s.screen.mvalues.page".formatted(MiaLib.MOD_ID), "Page %2d/%2d");
-        builder.add(MiaLib.MIALIB_CATEGORY.getTranslationKey(), MiaLib.MOD_NAME);
-        builder.add(MiaLib.CREATIVE_NO_SLEEP.getTranslationKey(), "Creative No Sleep");
-        builder.add(MiaLib.CREATIVE_NO_SLEEP.getDescriptionTranslationKey(), "Creative players don't need to sleep to skip the night");
-        builder.add(MiaLib.FIRE_ASPECT_AUTO_SMELT.getTranslationKey(), "Fire Aspect Auto Smelt");
-        builder.add(MiaLib.FIRE_ASPECT_AUTO_SMELT.getDescriptionTranslationKey(), "Fire Aspect smelts broken blocks");
-        builder.add(MiaLib.DISABLE_PIGLIN_PORTAL_SPAWNING.getTranslationKey(), "Disable Piglin Spawning");
-        builder.add(MiaLib.DISABLE_PIGLIN_PORTAL_SPAWNING.getDescriptionTranslationKey(), "Disables piglins spawning from nether portals");
-        builder.add(MiaLib.DISABLE_NETHER_PORTALS.getTranslationKey(), "Disable Nether Portals");
-        builder.add(MiaLib.DISABLE_NETHER_PORTALS.getDescriptionTranslationKey(), "Disables nether portals");
-        builder.add(MiaLib.DISABLE_END_PORTALS.getTranslationKey(), "Disable End Portals");
-        builder.add(MiaLib.DISABLE_END_PORTALS.getDescriptionTranslationKey(), "Disables end portals");
-        builder.add("category.%s".formatted(MiaLib.MOD_ID), MiaLib.MOD_NAME);
-        builder.add("key.%s.mvalues".formatted(MiaLib.MOD_ID), "Open %s Value Editor".formatted(MiaLib.MOD_NAME));
-        builder.add("%s.servers".formatted(MiaLib.MOD_ID), "Mialib Servers");
-        builder.add("%s.mialib_server.true".formatted(MiaLib.MOD_ID), "Save to Mialib Server File: §aTrue");
-        builder.add("%s.mialib_server.false".formatted(MiaLib.MOD_ID), "Save to Mialib Server File: §cFalse");
+        builder.add("%s.screen.mvalues".formatted(Mialib.MOD_ID), "%s Value Editor".formatted(Mialib.MOD_NAME));
+        builder.add("%s.screen.mvalues.page".formatted(Mialib.MOD_ID), "Page %2d/%2d");
+        builder.add(Mialib.MIALIB_CATEGORY.getTranslationKey(), Mialib.MOD_NAME);
+        builder.add(Mialib.CREATIVE_NO_SLEEP.getTranslationKey(), "Creative No Sleep");
+        builder.add(Mialib.CREATIVE_NO_SLEEP.getDescriptionTranslationKey(), "Creative players don't need to sleep to skip the night");
+        builder.add(Mialib.FIRE_ASPECT_AUTO_SMELT.getTranslationKey(), "Fire Aspect Auto Smelt");
+        builder.add(Mialib.FIRE_ASPECT_AUTO_SMELT.getDescriptionTranslationKey(), "Fire Aspect smelts broken blocks");
+        builder.add(Mialib.DISABLE_PIGLIN_PORTAL_SPAWNING.getTranslationKey(), "Disable Piglin Spawning");
+        builder.add(Mialib.DISABLE_PIGLIN_PORTAL_SPAWNING.getDescriptionTranslationKey(), "Disables piglins spawning from nether portals");
+        builder.add(Mialib.DISABLE_NETHER_PORTALS.getTranslationKey(), "Disable Nether Portals");
+        builder.add(Mialib.DISABLE_NETHER_PORTALS.getDescriptionTranslationKey(), "Disables nether portals");
+        builder.add(Mialib.DISABLE_END_PORTALS.getTranslationKey(), "Disable End Portals");
+        builder.add(Mialib.DISABLE_END_PORTALS.getDescriptionTranslationKey(), "Disables end portals");
+        builder.add("category.%s".formatted(Mialib.MOD_ID), Mialib.MOD_NAME);
+        builder.add("key.%s.mvalues".formatted(Mialib.MOD_ID), "Open %s Value Editor".formatted(Mialib.MOD_NAME));
+        builder.add("%s.servers".formatted(Mialib.MOD_ID), "Mialib Servers");
+        builder.add("%s.mialib_server.true".formatted(Mialib.MOD_ID), "Save to Mialib Server File: §aTrue");
+        builder.add("%s.mialib_server.false".formatted(Mialib.MOD_ID), "Save to Mialib Server File: §cFalse");
     }
 
     @Override

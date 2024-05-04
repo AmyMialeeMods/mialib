@@ -8,14 +8,14 @@ import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import org.ladysnake.cca.api.v3.component.tick.CommonTickingComponent;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 
 /**
  * Stores values for telling if a player is holding attack or use.
  * Also provides the amount of time they have been held.
  */
 public class HoldingComponent implements AutoSyncedComponent, CommonTickingComponent {
-	public static final ComponentKey<HoldingComponent> KEY = ComponentRegistry.getOrCreate(MiaLib.id("holding"), HoldingComponent.class);
+	public static final ComponentKey<HoldingComponent> KEY = ComponentRegistry.getOrCreate(Mialib.id("holding"), HoldingComponent.class);
 	private final PlayerEntity player;
 	private boolean attacking = false;
 	private boolean using = false;

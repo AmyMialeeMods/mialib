@@ -11,7 +11,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -27,7 +27,7 @@ public class ArmorMaterialBuilder {
         map.put(ArmorItem.Type.HELMET, 0);
         map.put(ArmorItem.Type.BODY, 0);
     });
-    public static final List<ArmorMaterial.Layer> EMPTY_LAYER = List.of(new ArmorMaterial.Layer(new Identifier(MiaLib.MOD_ID)));
+    public static final List<ArmorMaterial.Layer> EMPTY_LAYER = List.of(new ArmorMaterial.Layer(new Identifier(Mialib.MOD_ID)));
     public static final Supplier<Ingredient> EMPTY_INGREDIENT = () -> Ingredient.EMPTY;
     private Map<ArmorItem.Type, Integer> defense = ARMOR_ZERO;
     private int enchantability = 0;

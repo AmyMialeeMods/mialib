@@ -22,11 +22,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 
 @Mixin(MultiplayerServerListWidget.class)
 public class MultiplayerServerListWidgetMixin extends AlwaysSelectedEntryListWidget<MultiplayerServerListWidget.Entry> {
-    @Unique private static final Text MIALIB_SERVERS_TEXT = Text.translatable("%s.servers".formatted(MiaLib.MOD_ID));
+    @Unique private static final Text MIALIB_SERVERS_TEXT = Text.translatable("%s.servers".formatted(Mialib.MOD_ID));
     @Unique private static MultiplayerServerListWidget cache;
     @Unique private static boolean spacerAdded;
 

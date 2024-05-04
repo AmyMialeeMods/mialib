@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.amymialee.mialib.events.MiaLibEvents;
+import xyz.amymialee.mialib.events.MialibEvents;
 
 import java.util.Iterator;
 
@@ -38,7 +38,7 @@ public abstract class LivingEntityMixin extends Entity {
         if (this.blockedByShield(source)) {
             return;
         }
-        var damage = MiaLibEvents.DAMAGE_INTERACTION.invoker().modifyDamage((LivingEntity) (Object) this, source, amount);
+        var damage = MialibEvents.DAMAGE_INTERACTION.invoker().modifyDamage((LivingEntity) (Object) this, source, amount);
         if (damage.isPresent()) {
             amountLocal.set(damage.get());
         } else {

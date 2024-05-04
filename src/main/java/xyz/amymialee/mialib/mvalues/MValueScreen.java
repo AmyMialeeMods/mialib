@@ -18,7 +18,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.util.runnables.TriFunction;
 
 import java.util.ArrayList;
@@ -27,14 +27,14 @@ import java.util.List;
 
 public class MValueScreen extends Screen {
     public static final HashMap<Class<?>, TriFunction<Integer, Integer, MValue<?>, MValueButton<?, ?>>> MVALUE_WIDGETS = new HashMap<>();
-    public static final Identifier WINDOW_TEXTURE = MiaLib.id("textures/gui/mvalue/mvalue_screen.png");
+    public static final Identifier WINDOW_TEXTURE = Mialib.id("textures/gui/mvalue/mvalue_screen.png");
     private final List<MValueButton<?, ?>> widgets = new ArrayList<>();
-    private MValueCategory selectedCategory = MiaLib.MIALIB_CATEGORY;
+    private MValueCategory selectedCategory = Mialib.MIALIB_CATEGORY;
     private int selectedCategoryPage = 0;
     private int mvaluePage = 0;
 
     public MValueScreen() {
-        super(Text.translatable("%s.screen.mvalues".formatted(MiaLib.MOD_ID)));
+        super(Text.translatable("%s.screen.mvalues".formatted(Mialib.MOD_ID)));
     }
 
     @Override
@@ -51,12 +51,12 @@ public class MValueScreen extends Screen {
             this.widgets.add(this.addDrawableChild(MVALUE_WIDGETS.get(value.getClass()).apply(x, y, value)));
         }
         if (list.size() > 12) {
-            this.addDrawableChild(new MValuePageWidget(this.width / 2 - 1, this.height / 2 + 87, true, Text.translatable("%s.screen.mvalues.page".formatted(MiaLib.MOD_ID), this.mvaluePage + 1, list.size() / 12 + 1),
+            this.addDrawableChild(new MValuePageWidget(this.width / 2 - 1, this.height / 2 + 87, true, Text.translatable("%s.screen.mvalues.page".formatted(Mialib.MOD_ID), this.mvaluePage + 1, list.size() / 12 + 1),
                     list.size() <= (1 + this.mvaluePage) * 12 ? null : button -> {
                         this.mvaluePage++;
                         this.clearAndInit();
                     }));
-            this.addDrawableChild(new MValuePageWidget(this.width / 2 - 11, this.height / 2 + 87, false, Text.translatable("%s.screen.mvalues.page".formatted(MiaLib.MOD_ID), this.mvaluePage + 1, list.size() / 12 + 1),
+            this.addDrawableChild(new MValuePageWidget(this.width / 2 - 11, this.height / 2 + 87, false, Text.translatable("%s.screen.mvalues.page".formatted(Mialib.MOD_ID), this.mvaluePage + 1, list.size() / 12 + 1),
                     this.mvaluePage <= 0 ? null : button -> {
                         this.mvaluePage--;
                         this.clearAndInit();
@@ -75,12 +75,12 @@ public class MValueScreen extends Screen {
             }));
         }
         if (categories.size() > 12) {
-            this.addDrawableChild(new MValuePageWidget(this.width / 2 + 174 + 11, this.height / 2 - 76, true, Text.translatable("%s.screen.mvalues.page".formatted(MiaLib.MOD_ID), this.selectedCategoryPage + 1, categories.size() / 12 + 1),
+            this.addDrawableChild(new MValuePageWidget(this.width / 2 + 174 + 11, this.height / 2 - 76, true, Text.translatable("%s.screen.mvalues.page".formatted(Mialib.MOD_ID), this.selectedCategoryPage + 1, categories.size() / 12 + 1),
                     list.size() <= (1 + this.selectedCategoryPage) * 12 ? null : button -> {
                         this.selectedCategoryPage++;
                         this.clearAndInit();
                     }));
-            this.addDrawableChild(new MValuePageWidget(this.width / 2 + 174 + 1, this.height / 2 - 76, false, Text.translatable("%s.screen.mvalues.page".formatted(MiaLib.MOD_ID), this.selectedCategoryPage + 1, categories.size() / 12 + 1),
+            this.addDrawableChild(new MValuePageWidget(this.width / 2 + 174 + 1, this.height / 2 - 76, false, Text.translatable("%s.screen.mvalues.page".formatted(Mialib.MOD_ID), this.selectedCategoryPage + 1, categories.size() / 12 + 1),
                     this.selectedCategoryPage <= 0 ? null : button -> {
                         this.selectedCategoryPage--;
                         this.clearAndInit();
@@ -141,8 +141,8 @@ public class MValueScreen extends Screen {
     }
 
     public static class MValueCategoryWidget extends ButtonWidget {
-        public static final Identifier TAB_DESELECTED = MiaLib.id("textures/gui/mvalue/tab_deselected.png");
-        public static final Identifier TAB_SELECTED = MiaLib.id("textures/gui/mvalue/tab_selected.png");
+        public static final Identifier TAB_DESELECTED = Mialib.id("textures/gui/mvalue/tab_deselected.png");
+        public static final Identifier TAB_SELECTED = Mialib.id("textures/gui/mvalue/tab_selected.png");
         public final MValueCategory category;
 
         public MValueCategoryWidget(int x, int y, MValueCategory value, Text text, PressAction consumer) {

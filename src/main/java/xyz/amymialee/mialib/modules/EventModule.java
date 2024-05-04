@@ -4,29 +4,29 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ActionResult;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.cca.ExtraFlagsComponent;
 import xyz.amymialee.mialib.events.ExtraFlagEvents;
-import xyz.amymialee.mialib.events.MiaLibEvents;
+import xyz.amymialee.mialib.events.MialibEvents;
 
 import java.util.Optional;
 
 public interface EventModule {
     static void init() {
-        MiaLibEvents.SMELT_BROKEN_BLOCK.register((world, state, pos, blockEntity, entity, stack) -> {
+        MialibEvents.SMELT_BROKEN_BLOCK.register((world, state, pos, blockEntity, entity, stack) -> {
             if (stack.getItem().mialib$shouldSmelt(world, state, pos, blockEntity, entity, stack)) {
                 return ActionResult.SUCCESS;
             }
-            if (MiaLib.FIRE_ASPECT_AUTO_SMELT.getValue() && entity instanceof LivingEntity living && EnchantmentHelper.getFireAspect(living) > 0) {
+            if (Mialib.FIRE_ASPECT_AUTO_SMELT.getValue() && entity instanceof LivingEntity living && EnchantmentHelper.getFireAspect(living) > 0) {
                 return ActionResult.SUCCESS;
             }
             return ActionResult.PASS;
         });
-        MiaLibEvents.DAMAGE_PREVENTION.register((entity, source) -> {
+        MialibEvents.DAMAGE_PREVENTION.register((entity, source) -> {
             var component = ExtraFlagsComponent.KEY.get(entity);
             return component.isIndestructible() || (!(entity instanceof LivingEntity) && component.isImmortal());
         });
-        MiaLibEvents.DAMAGE_INTERACTION.register((entity, source, amount) -> {
+        MialibEvents.DAMAGE_INTERACTION.register((entity, source, amount) -> {
             var component = ExtraFlagsComponent.KEY.get(entity);
             if (component.isImmortal() && amount > entity.getHealth()) {
                 return Optional.of(entity.getHealth() - 1.0F);

@@ -23,7 +23,7 @@ import xyz.amymialee.mialib.modules.NetworkingModule;
 import xyz.amymialee.mialib.mvalues.MValue;
 import xyz.amymialee.mialib.mvalues.MValueCategory;
 
-public class MiaLib implements ModInitializer, EntityComponentInitializer {
+public class Mialib implements ModInitializer, EntityComponentInitializer {
     public static final String MOD_ID = "mialib";
     public static final String MOD_NAME = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow().getMetadata().getName();
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);

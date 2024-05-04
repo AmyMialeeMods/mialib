@@ -7,11 +7,11 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.mvalues.MValue;
 
 public record MValueC2SPayload(Identifier id, NbtCompound compound) implements CustomPayload {
-    public static final Id<MValueC2SPayload> ID = CustomPayload.id(MiaLib.id("mvalue_sync").toString());
+    public static final Id<MValueC2SPayload> ID = CustomPayload.id(Mialib.id("mvalue_sync").toString());
     public static final PacketCodec<RegistryByteBuf, MValueC2SPayload> CODEC = PacketCodec.tuple(Identifier.PACKET_CODEC, MValueC2SPayload::id, PacketCodecs.NBT_COMPOUND, MValueC2SPayload::compound, MValueC2SPayload::new);
 
     public static void send(MValue<?> value) {
