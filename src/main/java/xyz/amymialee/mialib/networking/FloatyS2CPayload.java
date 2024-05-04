@@ -9,12 +9,12 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.MiaLib;
 
-public record FloatyPayload(ItemStack stack) implements CustomPayload {
-    public static final Id<FloatyPayload> ID = CustomPayload.id(MiaLib.id("floaty").toString());
-    public static final PacketCodec<RegistryByteBuf, FloatyPayload> CODEC = PacketCodec.tuple(ItemStack.PACKET_CODEC, FloatyPayload::stack, FloatyPayload::new);
+public record FloatyS2CPayload(ItemStack stack) implements CustomPayload {
+    public static final Id<FloatyS2CPayload> ID = CustomPayload.id(MiaLib.id("floaty").toString());
+    public static final PacketCodec<RegistryByteBuf, FloatyS2CPayload> CODEC = PacketCodec.tuple(ItemStack.PACKET_CODEC, FloatyS2CPayload::stack, FloatyS2CPayload::new);
 
     public static void send(ItemStack stack, ServerPlayerEntity @NotNull ... players) {
-        var payload = new FloatyPayload(stack);
+        var payload = new FloatyS2CPayload(stack);
         for (var player : players) {
             ServerPlayNetworking.send(player, payload);
         }

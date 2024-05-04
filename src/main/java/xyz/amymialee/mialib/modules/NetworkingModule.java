@@ -1,13 +1,14 @@
 package xyz.amymialee.mialib.modules;
 
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import xyz.amymialee.mialib.mvalues.MValueManager;
-import xyz.amymialee.mialib.networking.AttackingC2SPayload;
-import xyz.amymialee.mialib.networking.MValueC2SPayload;
-import xyz.amymialee.mialib.networking.UsingC2SPayload;
+import xyz.amymialee.mialib.networking.*;
 import xyz.amymialee.mialib.util.MNetworking;
 
 public interface NetworkingModule {
     static void init() {
+        PayloadTypeRegistry.playS2C().register(FloatyS2CPayload.ID, FloatyS2CPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(MValueS2CPayload.ID, MValueS2CPayload.CODEC);
         MNetworking.registerPacketReceiver(MValueC2SPayload.ID, MValueC2SPayload.CODEC, (payload, context) -> {
             if (!context.player().hasPermissionLevel(4)) return;
             var id = payload.id();
