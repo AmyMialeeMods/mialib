@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.events.ExtraFlagEvents;
 import xyz.amymialee.mialib.util.MMath;
 
@@ -35,7 +35,7 @@ import xyz.amymialee.mialib.util.MMath;
  * </p>
  */
 public class ExtraFlagsComponent implements AutoSyncedComponent {
-    public static final ComponentKey<ExtraFlagsComponent> KEY = ComponentRegistry.getOrCreate(MiaLib.id("extra_flags"), ExtraFlagsComponent.class);
+    public static final ComponentKey<ExtraFlagsComponent> KEY = ComponentRegistry.getOrCreate(Mialib.id("extra_flags"), ExtraFlagsComponent.class);
     private final Entity entity;
     private byte flags = 0;
     private byte commandFlags = 0;

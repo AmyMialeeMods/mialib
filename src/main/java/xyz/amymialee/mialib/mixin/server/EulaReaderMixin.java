@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.config.MialibProperties;
 import xyz.amymialee.mialib.util.MDir;
 
@@ -39,10 +39,10 @@ public abstract class EulaReaderMixin {
             var accepted = false;
             if (MialibProperties.eulaAccepted.get()) {
                 accepted = true;
-                MiaLib.LOGGER.info("Automatically agreed to the Minecraft EULA (https://aka.ms/MinecraftEULA) using saved value in %s.".formatted(MDir.getMialibPath("%s.yaml".formatted(MiaLib.MOD_ID))));
+                Mialib.LOGGER.info("Automatically agreed to the Minecraft EULA (https://aka.ms/MinecraftEULA) using saved value in %s.".formatted(MDir.getMialibPath("%s.yaml".formatted(Mialib.MOD_ID))));
             }
             if (!accepted) {
-                MiaLib.LOGGER.info("Enter \"true\" to agree to the Minecraft EULA (https://aka.ms/MinecraftEULA).");
+                Mialib.LOGGER.info("Enter \"true\" to agree to the Minecraft EULA (https://aka.ms/MinecraftEULA).");
                 var scanner = new Scanner(System.in);
                 var input = scanner.nextLine().toLowerCase();
                 accepted = "true".equals(input);
@@ -53,7 +53,7 @@ public abstract class EulaReaderMixin {
                     properties.setProperty("eula", "true");
                     properties.store(outputStream, "Minecraft EULA (https://aka.ms/MinecraftEULA) accepted using Mialib.");
                 } catch (Exception e) {
-                    MiaLib.LOGGER.warn("Failed to save {}", this.eulaFile, e);
+                    Mialib.LOGGER.warn("Failed to save {}", this.eulaFile, e);
                 }
             }
         }

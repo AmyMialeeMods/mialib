@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.util.MDir;
 import xyz.amymialee.mialib.util.interfaces.MServerList;
 
@@ -54,7 +54,7 @@ public abstract class ServerListMixin implements MServerList {
                 this.mialibServers.add(ServerInfo.fromNbt(servers.getCompound(i)));
             }
         } catch (Exception e) {
-            MiaLib.LOGGER.error("Couldn't load mialib server list", e);
+            Mialib.LOGGER.error("Couldn't load mialib server list", e);
         }
     }
 
@@ -77,7 +77,7 @@ public abstract class ServerListMixin implements MServerList {
             NbtIo.write(serverCompound, newFile);
             Util.backupAndReplace(MDir.getMialibPath("mialibservers.dat"), newFile, MDir.getMialibPath("mialibservers.dat_old"));
         } catch (Exception e) {
-            MiaLib.LOGGER.error("Couldn't save mialib server list", e);
+            Mialib.LOGGER.error("Couldn't save mialib server list", e);
         }
     }
 

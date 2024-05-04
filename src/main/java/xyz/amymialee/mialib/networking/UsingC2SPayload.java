@@ -5,10 +5,10 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 
 public record UsingC2SPayload(boolean attacking) implements CustomPayload {
-    public static final Id<UsingC2SPayload> ID = CustomPayload.id(MiaLib.id("using").toString());
+    public static final Id<UsingC2SPayload> ID = CustomPayload.id(Mialib.id("using").toString());
     public static final PacketCodec<RegistryByteBuf, UsingC2SPayload> CODEC = PacketCodec.tuple(PacketCodecs.BOOL, UsingC2SPayload::attacking, UsingC2SPayload::new);
 
     public static void send(boolean using) {

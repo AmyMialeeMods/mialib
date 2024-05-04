@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.networking.MValueC2SPayload;
 import xyz.amymialee.mialib.networking.MValueS2CPayload;
 import xyz.amymialee.mialib.util.runnables.HoldingFunction;
@@ -17,7 +17,7 @@ import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public abstract class MValue<T> {
-    public static final Identifier MVALUE_SYNC = MiaLib.id("mvalue_sync");
+    public static final Identifier MVALUE_SYNC = Mialib.id("mvalue_sync");
     public final Identifier id;
     public final Function<MValue<T>, ItemStack> stackFunction;
 

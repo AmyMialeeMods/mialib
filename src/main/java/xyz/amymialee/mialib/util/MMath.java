@@ -1,6 +1,6 @@
 package xyz.amymialee.mialib.util;
 
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 
 @SuppressWarnings("unused")
 public interface MMath {
@@ -66,7 +66,7 @@ public interface MMath {
 
 	static boolean getByteFlag(byte data, int flag) {
 		if (flag < 0 || flag >= 8) {
-            MiaLib.LOGGER.warn("Invalid byte flag read index: {}", flag);
+            Mialib.LOGGER.warn("Invalid byte flag read index: {}", flag);
 			return false;
 		}
 		return (data >> flag & 0x01) == 1;
@@ -74,7 +74,7 @@ public interface MMath {
 
 	static byte setByteFlag(byte data, int flag, boolean value) {
 		if (flag < 0 || flag >= 8) {
-            MiaLib.LOGGER.warn("Invalid byte flag write index: {}", flag);
+            Mialib.LOGGER.warn("Invalid byte flag write index: {}", flag);
 			return data;
 		}
 		if (value) {

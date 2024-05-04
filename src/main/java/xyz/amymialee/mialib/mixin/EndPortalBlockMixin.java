@@ -7,12 +7,12 @@ import net.minecraft.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 
 @Mixin(EndPortalBlock.class)
 public class EndPortalBlockMixin {
     @WrapOperation(method = "onEntityCollision", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;canUsePortals()Z"))
     private boolean mialib$portalToggle(Entity instance, @NotNull Operation<Boolean> original) {
-        return original.call(instance) && !MiaLib.DISABLE_END_PORTALS.getValue();
+        return original.call(instance) && !Mialib.DISABLE_END_PORTALS.getValue();
     }
 }

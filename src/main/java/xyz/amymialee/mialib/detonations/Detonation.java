@@ -28,7 +28,7 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.events.DetonationEvents;
 import xyz.amymialee.mialib.util.runnables.QuinConsumer;
 import xyz.amymialee.mialib.util.runnables.TriConsumer;
@@ -273,7 +273,7 @@ public class Detonation {
 
     public Detonation setFalloff(BiFunction<Double, Double, Double> falloff) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set falloff on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set falloff on a sealed detonation");
             return this;
         }
         this.falloff = falloff;
@@ -282,7 +282,7 @@ public class Detonation {
 
     public Detonation setDestructionRadius(Supplier<Double> destructionRadius) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set destruction radius supplier on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set destruction radius supplier on a sealed detonation");
             return this;
         }
         this.destructionRadius = destructionRadius;
@@ -291,7 +291,7 @@ public class Detonation {
 
     public Detonation setDestructionRadius(double destructionRadius) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set destruction radius on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set destruction radius on a sealed detonation");
             return this;
         }
         this.destructionRadius = () -> destructionRadius;
@@ -300,7 +300,7 @@ public class Detonation {
 
     public Detonation setEntityRadius(Supplier<Double> entityRadius) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set entity radius supplier on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set entity radius supplier on a sealed detonation");
             return this;
         }
         this.entityRadius = entityRadius;
@@ -309,7 +309,7 @@ public class Detonation {
 
     public Detonation setEntityRadius(double entityRadius) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set entity radius on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set entity radius on a sealed detonation");
             return this;
         }
         this.entityRadius = () -> entityRadius;
@@ -318,7 +318,7 @@ public class Detonation {
 
     public Detonation setHorizontalPushback(Supplier<Double> horizontalPushback) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set horizontal pushback supplier on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set horizontal pushback supplier on a sealed detonation");
             return this;
         }
         this.horizontalPushback = horizontalPushback;
@@ -327,7 +327,7 @@ public class Detonation {
 
     public Detonation setHorizontalPushback(double horizontalPushback) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set horizontal pushback on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set horizontal pushback on a sealed detonation");
             return this;
         }
         this.horizontalPushback = () -> horizontalPushback;
@@ -336,7 +336,7 @@ public class Detonation {
 
     public Detonation setVerticalPushback(Supplier<Double> verticalPushback) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set vertical pushback supplier on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set vertical pushback supplier on a sealed detonation");
             return this;
         }
         this.verticalPushback = verticalPushback;
@@ -345,7 +345,7 @@ public class Detonation {
 
     public Detonation setVerticalPushback(double verticalPushback) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set vertical pushback on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set vertical pushback on a sealed detonation");
             return this;
         }
         this.verticalPushback = () -> verticalPushback;
@@ -354,7 +354,7 @@ public class Detonation {
 
     public Detonation setDamage(Supplier<Float> damage) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set damage supplier on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set damage supplier on a sealed detonation");
             return this;
         }
         this.damage = damage;
@@ -363,7 +363,7 @@ public class Detonation {
 
     public Detonation setDamage(double damage) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set damage on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set damage on a sealed detonation");
             return this;
         }
         this.damage = () -> (float) damage;
@@ -372,7 +372,7 @@ public class Detonation {
 
     public Detonation setSoftening(Function<Double, Float> softening) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set softening function on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set softening function on a sealed detonation");
             return this;
         }
         this.softening = softening;
@@ -381,7 +381,7 @@ public class Detonation {
 
     public Detonation setSoftening(double softening) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set softening on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set softening on a sealed detonation");
             return this;
         }
         this.softening = (distance) -> (float) softening;
@@ -390,7 +390,7 @@ public class Detonation {
 
     public Detonation setSparseness(Function<Double, Float> sparseness) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set sparseness function on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set sparseness function on a sealed detonation");
             return this;
         }
         this.sparseness = sparseness;
@@ -399,7 +399,7 @@ public class Detonation {
 
     public Detonation setSparseness(double sparseness) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set sparseness on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set sparseness on a sealed detonation");
             return this;
         }
         this.sparseness = (distance) -> (float) sparseness;
@@ -408,7 +408,7 @@ public class Detonation {
 
     public Detonation setDamageType(Function<Double, RegistryKey<DamageType>> damageType) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set damage type function on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set damage type function on a sealed detonation");
             return this;
         }
         this.damageType = damageType;
@@ -417,7 +417,7 @@ public class Detonation {
 
     public Detonation setDamageType(RegistryKey<DamageType> damageType) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set damage type on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set damage type on a sealed detonation");
             return this;
         }
         this.damageType = (distance) -> damageType;
@@ -426,7 +426,7 @@ public class Detonation {
 
     public Detonation setEntityPredicate(Predicate<Entity> entityPredicate) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set entity predicate on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set entity predicate on a sealed detonation");
             return this;
         }
         this.entityPredicate = entityPredicate;
@@ -435,7 +435,7 @@ public class Detonation {
 
     public Detonation setEntityDamageAction(QuinConsumer<Double, Vec3d, Entity, Entity, Entity> damageEntity) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set entity damage action on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set entity damage action on a sealed detonation");
             return this;
         }
         this.damageEntity = damageEntity;
@@ -444,7 +444,7 @@ public class Detonation {
 
     public Detonation setEntityPushbackAction(TriConsumer<Double, Vec3d, Entity> pushbackEntity) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set entity pushback on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set entity pushback on a sealed detonation");
             return this;
         }
         this.pushbackEntity = pushbackEntity;
@@ -453,7 +453,7 @@ public class Detonation {
 
     public Detonation setEntityEffectAction(TriConsumer<Double, Vec3d, Entity> entityEffects) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set entity effects on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set entity effects on a sealed detonation");
             return this;
         }
         this.entityEffects = entityEffects;
@@ -462,7 +462,7 @@ public class Detonation {
 
     public Detonation setReplacementBlock(TriFunction<World, BlockPos, Vec3d, BlockState> replacementBlock) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set replacement blocks on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set replacement blocks on a sealed detonation");
             return this;
         }
         this.replacementBlock = replacementBlock;
@@ -471,7 +471,7 @@ public class Detonation {
 
     public Detonation setDetonationEffects(BiConsumer<ServerWorld, Vec3d> detonationEffects) {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to set detonation effects on a sealed detonation");
+            Mialib.LOGGER.error("Tried to set detonation effects on a sealed detonation");
             return this;
         }
         this.detonationEffects = detonationEffects;
@@ -480,7 +480,7 @@ public class Detonation {
 
     public Detonation seal() {
         if (this.sealed) {
-            MiaLib.LOGGER.error("Tried to seal an already sealed detonation");
+            Mialib.LOGGER.error("Tried to seal an already sealed detonation");
             return this;
         }
         this.sealed = true;

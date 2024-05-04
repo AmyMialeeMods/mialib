@@ -7,12 +7,12 @@ import net.minecraft.server.world.SleepManager;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 
 @Mixin(SleepManager.class)
 public class SleepManagerMixin {
     @WrapOperation(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;isSpectator()Z"))
     private boolean mialib$shouldCountForSleepTotal(ServerPlayerEntity instance, @NotNull Operation<Boolean> original) {
-        return original.call(instance) || (instance.isCreative() && MiaLib.CREATIVE_NO_SLEEP.getValue());
+        return original.call(instance) || (instance.isCreative() && Mialib.CREATIVE_NO_SLEEP.getValue());
     }
 }

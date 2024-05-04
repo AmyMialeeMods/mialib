@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.config.DefaultOptionsOverride;
 
 import java.io.File;
@@ -40,7 +40,7 @@ public abstract class GameOptionsMixin {
                     if (string != null) {
                         var jsonReader = new JsonReader(new StringReader(string.isEmpty() ? "\"\"" : string));
                         var dataResult = option.getCodec().parse(JsonOps.INSTANCE, JsonParser.parseReader(jsonReader));
-                        dataResult.error().ifPresent(partialResult -> MiaLib.LOGGER.error("Error parsing default option value {} for option {}: {}", string, option, partialResult.message()));
+                        dataResult.error().ifPresent(partialResult -> Mialib.LOGGER.error("Error parsing default option value {} for option {}: {}", string, option, partialResult.message()));
                         dataResult.result().ifPresent(option::setValue);
                     }
                 }
@@ -52,7 +52,7 @@ public abstract class GameOptionsMixin {
                         try {
                             return Integer.parseInt(string);
                         } catch (NumberFormatException e) {
-                            MiaLib.LOGGER.warn("Invalid integer value for default option {} = {}", key, string, e);
+                            Mialib.LOGGER.warn("Invalid integer value for default option {} = {}", key, string, e);
                         }
                     }
                     return current;
@@ -83,7 +83,7 @@ public abstract class GameOptionsMixin {
                         try {
                             return Float.parseFloat(string);
                         } catch (NumberFormatException e) {
-                            MiaLib.LOGGER.warn("Invalid floating point value for default option {} = {}", key, string, e);
+                            Mialib.LOGGER.warn("Invalid floating point value for default option {} = {}", key, string, e);
                             return current;
                         }
                     }

@@ -10,7 +10,7 @@ import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import org.ladysnake.cca.api.v3.component.tick.CommonTickingComponent;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ import java.util.Map;
  * Stores cooldowns tied to identifiers.
  */
 public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingComponent {
-	public static final ComponentKey<IdCooldownComponent> KEY = ComponentRegistry.getOrCreate(MiaLib.id("identifier_cooldown"), IdCooldownComponent.class);
+	public static final ComponentKey<IdCooldownComponent> KEY = ComponentRegistry.getOrCreate(Mialib.id("identifier_cooldown"), IdCooldownComponent.class);
 	private final PlayerEntity player;
 	private final Map<Identifier, Entry> cooldowns = new HashMap<>();
 	private int tick;

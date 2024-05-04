@@ -19,14 +19,14 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 
 import java.util.function.Supplier;
 
 @Mixin(AddServerScreen.class)
 public class AddServerScreenMixin extends Screen {
-    @Unique private static final Identifier LOGO_TEXTURE = MiaLib.id("textures/gui/logo.png");
-    @Unique private static final Identifier LOGO_GRAY_TEXTURE = MiaLib.id("textures/gui/logo_gray.png");
+    @Unique private static final Identifier LOGO_TEXTURE = Mialib.id("textures/gui/logo.png");
+    @Unique private static final Identifier LOGO_GRAY_TEXTURE = Mialib.id("textures/gui/logo_gray.png");
 
     @Shadow @Final private Screen parent;
 
@@ -41,7 +41,7 @@ public class AddServerScreenMixin extends Screen {
             serverList.mialib$setEditingMialibServer(serverList.mialib$getMialibServers().contains(multiplayerScreen.getServerList().mialib$getEditTarget()));
             var button = new ButtonWidget(this.width / 2 + 104, this.height / 4 + 72, 20, 20, Text.empty(), (b) -> {
                 serverList.mialib$setEditingMialibServer(!serverList.mialib$isEditingMialibServer());
-                b.setTooltip(Tooltip.of(Text.translatable((serverList.mialib$isEditingMialibServer() ? "%s.mialib_server.true" : "%s.mialib_server.false").formatted(MiaLib.MOD_ID))));
+                b.setTooltip(Tooltip.of(Text.translatable((serverList.mialib$isEditingMialibServer() ? "%s.mialib_server.true" : "%s.mialib_server.false").formatted(Mialib.MOD_ID))));
             }, Supplier::get) {
                 @Override
                 protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
@@ -52,7 +52,7 @@ public class AddServerScreenMixin extends Screen {
                 @Override
                 public void drawMessage(DrawContext context, TextRenderer textRenderer, int color) {}
             };
-            button.setTooltip(Tooltip.of(Text.translatable((serverList.mialib$isEditingMialibServer() ? "%s.mialib_server.true" : "%s.mialib_server.false").formatted(MiaLib.MOD_ID))));
+            button.setTooltip(Tooltip.of(Text.translatable((serverList.mialib$isEditingMialibServer() ? "%s.mialib_server.true" : "%s.mialib_server.false").formatted(Mialib.MOD_ID))));
             this.addDrawableChild(button);
         }
     }

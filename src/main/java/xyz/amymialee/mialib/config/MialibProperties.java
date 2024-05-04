@@ -1,6 +1,6 @@
 package xyz.amymialee.mialib.config;
 
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.util.MDir;
 
 import java.io.BufferedReader;
@@ -25,7 +25,7 @@ public class MialibProperties {
      */
     public static void loadConfig() {
         loaded = true;
-        var mialibFile = MDir.getMialibFile("%s.yaml".formatted(MiaLib.MOD_ID));
+        var mialibFile = MDir.getMialibFile("%s.yaml".formatted(Mialib.MOD_ID));
         try (var reader = new BufferedReader(new FileReader(mialibFile))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -36,9 +36,9 @@ public class MialibProperties {
                 }
             }
         } catch (FileNotFoundException e) {
-            MiaLib.LOGGER.info("Failed to find mialib properties file {}", mialibFile, e);
+            Mialib.LOGGER.info("Failed to find mialib properties file {}", mialibFile, e);
         } catch (Exception e) {
-            MiaLib.LOGGER.warn("Failed to load mialib properties file {}", mialibFile, e);
+            Mialib.LOGGER.warn("Failed to load mialib properties file {}", mialibFile, e);
         }
     }
 
@@ -53,7 +53,7 @@ public class MialibProperties {
             try {
                 this.internalOnlySet(Boolean.parseBoolean(value));
             } catch (Exception e) {
-                MiaLib.LOGGER.warn("Failed to load mialib boolean property {} from value {}", this.key, value, e);
+                Mialib.LOGGER.warn("Failed to load mialib boolean property {} from value {}", this.key, value, e);
             }
         }
     }

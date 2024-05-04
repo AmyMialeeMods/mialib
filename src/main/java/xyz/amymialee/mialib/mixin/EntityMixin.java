@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.amymialee.mialib.events.MiaLibEvents;
+import xyz.amymialee.mialib.events.MialibEvents;
 
 @Mixin(Entity.class)
 public class EntityMixin {
@@ -19,7 +19,7 @@ public class EntityMixin {
             return;
         }
         var self = (Entity) (Object) this;
-        var result = MiaLibEvents.DAMAGE_PREVENTION.invoker().isInvulnerableTo(self, damageSource);
+        var result = MialibEvents.DAMAGE_PREVENTION.invoker().isInvulnerableTo(self, damageSource);
         if (result) {
             cir.setReturnValue(true);
         }
