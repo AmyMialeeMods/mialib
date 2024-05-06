@@ -7,10 +7,6 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public interface MText {
-	default Text mialib$withColor(int color) {
-		return Text.empty();
-	}
-
 	default Text mialib$withItalics(boolean italics) {
 		return Text.empty();
 	}
@@ -33,10 +29,6 @@ public interface MText {
 
 	default Text mialib$withInsertion(String insertion) {
 		return Text.empty();
-	}
-
-	static Text withColor(@NotNull Text text, int color) {
-		return repack(text.getWithStyle(text.getStyle().withColor(color)));
 	}
 
 	static Text withItalics(@NotNull Text text, boolean italics) {

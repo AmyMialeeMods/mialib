@@ -8,11 +8,6 @@ import xyz.amymialee.mialib.util.interfaces.MText;
 @Mixin(Text.class)
 public interface TextMixin extends MText {
     @Override
-    default Text mialib$withColor(int color) {
-        return MText.withColor((Text) this, color);
-    }
-
-    @Override
     default Text mialib$withItalics(boolean italics) {
         return MText.withItalics((Text) this, italics);
     }
