@@ -30,7 +30,7 @@ public abstract class ItemStackMixin {
         if (color != -1) {
             var text = cir.getReturnValue();
             if (text.getStyle().getColor() == null) {
-                cir.setReturnValue(text.mialib$withColor(color));
+                cir.setReturnValue(text.copy().withColor(color));
             }
         }
     }
