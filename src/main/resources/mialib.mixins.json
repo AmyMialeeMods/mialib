@@ -42,6 +42,7 @@
     "client.GameOptionsMixin",
     "client.HeldItemFeatureRendererMixin",
     "client.HeldItemRendererMixin",
+    "client.ItemEntityRendererMixin",
     "client.ItemRendererMixin",
     "client.MinecraftClientMixin",
     "client.MultiplayerScreenMixin",
