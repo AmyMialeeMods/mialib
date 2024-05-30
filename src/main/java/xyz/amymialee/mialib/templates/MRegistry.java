@@ -136,21 +136,21 @@ public class MRegistry {
 
 	public Block registerBlockWithItem(String path, Block block, ItemGroup @NotNull ... groups) {
 		this.register(path, block);
-		this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups);
+		Item.BLOCK_ITEMS.put(block, this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups));
 		return block;
 	}
 
 	@SafeVarargs
 	public final Block registerBlockWithItem(String path, Block block, RegistryKey<ItemGroup> @NotNull ... groups) {
 		this.register(path, block);
-		this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups);
+		Item.BLOCK_ITEMS.put(block, this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups));
 		return block;
 	}
 
 	@SafeVarargs
 	public final Block registerBlockWithItem(String path, Block block, Consumer<Item> @NotNull ... groups) {
 		this.register(path, block);
-		this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups);
+		Item.BLOCK_ITEMS.put(block, this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups));
 		return block;
 	}
 

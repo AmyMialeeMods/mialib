@@ -94,6 +94,7 @@ public class MValueScreen extends Screen {
     public void render(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
         this.renderBackground(context);
         context.getMatrices().push();
+        RenderSystem.enableBlend();
         context.enableScissor(this.width / 2 - 194, this.height / 2 - 62, this.width / 2 + 194, this.height / 2 + 88);
         for (var x = 0; x <= this.width; x += 16) {
             for (var y = 0; y <= this.height; y += 16) {
@@ -376,6 +377,12 @@ public class MValueScreen extends Screen {
         }
 
         @Override
+        public void refreshMessage() {
+            this.setMessage(Text.translatable(this.value.getTranslationKey()).append(Text.literal(": %.2f".formatted(this.value.getValue()))));
+            this.setTooltip(Tooltip.of(Text.translatable(this.value.getDescriptionTranslationKey())));
+        }
+
+        @Override
         protected void setValue(double value) {
             var clamped = MathHelper.clamp(value, 0.0, 1.0);
             if (clamped != this.sliderValue) {
@@ -393,6 +400,12 @@ public class MValueScreen extends Screen {
         public void refreshFromValue() {
             this.sliderValue = (this.value.getValue() - this.value.getMin()) / (this.value.getMax() - this.value.getMin());
             this.refreshMessage();
+        }
+
+        @Override
+        public void refreshMessage() {
+            this.setMessage(Text.translatable(this.value.getTranslationKey()).append(Text.literal(": %.2f".formatted(this.value.getValue()))));
+            this.setTooltip(Tooltip.of(Text.translatable(this.value.getDescriptionTranslationKey())));
         }
 
         @Override
