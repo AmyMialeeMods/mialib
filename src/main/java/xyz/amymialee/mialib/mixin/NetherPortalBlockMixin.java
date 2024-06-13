@@ -1,0 +1,24 @@
+package xyz.amymialee.mialib.mixin;
+
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.block.NetherPortalBlock;
+import net.minecraft.entity.Entity;
+import net.minecraft.world.GameRules;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import xyz.amymialee.mialib.MiaLib;
+
+@Mixin(NetherPortalBlock.class)
+public class NetherPortalBlockMixin {
+    @WrapOperation(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameRules;getBoolean(Lnet/minecraft/world/GameRules$Key;)Z"))
+    private boolean mialib$spawningToggle(GameRules instance, GameRules.Key<GameRules.BooleanRule> rule, @NotNull Operation<Boolean> original) {
+        return original.call(instance, rule) && !MiaLib.DISABLE_PIGLIN_PORTAL_SPAWNING.getValue();
+    }
+
+    @WrapOperation(method = "onEntityCollision", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;canUsePortals()Z"))
+    private boolean mialib$portalToggle(Entity instance, @NotNull Operation<Boolean> original) {
+        return original.call(instance) && !MiaLib.DISABLE_NETHER_PORTALS.getValue();
+    }
+}

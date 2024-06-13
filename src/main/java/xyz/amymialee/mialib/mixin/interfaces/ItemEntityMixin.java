@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.amymialee.mialib.interfaces.MItemEntity;
+import xyz.amymialee.mialib.util.interfaces.MItemEntity;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin implements MItemEntity {
@@ -15,6 +15,7 @@ public abstract class ItemEntityMixin implements MItemEntity {
 
     @Shadow private int itemAge;
 
+    @SuppressWarnings("UnreachableCode")
     @Inject(method = "tryMerge(Lnet/minecraft/entity/ItemEntity;)V", at = @At("HEAD"), cancellable = true)
     private void mialib$delayedMerge(ItemEntity other, CallbackInfo ci) {
         if ((Object) this instanceof ItemEntity) {
@@ -24,11 +25,13 @@ public abstract class ItemEntityMixin implements MItemEntity {
         }
     }
 
+    @Override
     @Unique
     public int mialib$getMergeDelay() {
         return this.mergeDelay;
     }
 
+    @Override
     @Unique
     public void mialib$setMergeDelay(int mergeDelay) {
         this.mergeDelay = mergeDelay;

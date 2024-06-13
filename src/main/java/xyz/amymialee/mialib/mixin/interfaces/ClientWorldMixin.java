@@ -6,7 +6,7 @@ import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import xyz.amymialee.mialib.MiaLib;
 import xyz.amymialee.mialib.detonations.Detonation;
-import xyz.amymialee.mialib.interfaces.MWorld;
+import xyz.amymialee.mialib.util.interfaces.MWorld;
 
 @Mixin(ClientWorld.class)
 public class ClientWorldMixin implements MWorld {
@@ -17,11 +17,11 @@ public class ClientWorldMixin implements MWorld {
 
     @Override
     public void mialib$detonate(Detonation detonation, Vec3d pos, Entity owner) {
-        MiaLib.LOGGER.error("Tried to detonate a detonation on the client!");
+        MiaLib.LOGGER.error("Tried to detonate a detonation on the client with owner!");
     }
 
     @Override
     public void mialib$detonate(Detonation detonation, Vec3d pos, Entity owner, Entity projectile) {
-        MiaLib.LOGGER.error("Tried to detonate a detonation on the client!");
+        MiaLib.LOGGER.error("Tried to detonate a detonation on the client with projectile!");
     }
 }

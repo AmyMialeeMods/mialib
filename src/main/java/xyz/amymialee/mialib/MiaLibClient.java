@@ -5,6 +5,12 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
+import net.minecraft.entity.LivingEntity;
+import xyz.amymialee.mialib.modules.client.ClientInputModule;
+import xyz.amymialee.mialib.modules.client.NetworkingClientModule;
+import xyz.amymialee.mialib.templates.MRegistry;
 
 public class MiaLibClient implements ClientModInitializer {
     public static LivingEntity renderingEntityWithItem = null;
@@ -12,19 +18,14 @@ public class MiaLibClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        if (!MRegistry.REGISTRIES.isEmpty()) {
-            MiaLib.LOGGER.info("Building %d MiaLib Registr%s on Client".formatted(MRegistry.REGISTRIES.size(), MRegistry.REGISTRIES.size() == 1 ? "y" : "ies"));
-            MRegistry.REGISTRIES.forEach(MRegistry::build);
-        }
-        ClientPlayNetworking.registerGlobalReceiver(MiaLib.id("floaty"), (minecraftClient, playNetworkHandler, packetByteBuf, packetSender) -> {
-            var stack = packetByteBuf.readItemStack();
-            minecraftClient.execute(() -> minecraftClient.gameRenderer.showFloatingItem(stack));
-        });
+        MRegistry.tryBuildAll("%s Client".formatted(MiaLib.MOD_NAME));
+        ClientInputModule.init();
+        NetworkingClientModule.init();
     }
 
     static {
         for (var mode : ModelTransformationMode.values()) {
-             ModelPredicateProviderRegistry.register(MiaLib.id(mode.name().toLowerCase()), (stack, world, entity, seed) -> mode == currentMode ? 1.0F : 0.0F);
+            ModelPredicateProviderRegistry.register(MiaLib.id(mode.name().toLowerCase()), (stack, world, entity, seed) -> mode == currentMode ? 1.0F : 0.0F);
         }
     }
 }

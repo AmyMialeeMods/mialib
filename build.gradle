@@ -1,17 +1,24 @@
 plugins {
-    id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
+}
+
+base {
+    archivesName = project.archives_base_name + "-" + project.minecraft_version
 }
 
 version = project.mod_version + '+' + project.minecraft_version
 group = project.maven_group
 
 repositories {
-    maven { url = "https://jitpack.io" }
-    maven { url = "https://api.modrinth.com/maven" }
-    maven { url = "https://maven.ladysnake.org/releases" }
-    maven { url = "https://maven.terraformersmc.com/releases/" }
-    maven { url = 'https://raw.githubusercontent.com/Devan-Kerman/Devan-Repo/master/' }
+    maven {
+        description = "Maven for Cardinal Components"
+        url = "https://maven.ladysnake.org/releases/"
+    }
+    maven {
+        description = "Maven for ModMenu and EMI"
+        url = "https://maven.terraformersmc.com/releases/"
+    }
 }
 
 dependencies {
@@ -20,19 +27,17 @@ dependencies {
     modImplementation ("net.fabricmc:fabric-loader:${project.loader_version}")
     modImplementation ("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
+    modCompileOnly ("dev.emi:emi-fabric:${emi_version}:api")
+    modLocalRuntime ("dev.emi:emi-fabric:${emi_version}")
     modImplementation ("com.terraformersmc:modmenu:${project.modmenu_version}")
-    modImplementation include ("maven.modrinth:midnightlib:${project.midnightlib_version}")
     modImplementation include ("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}")
     modImplementation include ("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}")
     modImplementation include ("dev.onyxstudios.cardinal-components-api:cardinal-components-scoreboard:${project.cca_version}")
-//    modImplementation include ("net.devtech:grossfabrichacks:${project.grossfabrichacks_version}")
-    include (implementation (annotationProcessor ("io.github.llamalad7:mixinextras-fabric:${project.mixinextras_version}")))
-    include (implementation (annotationProcessor ("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${project.mixinsquared_version}")))
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
+    publications { //noinspection GroovyAssignabilityCheck
+        mavenJava(MavenPublication) { //noinspection GroovyAssignabilityCheck
             from components.java
         }
     }
@@ -41,7 +46,7 @@ publishing {
             name = "willBlRepositoryReleases"
             url = "https://maven.willbl.dev/releases"
             credentials(PasswordCredentials)
-            authentication {
+            authentication { //noinspection GroovyAssignabilityCheck
                 basic(BasicAuthentication)
             }
         }
@@ -65,9 +70,7 @@ loom {
 sourceSets {
     main {
         resources {
-            srcDirs += [
-                    'src/main/generated'
-            ]
+            srcDirs += ['src/main/generated']
         }
     }
 }
@@ -89,7 +92,7 @@ java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
     archivesBaseName = project.archives_base_name
-    withSourcesJar()
+//    withSourcesJar()
 }
 
 jar {

@@ -1,20 +1,19 @@
 {
   "schemaVersion": 1,
   "id": "mialib",
-  "version": "${version}",
-  "accessWidener" : "mialib.accesswidener",
-  "name": "mialib",
+  "name": "Mialib",
   "description": "Library for AmyMialee Mods",
   "authors": [
     "AmyMialee"
   ],
-  "contact": {
-    "website": "http://amymialee.xyz/",
-    "repo": "https://github.com/AmyMialeeMods/mialib"
-  },
+  "version": "${version}",
   "license": "All-Rights-Reserved",
   "icon": "assets/mialib/icon.png",
-  "environment": "*",
+  "contact": {
+    "homepage": "http://amymialee.xyz/",
+    "sources": "https://github.com/AmyMialeeMods/mialib",
+    "issues": "https://github.com/AmyMialeeMods/mialib/issues"
+  },
   "entrypoints": {
     "client": [
       "xyz.amymialee.mialib.MiaLibClient"
@@ -32,26 +31,35 @@
       "xyz.amymialee.mialib.MiaLib"
     ]
   },
-  "mixins": [
-    "mialib.mixins.json"
-  ],
   "custom": {
     "cardinal-components": [
       "mialib:identifier_cooldown",
       "mialib:holding",
-      "mialib:extra_flags",
-      "mialib:mvalue_manager"
+      "mialib:extra_flags"
     ],
     "loom:injected_interfaces": {
-      "net/minecraft/class_1792": ["xyz/amymialee/mialib/interfaces/MItem", "xyz/amymialee/mialib/interfaces/MItemClient"],
-      "net/minecraft/class_1542": ["xyz/amymialee/mialib/interfaces/MItemEntity"],
-      "net/minecraft/class_1761": ["xyz/amymialee/mialib/interfaces/MItemGroup"],
-      "net/minecraft/class_1799": ["xyz/amymialee/mialib/interfaces/MItemStack"],
-      "net/minecraft/class_1657": ["xyz/amymialee/mialib/interfaces/MPlayerEntity"],
-      "net/minecraft/class_2561": ["xyz/amymialee/mialib/interfaces/MText"],
-      "net/minecraft/class_1937": ["xyz/amymialee/mialib/interfaces/MWorld"]
+      "net/minecraft/class_1297": ["xyz/amymialee/mialib/util/interfaces/MEntity"],
+      "net/minecraft/class_1792": ["xyz/amymialee/mialib/util/interfaces/MItem", "xyz/amymialee/mialib/util/interfaces/MItemClient"],
+      "net/minecraft/class_1542": ["xyz/amymialee/mialib/util/interfaces/MItemEntity"],
+      "net/minecraft/class_1761": ["xyz/amymialee/mialib/util/interfaces/MItemGroup"],
+      "net/minecraft/class_1799": ["xyz/amymialee/mialib/util/interfaces/MItemStack"],
+      "net/minecraft/class_1657": ["xyz/amymialee/mialib/util/interfaces/MPlayerEntity"],
+      "net/minecraft/class_641": ["xyz/amymialee/mialib/util/interfaces/MServerList"],
+      "net/minecraft/class_1291": ["xyz/amymialee/mialib/util/interfaces/MStatusEffect"],
+      "net/minecraft/class_2561": ["xyz/amymialee/mialib/util/interfaces/MText"],
+      "net/minecraft/class_1937": ["xyz/amymialee/mialib/util/interfaces/MWorld"]
+    },
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/P4dUsxv6An"
+      }
     }
   },
+  "accessWidener" : "mialib.accesswidener",
+  "mixins": [
+    "mialib.mixins.json"
+  ],
+  "environment": "*",
   "depends": {
     "fabric": "*"
   }

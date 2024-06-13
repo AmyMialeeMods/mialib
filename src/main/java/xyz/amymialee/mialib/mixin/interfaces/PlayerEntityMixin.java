@@ -6,8 +6,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import xyz.amymialee.mialib.MiaLib;
-import xyz.amymialee.mialib.interfaces.MPlayerEntity;
+import xyz.amymialee.mialib.cca.HoldingComponent;
+import xyz.amymialee.mialib.cca.IdCooldownComponent;
+import xyz.amymialee.mialib.util.interfaces.MPlayerEntity;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends Entity implements MPlayerEntity {
@@ -17,36 +18,51 @@ public abstract class PlayerEntityMixin extends Entity implements MPlayerEntity 
 
     @Override
     public boolean mialib$isCoolingDown(Identifier id) {
-        return MiaLib.ID_COOLDOWN_COMPONENT.get(this).isCoolingDown(id);
+        return IdCooldownComponent.KEY.get(this).isCoolingDown(id);
     }
 
     @Override
     public void mialib$setCooldown(Identifier id, int ticks) {
-        MiaLib.ID_COOLDOWN_COMPONENT.get(this).setCooldown(id, ticks);
+        IdCooldownComponent.KEY.get(this).setCooldown(id, ticks);
     }
 
     @Override
     public int mialib$getCooldown(Identifier id) {
-        return MiaLib.ID_COOLDOWN_COMPONENT.get(this).getCooldown(id);
+        return IdCooldownComponent.KEY.get(this).getCooldown(id);
     }
 
     @Override
     public float mialib$getCooldown(Identifier id, float tickDelta) {
-        return MiaLib.ID_COOLDOWN_COMPONENT.get(this).getCooldown(id, tickDelta);
+        return IdCooldownComponent.KEY.get(this).getCooldown(id, tickDelta);
     }
 
     @Override
     public boolean mialib$holdingAttack() {
-        return MiaLib.HOLDING.get(this).isAttacking();
+        return HoldingComponent.KEY.get(this).isAttacking();
     }
 
     @Override
-    public void miaLib$setHoldingAttack(boolean attackHeld) {
-        MiaLib.HOLDING.get(this).setAttacking(attackHeld);
+    public void mialib$setHoldingAttack(boolean attackHeld) {
+        HoldingComponent.KEY.get(this).setAttacking(attackHeld);
     }
 
     @Override
     public int mialib$getHoldingAttackTime() {
-        return MiaLib.HOLDING.get(this).getTickAttacking();
+        return HoldingComponent.KEY.get(this).getAttackTicks();
+    }
+
+    @Override
+    public boolean mialib$holdingUse() {
+        return HoldingComponent.KEY.get(this).isUsing();
+    }
+
+    @Override
+    public void mialib$setHoldingUse(boolean useHeld) {
+        HoldingComponent.KEY.get(this).setUsing(useHeld);
+    }
+
+    @Override
+    public int mialib$getHoldingUseTime() {
+        return HoldingComponent.KEY.get(this).getUsageTicks();
     }
 }

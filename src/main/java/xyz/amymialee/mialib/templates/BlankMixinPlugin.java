@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public interface BlankMixinPlugin extends IMixinConfigPlugin {
     @Override
     default void onLoad(String mixinPackage) {}

@@ -9,21 +9,21 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.modules.ItemModule;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
     @Shadow public abstract boolean isIn(TagKey<Item> tag);
-
     @Shadow public abstract Item getItem();
 
     @Inject(method = "isDamageable", at = @At("HEAD"), cancellable = true)
     private void mialib$disableDamageable(CallbackInfoReturnable<Boolean> cir) {
-        if (this.isIn(MiaLib.UNBREAKABLE)) {
+        if (this.isIn(ItemModule.UNBREAKABLE)) {
             cir.setReturnValue(false);
         }
     }
 
+    @SuppressWarnings("UnreachableCode")
     @Inject(method = "getName", at = @At("RETURN"), cancellable = true)
     private void getName(CallbackInfoReturnable<Text> cir) {
         var color = this.getItem().mialib$getNameColor((ItemStack) (Object) this);

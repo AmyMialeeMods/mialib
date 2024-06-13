@@ -1,5 +1,7 @@
 package xyz.amymialee.mialib.cca;
 
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,7 +14,11 @@ import xyz.amymialee.mialib.MiaLib;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Stores cooldowns tied to identifiers.
+ */
 public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingComponent {
+	public static final ComponentKey<IdCooldownComponent> KEY = ComponentRegistry.getOrCreate(MiaLib.id("identifier_cooldown"), IdCooldownComponent.class);
 	private final PlayerEntity player;
 	private final Map<Identifier, Entry> cooldowns = new HashMap<>();
 	private int tick;
@@ -21,12 +27,8 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 		this.player = player;
 	}
 
-	public static @NotNull IdCooldownComponent get(PlayerEntity player) {
-		return MiaLib.ID_COOLDOWN_COMPONENT.get(player);
-	}
-
 	public void sync() {
-		MiaLib.ID_COOLDOWN_COMPONENT.sync(this.player);
+		KEY.sync(this.player);
 	}
 
 	@Override
@@ -44,6 +46,9 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 		return this.cooldowns.containsKey(id);
 	}
 
+	/**
+	 * @return Number of ticks remaining on the cooldown.
+	 */
 	public int getCooldown(Identifier id) {
 		var entry = this.cooldowns.get(id);
 		if (entry == null) {
@@ -52,6 +57,9 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 		return entry.endTick - entry.startTick;
 	}
 
+	/**
+	 * @return A value between 0.0 and 1.0 representing the cooldown progress.
+	 */
 	public float getCooldown(Identifier id, float tickDelta) {
 		if (!this.cooldowns.containsKey(id)) {
 			return 0.0f;

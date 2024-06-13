@@ -5,7 +5,7 @@ import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
-import xyz.amymialee.mialib.interfaces.MItemStack;
+import xyz.amymialee.mialib.util.interfaces.MItemStack;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements MItemStack {

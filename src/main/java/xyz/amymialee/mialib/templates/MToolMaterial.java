@@ -3,6 +3,7 @@ package xyz.amymialee.mialib.templates;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
 
+@SuppressWarnings("unused")
 public class MToolMaterial implements ToolMaterial {
     public static final MToolMaterial EMPTY = new MToolMaterial();
     private int toolDurability = 0;
