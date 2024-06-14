@@ -35,13 +35,6 @@ public interface CommandModule {
                                     return 1;
                                 }))));
             }
-            dispatcher.register(CommandManager.literal("imperceptible").requires(source -> source.hasPermissionLevel(4))
-                    .then(CommandManager.argument("enabled", BoolArgumentType.bool())
-                            .then(CommandManager.argument("targets", EntityArgumentType.entities())
-                                    .executes(ctx -> executeImperceptible(ctx.getSource(), BoolArgumentType.getBool(ctx, "enabled"), EntityArgumentType.getEntities(ctx, "targets").toArray(new Entity[0])))
-                            ).executes(ctx -> executeImperceptible(ctx.getSource(), BoolArgumentType.getBool(ctx, "enabled"), ctx.getSource().getPlayer()))
-                    ).executes(ctx -> ctx.getSource().getPlayer() == null ? 0 : executeImperceptible(ctx.getSource(), !ctx.getSource().getPlayer().mialib$isImperceptible(), ctx.getSource().getPlayer()))
-            );
             dispatcher.register(CommandManager.literal("indestructible").requires(source -> source.hasPermissionLevel(4))
                     .then(CommandManager.argument("enabled", BoolArgumentType.bool())
                             .then(CommandManager.argument("targets", EntityArgumentType.entities())
@@ -57,13 +50,6 @@ public interface CommandModule {
                     ).executes(ctx -> ctx.getSource().getPlayer() == null ? 0 : executeImmortal(ctx.getSource(), !ctx.getSource().getPlayer().mialib$isImmortal(), ctx.getSource().getPlayer()))
             );
         });
-    }
-
-    @SafeVarargs
-    static <T extends Entity> int executeImperceptible(ServerCommandSource source, boolean imperceptible, T @NotNull ... targets) {
-        for (var target : targets) ExtraFlagsComponent.KEY.maybeGet(target).ifPresent(extraFlagsComponent -> extraFlagsComponent.setImperceptibleCommand(imperceptible));
-        source.sendFeedback(() -> Text.translatable("commands.mialib.vanish.%s.%s".formatted(imperceptible ? "enabled" : "disabled", targets.length == 1 ? "single" : "multiple"), targets.length == 1 ? targets[0] != null ? targets[0].getDisplayName() : "Nobody" : targets.length), true);
-        return targets.length;
     }
 
     @SafeVarargs

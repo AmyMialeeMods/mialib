@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.util.MDir;
 import xyz.amymialee.mialib.util.interfaces.MServerList;
 
@@ -49,14 +49,14 @@ public abstract class ServerListMixin implements MServerList {
     private void mialib$loadMialibServers(CallbackInfo ci) {
         try {
             this.mialibServers.clear();
-            var serverFile = NbtIo.read(MDir.getMialibFile("mialibservers.dat"));
+            var serverFile = NbtIo.read(MDir.getMialibPath("mialibservers.dat"));
             if (serverFile == null) return;
             var servers = serverFile.getList("servers", NbtElement.COMPOUND_TYPE);
             for (var i = 0; i < servers.size(); i++) {
                 this.mialibServers.add(ServerInfo.fromNbt(servers.getCompound(i)));
             }
         } catch (Exception e) {
-            MiaLib.LOGGER.error("Couldn't load mialib server list", e);
+            Mialib.LOGGER.error("Couldn't load mialib server list", e);
         }
     }
 
@@ -75,11 +75,11 @@ public abstract class ServerListMixin implements MServerList {
             }
             var serverCompound = new NbtCompound();
             serverCompound.put("servers", serverList);
-            var newFile = File.createTempFile("servers", ".dat", this.client.runDirectory);
+            var newFile = File.createTempFile("servers", ".dat", this.client.runDirectory).toPath();
             NbtIo.write(serverCompound, newFile);
-            Util.backupAndReplace(MDir.getMialibFile("mialibservers.dat"), newFile, MDir.getMialibFile("mialibservers.dat_old"));
+            Util.backupAndReplace(MDir.getMialibPath("mialibservers.dat"), newFile, MDir.getMialibPath("mialibservers.dat_old"));
         } catch (Exception e) {
-            MiaLib.LOGGER.error("Couldn't save mialib server list", e);
+            Mialib.LOGGER.error("Couldn't save mialib server list", e);
         }
     }
 

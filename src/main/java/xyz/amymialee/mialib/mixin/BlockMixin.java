@@ -6,10 +6,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -29,9 +29,6 @@ import java.util.List;
 
 @Mixin(Block.class)
 public class BlockMixin {
-    @Unique
-    private static final SimpleInventory fakeFurnace = new SimpleInventory(3);
-
     @WrapOperation(method = "dropStacks(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/entity/BlockEntity;Lnet/minecraft/entity/Entity;Lnet/minecraft/item/ItemStack;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getDroppedStacks(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/entity/BlockEntity;Lnet/minecraft/entity/Entity;Lnet/minecraft/item/ItemStack;)Ljava/util/List;"))
     private static List<ItemStack> mialib$autoSmelting(BlockState state, ServerWorld world, BlockPos pos, BlockEntity blockEntity, Entity entity, ItemStack stack, @NotNull Operation<List<ItemStack>> original) {
         var result = MiaLibEvents.SMELT_BROKEN_BLOCK.invoker().shouldSmeltBlock(world, state, pos, blockEntity, entity, stack);
@@ -93,11 +90,9 @@ public class BlockMixin {
 
     @Unique
     private static @Nullable ItemStack simulateSmelt(@NotNull World world, ItemStack input) {
-        fakeFurnace.clear();
-        fakeFurnace.setStack(0, input);
-        var recipes = world.getRecipeManager().getAllMatches(RecipeType.SMELTING, fakeFurnace, world);
+        var recipes = world.getRecipeManager().getAllMatches(RecipeType.SMELTING, new SingleStackRecipeInput(input), world);
         for (var recipe : recipes) {
-            var result = recipe.getOutput(world.getRegistryManager());
+            var result = recipe.value().getResult(world.getRegistryManager());
             result.setCount(result.getCount() * input.getCount());
             return result;
         }

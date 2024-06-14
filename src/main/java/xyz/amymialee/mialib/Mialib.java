@@ -1,16 +1,15 @@
 package xyz.amymialee.mialib;
 
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
-import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
+import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
+import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
+import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.amymialee.mialib.cca.ExtraFlagsComponent;
@@ -23,17 +22,19 @@ import xyz.amymialee.mialib.modules.NetworkingModule;
 import xyz.amymialee.mialib.mvalues.MValue;
 import xyz.amymialee.mialib.mvalues.MValueCategory;
 
-public class MiaLib implements ModInitializer, EntityComponentInitializer {
+import java.util.Random;
+
+public class Mialib implements ModInitializer, EntityComponentInitializer {
     public static final String MOD_ID = "mialib";
     public static final String MOD_NAME = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow().getMetadata().getName();
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
+    public static final Random RANDOM = new Random();
     /* MValues */
-    public static final MValueCategory MIALIB_CATEGORY = new MValueCategory(id(MOD_ID), Items.DIAMOND.getDefaultStack(), new Identifier("textures/block/purple_concrete.png"));
+    public static final MValueCategory MIALIB_CATEGORY = new MValueCategory(id(MOD_ID), Items.DIAMOND.getDefaultStack(), Identifier.ofVanilla("textures/block/purple_concrete.png"));
     public static final MValue.MValueBoolean CREATIVE_NO_SLEEP = MValue.ofBoolean(MIALIB_CATEGORY, id("creative_no_sleep"), Items.BLUE_BED.getDefaultStack(), Items.RED_BED.getDefaultStack(), false);
-    public static final MValue.MValueBoolean FIRE_ASPECT_AUTO_SMELT = MValue.ofBoolean(MIALIB_CATEGORY, id("fire_aspect_auto_smelt"), Items.FIRE_CHARGE.getDefaultStack(), Items.COAL.getDefaultStack(), false);
     public static final MValue.MValueBoolean DISABLE_PIGLIN_PORTAL_SPAWNING = MValue.ofBoolean(MIALIB_CATEGORY, id("disable_piglin_portal_spawning"), Items.ROTTEN_FLESH.getDefaultStack(), Items.GOLD_NUGGET.getDefaultStack(), false);
-    public static final MValue.MValueBoolean DISABLE_NETHER_PORTALS = MValue.ofBoolean(MIALIB_CATEGORY, id("disable_nether_portals"), Items.OBSIDIAN.getDefaultStack().mialib$enchantStack(Enchantments.FLAME), Items.OBSIDIAN.getDefaultStack(), false);
-    public static final MValue.MValueBoolean DISABLE_END_PORTALS = MValue.ofBoolean(MIALIB_CATEGORY, id("disable_end_portals"), Items.END_PORTAL_FRAME.getDefaultStack().mialib$enchantStack(Enchantments.FLAME), Items.END_PORTAL_FRAME.getDefaultStack(), false);
+    public static final MValue.MValueBoolean DISABLE_NETHER_PORTALS = MValue.ofBoolean(MIALIB_CATEGORY, id("disable_nether_portals"), Items.OBSIDIAN.getDefaultStack(), Items.OBSIDIAN.getDefaultStack(), false);
+    public static final MValue.MValueBoolean DISABLE_END_PORTALS = MValue.ofBoolean(MIALIB_CATEGORY, id("disable_end_portals"), Items.END_PORTAL_FRAME.getDefaultStack(), Items.END_PORTAL_FRAME.getDefaultStack(), false);
 
     @Override
     public void onInitialize() {
@@ -51,6 +52,6 @@ public class MiaLib implements ModInitializer, EntityComponentInitializer {
     }
 
     public static @NotNull Identifier id(String path) {
-        return new Identifier(MOD_ID, path);
+        return Identifier.of(MOD_ID, path);
     }
 }

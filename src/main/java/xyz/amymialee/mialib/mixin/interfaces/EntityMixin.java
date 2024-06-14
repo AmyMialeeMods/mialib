@@ -8,11 +8,6 @@ import xyz.amymialee.mialib.util.interfaces.MEntity;
 @Mixin(Entity.class)
 public abstract class EntityMixin implements MEntity {
     @Override
-    public boolean mialib$isImperceptible() {
-        return ExtraFlagsComponent.KEY.get(this).isImperceptible();
-    }
-
-    @Override
     public boolean mialib$isIndestructible() {
         return ExtraFlagsComponent.KEY.get(this).isIndestructible();
     }

@@ -1,5 +1,5 @@
 {
-  "display": "tnt",
+  "display": "minecraft:tnt",
   "settings": {
     "biome": "minecraft:dark_forest",
     "features": false,

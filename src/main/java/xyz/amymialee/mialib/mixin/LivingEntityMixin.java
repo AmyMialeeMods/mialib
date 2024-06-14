@@ -11,7 +11,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -46,15 +45,9 @@ public abstract class LivingEntityMixin extends Entity {
         }
     }
 
-    @WrapOperation(method = "tickStatusEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V"))
-    private void mialib$noParticles(World instance, ParticleEffect parameters, double x, double y, double z, double velocityX, double velocityY, double velocityZ, @NotNull Operation<Void> original) {
-        if (this.mialib$isImperceptible()) return;
-        original.call(instance, parameters, x, y, z, velocityX, velocityY, velocityZ);
-    }
-
     @WrapOperation(method = "clearStatusEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;onStatusEffectRemoved(Lnet/minecraft/entity/effect/StatusEffectInstance;)V"))
     private void mialib$unclearable(LivingEntity instance, @NotNull StatusEffectInstance effect, Operation<Void> original, @Share("shouldClear") @NotNull LocalBooleanRef shouldClear) {
-        shouldClear.set(effect.getEffectType().mialib$shouldBeCleared(instance, effect));
+        shouldClear.set(effect.getEffectType().value().mialib$shouldBeCleared(instance, effect));
         if (shouldClear.get()) {
             original.call(instance, effect);
         }

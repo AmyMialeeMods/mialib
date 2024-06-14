@@ -1,10 +1,11 @@
 package xyz.amymialee.mialib.mixin.client;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.option.GameOptions;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,7 +13,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import xyz.amymialee.mialib.config.MialibProperties;
-import xyz.amymialee.mialib.modules.client.NetworkingClientModule;
+import xyz.amymialee.mialib.networking.AttackingPayload;
+import xyz.amymialee.mialib.networking.UsingPayload;
+
+import java.util.List;
+import java.util.function.Function;
 
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {
@@ -21,26 +26,22 @@ public class MinecraftClientMixin {
 	@Unique private boolean mialib$attacking = false;
 	@Unique private boolean mialib$using = false;
 
-	@WrapOperation(method = "onInitFinished", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;setScreen(Lnet/minecraft/client/gui/screen/Screen;)V", ordinal = 0))
-	private void mialib$skipNarrator(MinecraftClient instance, Screen screen, Operation<Void> original) {
-		if (MialibProperties.skipNarrator.get()) {
-			original.call(instance, new TitleScreen(true));
-		} else {
-			original.call(instance, screen);
-		}
-	}
+	@WrapWithCondition(method = "createInitScreens", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0))
+	private boolean mialib$skipNarrator(List<Function<Runnable, Screen>> instance, Object e) {
+        return !MialibProperties.skipNarrator.get();
+    }
 
 	@WrapOperation(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V"))
 	private void mialib$holding(MinecraftClient instance, boolean bl, Operation<Void> original) {
 		var attacking = this.options.attackKey.isPressed();
 		if (attacking != this.mialib$attacking) {
 			this.mialib$attacking = attacking;
-			NetworkingClientModule.sendAttacking(attacking);
+			ClientPlayNetworking.send(new AttackingPayload(attacking));
 		}
 		var using = this.options.useKey.isPressed();
 		if (using != this.mialib$using) {
 			this.mialib$using = using;
-			NetworkingClientModule.sendUsing(using);
+			ClientPlayNetworking.send(new UsingPayload(using));
 		}
 		original.call(instance, bl);
 	}

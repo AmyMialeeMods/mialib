@@ -16,19 +16,19 @@
   },
   "entrypoints": {
     "client": [
-      "xyz.amymialee.mialib.MiaLibClient"
+      "xyz.amymialee.mialib.MialibClient"
     ],
     "main": [
-      "xyz.amymialee.mialib.MiaLib"
+      "xyz.amymialee.mialib.Mialib"
     ],
     "server": [
-      "xyz.amymialee.mialib.MiaLibServer"
+      "xyz.amymialee.mialib.MialibServer"
     ],
     "fabric-datagen": [
-      "xyz.amymialee.mialib.MiaLibDataGen"
+      "xyz.amymialee.mialib.MialibDataGen"
     ],
     "cardinal-components-entity": [
-      "xyz.amymialee.mialib.MiaLib"
+      "xyz.amymialee.mialib.Mialib"
     ]
   },
   "custom": {

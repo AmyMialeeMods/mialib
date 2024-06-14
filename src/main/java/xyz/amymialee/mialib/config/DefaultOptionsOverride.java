@@ -1,6 +1,6 @@
 package xyz.amymialee.mialib.config;
 
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.util.MDir;
 
 import java.io.BufferedReader;
@@ -28,17 +28,17 @@ public class DefaultOptionsOverride {
                 if (line.isBlank()) continue;
                 var split = line.split(":");
                 if (split.length < 2) {
-                    MiaLib.LOGGER.warn("Failed to parse default options line {}, too few :", line);
+                    Mialib.LOGGER.warn("Failed to parse default options line {}, too few :", line);
                 } else if (split.length == 2) {
                     defaultOverrides.put(split[0].trim(), split[1].trim());
                 } else {
-                    MiaLib.LOGGER.warn("Failed to parse default options line {}, too many :", line);
+                    Mialib.LOGGER.warn("Failed to parse default options line {}, too many :", line);
                 }
             }
         } catch (FileNotFoundException e) {
-            MiaLib.LOGGER.info("Failed to find default options file {}", mialibFile, e);
+            Mialib.LOGGER.info("Failed to find default options file {}", mialibFile, e);
         } catch (Exception e) {
-            MiaLib.LOGGER.warn("Failed to load default options file {}", mialibFile, e);
+            Mialib.LOGGER.warn("Failed to load default options file {}", mialibFile, e);
         }
     }
 

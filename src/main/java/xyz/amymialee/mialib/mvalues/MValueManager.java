@@ -3,12 +3,14 @@ package xyz.amymialee.mialib.mvalues;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import dev.onyxstudios.cca.api.v3.scoreboard.ScoreboardSyncCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
-import xyz.amymialee.mialib.MiaLib;
-import xyz.amymialee.mialib.modules.NetworkingModule;
+import org.ladysnake.cca.api.v3.scoreboard.ScoreboardSyncCallback;
+import xyz.amymialee.mialib.Mialib;
+import xyz.amymialee.mialib.networking.MValuePayload;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
@@ -29,9 +31,7 @@ public class MValueManager {
         this.server = server;
         INSTANCE = this;
         ScoreboardSyncCallback.EVENT.register((player, tracked) -> {
-            for (var key : MVALUES.values()) {
-                NetworkingModule.syncMValue(key, player);
-            }
+            for (var key : MVALUES.values()) ServerPlayNetworking.send(player, new MValuePayload(key.id, key.writeNbt(new NbtCompound())));
         });
         loadConfig();
     }
@@ -47,7 +47,7 @@ public class MValueManager {
 
     public static void register(MValueCategory category, MValue<?> mValue) {
         if (INSTANCE != null) {
-            MiaLib.LOGGER.error("MValue registered after component initialization, this leads to value loss!");
+            Mialib.LOGGER.error("MValue registered after component initialization, this leads to value loss!");
             throw new RuntimeException("MValue registered after component initialization, this leads to value loss!");
         }
         MVALUES.put(mValue.id, mValue);
@@ -65,7 +65,7 @@ public class MValueManager {
             var jsonData = gson.toJson(json);
             Files.writeString(configFile, jsonData);
         } catch (Exception e) {
-            MiaLib.LOGGER.info(e.toString());
+            Mialib.LOGGER.info(e.toString());
         }
     }
 
@@ -79,16 +79,16 @@ public class MValueManager {
                     try {
                         values.getValue().readJson(data.get(values.getKey().toString()));
                     } catch (Exception e) {
-                        MiaLib.LOGGER.info("Error loading mvalue data for {}", values.getKey().toString());
-                        MiaLib.LOGGER.info(e.toString());
+                        Mialib.LOGGER.info("Error loading mvalue data for {}", values.getKey().toString());
+                        Mialib.LOGGER.info(e.toString());
                     }
                 }
             }
         } catch (FileNotFoundException e) {
-            MiaLib.LOGGER.info("MValue data not found.");
+            Mialib.LOGGER.info("MValue data not found.");
         } catch (Exception e) {
-            MiaLib.LOGGER.info("Error loading mvalue data.");
-            MiaLib.LOGGER.info(e.toString());
+            Mialib.LOGGER.info("Error loading mvalue data.");
+            Mialib.LOGGER.info(e.toString());
         }
     }
 }

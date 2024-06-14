@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.MinecraftVersion;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.*;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,8 +18,8 @@ public class ResourcePackManagerMixin {
     private ImmutableSet<ResourcePackProvider> mialib$moreDirs(Object @NotNull [] array, @NotNull Operation<ImmutableSet<ResourcePackProvider>> operation) {
         var universalDir = MDir.getMialibPath("resourcepacks/universal");
         var versionDir = MDir.getMialibPath("resourcepacks/pack_format_" + MinecraftVersion.CURRENT.getResourceVersion(ResourceType.CLIENT_RESOURCES));
-        var universalProvider = new FileResourcePackProvider(universalDir, ResourceType.CLIENT_RESOURCES, ResourcePackSource.NONE);//, MinecraftClient.getInstance().getSymlinkFinder());
-        var versionProvider = new FileResourcePackProvider(versionDir, ResourceType.CLIENT_RESOURCES, ResourcePackSource.NONE);//, MinecraftClient.getInstance().getSymlinkFinder());
+        var universalProvider = new FileResourcePackProvider(universalDir, ResourceType.CLIENT_RESOURCES, ResourcePackSource.NONE, MinecraftClient.getInstance().getSymlinkFinder());
+        var versionProvider = new FileResourcePackProvider(versionDir, ResourceType.CLIENT_RESOURCES, ResourcePackSource.NONE, MinecraftClient.getInstance().getSymlinkFinder());
         var combined = new ResourcePackProvider[array.length + 2];
         System.arraycopy(array, 0, combined, 0, array.length);
         combined[array.length] = universalProvider;

@@ -2,13 +2,18 @@ package xyz.amymialee.mialib.mvalues;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.mojang.brigadier.arguments.*;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
-import xyz.amymialee.mialib.MiaLib;
-import xyz.amymialee.mialib.modules.NetworkingModule;
-import xyz.amymialee.mialib.modules.client.NetworkingClientModule;
+import xyz.amymialee.mialib.Mialib;
+import xyz.amymialee.mialib.networking.MValuePayload;
 import xyz.amymialee.mialib.util.runnables.HoldingFunction;
 import xyz.amymialee.mialib.util.runnables.mvalues.MBooleanFunction;
 
@@ -17,7 +22,7 @@ import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public abstract class MValue<T> {
-    public static final Identifier MVALUE_SYNC = MiaLib.id("mvalue_sync");
+    public static final Identifier MVALUE_SYNC = Mialib.id("mvalue_sync");
     public final Identifier id;
     public final Function<MValue<T>, ItemStack> stackFunction;
 
@@ -113,7 +118,7 @@ public abstract class MValue<T> {
 
     public void syncAll() {
         for (var player : MValueManager.INSTANCE.server.getPlayerManager().getPlayerList()) {
-            NetworkingModule.syncMValue(this, player);
+            ServerPlayNetworking.send(player, new MValuePayload(this.id, this.writeNbt(new NbtCompound())));
         }
     }
 
@@ -129,7 +134,7 @@ public abstract class MValue<T> {
 
     public void sendValue(T value) {
         this.setValueInternal(value);
-        NetworkingClientModule.sendMValueChange(this);
+        ClientPlayNetworking.send(new MValuePayload(this.id, this.writeNbt(new NbtCompound())));
     }
 
     public abstract T getValue();
@@ -152,6 +157,19 @@ public abstract class MValue<T> {
             super(category, id, stackFunction);
             this.defaultValue = defaultValue;
             this.value = this.defaultValue;
+            CommandRegistrationCallback.EVENT.register((dispatcher, reg, env) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                    .then(CommandManager.literal(id.toString())
+                            .then(CommandManager.argument("enabled", BoolArgumentType.bool())
+                                    .executes(ctx -> {
+                                        this.setValue(BoolArgumentType.getBool(ctx, "enabled"));
+                                        ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", Text.translatable(this.getTranslationKey()), this.getValue()), true);
+                                        return this.value ? 1 : 0;
+                                    })
+                            ).executes(ctx -> {
+                                ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.query", Text.translatable(this.getTranslationKey()), this.getValue()), false);
+                                return this.value ? 1 : 0;
+                            })
+                    )));
         }
 
         @Override
@@ -186,7 +204,6 @@ public abstract class MValue<T> {
         }
     }
 
-    @SuppressWarnings("unused")
     public abstract static class MValueMinMax<T extends Number> extends MValue<T> {
         public MValueMinMax(MValueCategory category, Identifier id, Function<MValue<T>, ItemStack> stackFunction) {
             super(category, id, stackFunction);
@@ -213,6 +230,19 @@ public abstract class MValue<T> {
             this.value = this.defaultValue;
             this.min = min;
             this.max = max;
+            CommandRegistrationCallback.EVENT.register((dispatcher, reg, env) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                    .then(CommandManager.literal(id.toString())
+                            .then(CommandManager.argument("value", IntegerArgumentType.integer(this.min, this.max))
+                                    .executes(ctx -> {
+                                        this.setValue(IntegerArgumentType.getInteger(ctx, "value"));
+                                        ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", Text.translatable(this.getTranslationKey()), this.getValue()), true);
+                                        return this.value;
+                                    })
+                            ).executes(ctx -> {
+                                ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.query", Text.translatable(this.getTranslationKey()), this.getValue()), false);
+                                return this.value;
+                            })
+                    )));
         }
 
         @Override
@@ -273,6 +303,19 @@ public abstract class MValue<T> {
             this.value = this.defaultValue;
             this.min = min;
             this.max = max;
+            CommandRegistrationCallback.EVENT.register((dispatcher, reg, env) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                    .then(CommandManager.literal(id.toString())
+                            .then(CommandManager.argument("value", LongArgumentType.longArg(this.min, this.max))
+                                    .executes(ctx -> {
+                                        this.setValue(LongArgumentType.getLong(ctx, "value"));
+                                        ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", Text.translatable(this.getTranslationKey()), this.getValue()), true);
+                                        return (int) this.value;
+                                    })
+                            ).executes(ctx -> {
+                                ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.query", Text.translatable(this.getTranslationKey()), this.getValue()), false);
+                                return (int) this.value;
+                            })
+                    )));
         }
 
         @Override
@@ -333,6 +376,19 @@ public abstract class MValue<T> {
             this.value = this.defaultValue;
             this.min = min;
             this.max = max;
+            CommandRegistrationCallback.EVENT.register((dispatcher, reg, env) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                    .then(CommandManager.literal(id.toString())
+                            .then(CommandManager.argument("value", FloatArgumentType.floatArg(this.min, this.max))
+                                    .executes(ctx -> {
+                                        this.setValue(FloatArgumentType.getFloat(ctx, "value"));
+                                        ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", Text.translatable(this.getTranslationKey()), this.getValue()), true);
+                                        return (int) this.value;
+                                    })
+                            ).executes(ctx -> {
+                                ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.query", Text.translatable(this.getTranslationKey()), this.getValue()), false);
+                                return (int) this.value;
+                            })
+                    )));
         }
 
         @Override
@@ -393,6 +449,19 @@ public abstract class MValue<T> {
             this.value = this.defaultValue;
             this.min = min;
             this.max = max;
+            CommandRegistrationCallback.EVENT.register((dispatcher, reg, env) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                    .then(CommandManager.literal(id.toString())
+                            .then(CommandManager.argument("value", DoubleArgumentType.doubleArg(this.min, this.max))
+                                    .executes(ctx -> {
+                                        this.setValue(DoubleArgumentType.getDouble(ctx, "value"));
+                                        ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", Text.translatable(this.getTranslationKey()), this.getValue()), true);
+                                        return (int) this.value;
+                                    })
+                            ).executes(ctx -> {
+                                ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.query", Text.translatable(this.getTranslationKey()), this.getValue()), false);
+                                return (int) this.value;
+                            })
+                    )));
         }
 
         @Override

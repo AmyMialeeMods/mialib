@@ -1,12 +1,13 @@
 package xyz.amymialee.mialib.cca;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import org.jetbrains.annotations.NotNull;
-import xyz.amymialee.mialib.MiaLib;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.ComponentRegistry;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.events.ExtraFlagEvents;
 import xyz.amymialee.mialib.util.MMath;
 
@@ -34,7 +35,7 @@ import xyz.amymialee.mialib.util.MMath;
  * </p>
  */
 public class ExtraFlagsComponent implements AutoSyncedComponent {
-    public static final ComponentKey<ExtraFlagsComponent> KEY = ComponentRegistry.getOrCreate(MiaLib.id("extra_flags"), ExtraFlagsComponent.class);
+    public static final ComponentKey<ExtraFlagsComponent> KEY = ComponentRegistry.getOrCreate(Mialib.id("extra_flags"), ExtraFlagsComponent.class);
     private final Entity entity;
     private byte flags = 0;
     private byte commandFlags = 0;
@@ -45,27 +46,6 @@ public class ExtraFlagsComponent implements AutoSyncedComponent {
 
     public void sync() {
         KEY.sync(this.entity);
-    }
-
-    public boolean isImperceptible() {
-        return MMath.getByteFlag(this.flags, 0);
-    }
-
-    private void setImperceptible(boolean imperceptible) {
-        if (imperceptible == this.isImperceptible()) return;
-        this.flags = MMath.setByteFlag(this.flags, 0, imperceptible);
-        this.sync();
-    }
-
-    public boolean hasImperceptibleCommand() {
-        return MMath.getByteFlag(this.commandFlags, 0);
-    }
-
-    public void setImperceptibleCommand(boolean imperceptible) {
-        if (imperceptible == this.hasImperceptibleCommand()) return;
-        this.commandFlags = MMath.setByteFlag(this.commandFlags, 0, imperceptible);
-        this.sync();
-        this.refreshFlags();
     }
 
     public boolean isIndestructible() {
@@ -111,19 +91,18 @@ public class ExtraFlagsComponent implements AutoSyncedComponent {
     }
 
     public void refreshFlags() {
-        this.setImperceptible(ExtraFlagEvents.SHOULD_BE_IMPERCEPTIBLE.invoker().shouldHaveFlag(this.entity.getWorld(), this.entity).isAccepted());
         this.setIndestructible(ExtraFlagEvents.SHOULD_BE_INDESTRUCTIBLE.invoker().shouldHaveFlag(this.entity.getWorld(), this.entity).isAccepted());
         this.setImmortal(ExtraFlagEvents.SHOULD_BE_IMMORTAL.invoker().shouldHaveFlag(this.entity.getWorld(), this.entity).isAccepted());
     }
 
     @Override
-    public void readFromNbt(@NotNull NbtCompound tag) {
+    public void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         this.flags = tag.getByte("flags");
         this.commandFlags = tag.getByte("commandFlags");
     }
 
     @Override
-    public void writeToNbt(@NotNull NbtCompound tag) {
+    public void writeToNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         tag.putByte("flags", this.flags);
         tag.putByte("commandFlags", this.commandFlags);
     }

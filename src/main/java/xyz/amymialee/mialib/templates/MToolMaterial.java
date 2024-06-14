@@ -1,7 +1,10 @@
 package xyz.amymialee.mialib.templates;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 
 @SuppressWarnings("unused")
 public class MToolMaterial implements ToolMaterial {
@@ -9,23 +12,23 @@ public class MToolMaterial implements ToolMaterial {
     private int toolDurability = 0;
     private float miningSpeedMultiplier = 1;
     private float attackDamage = 0;
-    private int miningLevel = 0;
+    private TagKey<Block> inverseTag = BlockTags.AIR;
     private int enchantability = 0;
     private Ingredient repairIngredient = Ingredient.EMPTY;
 
     public MToolMaterial() {}
 
-    public MToolMaterial(int toolDurability, float miningSpeedMultiplier, float attackDamage, int miningLevel, int enchantability, Ingredient repairIngredient) {
+    public MToolMaterial(int toolDurability, float miningSpeedMultiplier, float attackDamage, TagKey<Block> inverseTag, int enchantability, Ingredient repairIngredient) {
         this.toolDurability = toolDurability;
         this.miningSpeedMultiplier = miningSpeedMultiplier;
         this.attackDamage = attackDamage;
-        this.miningLevel = miningLevel;
+        this.inverseTag = inverseTag;
         this.enchantability = enchantability;
         this.repairIngredient = repairIngredient;
     }
 
     public MToolMaterial copy() {
-        return new MToolMaterial(this.toolDurability, this.miningSpeedMultiplier, this.attackDamage, this.miningLevel, this.enchantability, this.repairIngredient);
+        return new MToolMaterial(this.toolDurability, this.miningSpeedMultiplier, this.attackDamage, this.inverseTag, this.enchantability, this.repairIngredient);
     }
 
     public MToolMaterial setToolDurability(int toolDurability) {
@@ -43,8 +46,8 @@ public class MToolMaterial implements ToolMaterial {
         return this;
     }
 
-    public MToolMaterial setMiningLevel(int miningLevel) {
-        this.miningLevel = miningLevel;
+    public MToolMaterial setInverseTag(TagKey<Block> inverseTag) {
+        this.inverseTag = inverseTag;
         return this;
     }
 
@@ -74,8 +77,8 @@ public class MToolMaterial implements ToolMaterial {
     }
 
     @Override
-    public int getMiningLevel() {
-        return this.miningLevel;
+    public TagKey<Block> getInverseTag() {
+        return this.inverseTag;
     }
 
     @Override

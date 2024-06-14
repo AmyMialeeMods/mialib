@@ -24,11 +24,4 @@ public class EntityMixin {
             cir.setReturnValue(true);
         }
     }
-
-    @Inject(method = "isInvisibleTo", at = @At("HEAD"), cancellable = true)
-    private void mialib$imperceptible(@NotNull PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
-        if (player.mialib$isImperceptible()) {
-            cir.setReturnValue(true);
-        }
-    }
 }

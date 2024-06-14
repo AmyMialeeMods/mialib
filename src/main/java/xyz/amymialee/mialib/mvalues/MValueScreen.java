@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.navigation.GuiNavigationType;
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -16,7 +17,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.util.runnables.TriFunction;
 
 import java.util.ArrayList;
@@ -25,14 +26,14 @@ import java.util.List;
 
 public class MValueScreen extends Screen {
     public static final HashMap<Class<?>, TriFunction<Integer, Integer, MValue<?>, MValueButton<?, ?>>> MVALUE_WIDGETS = new HashMap<>();
-    public static final Identifier WINDOW_TEXTURE = MiaLib.id("textures/gui/mvalue/mvalue_screen.png");
+    public static final Identifier WINDOW_TEXTURE = Mialib.id("textures/gui/mvalue/mvalue_screen.png");
     private final List<MValueButton<?, ?>> widgets = new ArrayList<>();
-    private MValueCategory selectedCategory = MiaLib.MIALIB_CATEGORY;
+    private MValueCategory selectedCategory = Mialib.MIALIB_CATEGORY;
     private int selectedCategoryPage = 0;
     private int mvaluePage = 0;
 
     public MValueScreen() {
-        super(Text.translatable("%s.screen.mvalues".formatted(MiaLib.MOD_ID)));
+        super(Text.translatable("%s.screen.mvalues".formatted(Mialib.MOD_ID)));
     }
 
     @Override
@@ -49,12 +50,12 @@ public class MValueScreen extends Screen {
             this.widgets.add(this.addDrawableChild(MVALUE_WIDGETS.get(value.getClass()).apply(x, y, value)));
         }
         if (list.size() > 12) {
-            this.addDrawableChild(new MValuePageWidget(this.width / 2 - 1, this.height / 2 + 87, true, Text.translatable("%s.screen.mvalues.page".formatted(MiaLib.MOD_ID), this.mvaluePage + 1, list.size() / 12 + 1),
+            this.addDrawableChild(new MValuePageWidget(this.width / 2 - 1, this.height / 2 + 87, true, Text.translatable("%s.screen.mvalues.page".formatted(Mialib.MOD_ID), this.mvaluePage + 1, list.size() / 12 + 1),
                     list.size() <= (1 + this.mvaluePage) * 12 ? null : button -> {
                         this.mvaluePage++;
                         this.clearAndInit();
                     }));
-            this.addDrawableChild(new MValuePageWidget(this.width / 2 - 11, this.height / 2 + 87, false, Text.translatable("%s.screen.mvalues.page".formatted(MiaLib.MOD_ID), this.mvaluePage + 1, list.size() / 12 + 1),
+            this.addDrawableChild(new MValuePageWidget(this.width / 2 - 11, this.height / 2 + 87, false, Text.translatable("%s.screen.mvalues.page".formatted(Mialib.MOD_ID), this.mvaluePage + 1, list.size() / 12 + 1),
                     this.mvaluePage <= 0 ? null : button -> {
                         this.mvaluePage--;
                         this.clearAndInit();
@@ -73,12 +74,12 @@ public class MValueScreen extends Screen {
             }));
         }
         if (categories.size() > 12) {
-            this.addDrawableChild(new MValuePageWidget(this.width / 2 + 174 + 11, this.height / 2 - 76, true, Text.translatable("%s.screen.mvalues.page".formatted(MiaLib.MOD_ID), this.selectedCategoryPage + 1, categories.size() / 12 + 1),
+            this.addDrawableChild(new MValuePageWidget(this.width / 2 + 174 + 11, this.height / 2 - 76, true, Text.translatable("%s.screen.mvalues.page".formatted(Mialib.MOD_ID), this.selectedCategoryPage + 1, categories.size() / 12 + 1),
                     list.size() <= (1 + this.selectedCategoryPage) * 12 ? null : button -> {
                         this.selectedCategoryPage++;
                         this.clearAndInit();
                     }));
-            this.addDrawableChild(new MValuePageWidget(this.width / 2 + 174 + 1, this.height / 2 - 76, false, Text.translatable("%s.screen.mvalues.page".formatted(MiaLib.MOD_ID), this.selectedCategoryPage + 1, categories.size() / 12 + 1),
+            this.addDrawableChild(new MValuePageWidget(this.width / 2 + 174 + 1, this.height / 2 - 76, false, Text.translatable("%s.screen.mvalues.page".formatted(Mialib.MOD_ID), this.selectedCategoryPage + 1, categories.size() / 12 + 1),
                     this.selectedCategoryPage <= 0 ? null : button -> {
                         this.selectedCategoryPage--;
                         this.clearAndInit();
@@ -92,7 +93,7 @@ public class MValueScreen extends Screen {
 
     @Override
     public void render(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context);
+        this.renderBackground(context, mouseX, mouseY, delta);
         context.getMatrices().push();
         RenderSystem.enableBlend();
         context.enableScissor(this.width / 2 - 194, this.height / 2 - 62, this.width / 2 + 194, this.height / 2 + 88);
@@ -105,11 +106,13 @@ public class MValueScreen extends Screen {
         RenderSystem.enableBlend();
         context.drawTexture(WINDOW_TEXTURE, this.width / 2 - 203, this.height / 2 - 80, 0, 0, 406, 177, 406, 177);
         context.getMatrices().pop();
-        super.render(context, mouseX, mouseY, delta);
         var y = this.height / 2 - 74;
         context.drawText(this.textRenderer, this.title, this.width / 2 - 192, y, 4210752, false);
         var categoryTitle = Text.translatable(this.selectedCategory.getTranslationKey());
         context.drawText(this.textRenderer, categoryTitle, this.width / 2 - this.textRenderer.getWidth(categoryTitle) / 2, y, 4210752, false);
+        for (var drawable : this.drawables) {
+            drawable.render(context, mouseX, mouseY, delta);
+        }
     }
 
     static {
@@ -121,7 +124,7 @@ public class MValueScreen extends Screen {
     }
 
     public static class MValuePageWidget extends ButtonWidget {
-        public static final Identifier BUTTON_TEX = new Identifier("fabric", "textures/gui/creative_buttons.png");
+        public static final Identifier BUTTON_TEX = Identifier.of("fabric", "textures/gui/creative_buttons.png");
         private final boolean next;
 
         public MValuePageWidget(int x, int y, boolean next, Text text, PressAction consumer) {
@@ -131,17 +134,17 @@ public class MValueScreen extends Screen {
         }
 
         @Override
-        public void render(@NotNull DrawContext drawContext, int mouseX, int mouseY, float delta) {
-            drawContext.drawTexture(BUTTON_TEX, this.getX(), this.getY(), (this.active && this.isHovered() ? 22 : 0) + (this.next ? 11 : 0), this.active ? 0 : 12, 11, 12);
+        protected void renderWidget(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
+            context.drawTexture(BUTTON_TEX, this.getX(), this.getY(), (this.active && this.isHovered() ? 22 : 0) + (this.next ? 11 : 0), this.active ? 0 : 12, 11, 12);
             if (mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height) {
-                drawContext.drawTooltip(MinecraftClient.getInstance().textRenderer, this.getMessage(), mouseX, mouseY);
+                context.drawTooltip(MinecraftClient.getInstance().textRenderer, this.getMessage(), mouseX, mouseY);
             }
         }
     }
 
     public static class MValueCategoryWidget extends ButtonWidget {
-        public static final Identifier TAB_DESELECTED = MiaLib.id("textures/gui/mvalue/tab_deselected.png");
-        public static final Identifier TAB_SELECTED = MiaLib.id("textures/gui/mvalue/tab_selected.png");
+        public static final Identifier TAB_DESELECTED = Mialib.id("textures/gui/mvalue/tab_deselected.png");
+        public static final Identifier TAB_SELECTED = Mialib.id("textures/gui/mvalue/tab_selected.png");
         public final MValueCategory category;
 
         public MValueCategoryWidget(int x, int y, MValueCategory value, Text text, PressAction consumer) {
@@ -151,16 +154,17 @@ public class MValueScreen extends Screen {
         }
 
         @Override
-        public void render(@NotNull DrawContext drawContext, int mouseX, int mouseY, float delta) {
-            drawContext.drawTexture(this.active ? TAB_DESELECTED : TAB_SELECTED, this.getX(), this.getY(), 0, 0, 28, 32, 28, 32);
-            drawContext.drawItem(this.category.stackSupplier.get(), this.getX() + 5, this.getY() + 10);
+        protected void renderWidget(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
+            context.drawTexture(this.active ? TAB_DESELECTED : TAB_SELECTED, this.getX(), this.getY(), 0, 0, 28, 32, 28, 32);
+            context.drawItem(this.category.stackSupplier.get(), this.getX() + 5, this.getY() + 10);
             if (mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height) {
-                drawContext.drawTooltip(MinecraftClient.getInstance().textRenderer, this.getMessage(), mouseX, mouseY);
+                context.drawTooltip(MinecraftClient.getInstance().textRenderer, this.getMessage(), mouseX, mouseY);
             }
         }
     }
 
     public abstract static class MValueButton<T, K extends MValue<T>> extends ClickableWidget {
+        public static final ButtonTextures BUTTON_TEXTURES = new ButtonTextures(Identifier.ofVanilla("widget/button"), Identifier.ofVanilla("widget/button_disabled"), Identifier.ofVanilla("widget/button_highlighted"));
         protected final K value;
 
         public MValueButton(int x, int y, @NotNull K value) {
@@ -174,16 +178,6 @@ public class MValueScreen extends Screen {
         public void refreshMessage() {
             this.setMessage(Text.translatable(this.value.getTranslationKey()).append(Text.literal(": " + this.value.getValue())));
             this.setTooltip(Tooltip.of(Text.translatable(this.value.getDescriptionTranslationKey())));
-        }
-
-        protected int getTextureY() {
-            var i = 1;
-            if (!this.active) {
-                i = 0;
-            } else if (this.isSelected()) {
-                i = 2;
-            }
-            return 46 + i * 20;
         }
 
         @Override
@@ -203,14 +197,14 @@ public class MValueScreen extends Screen {
         }
 
         @Override
-        protected void renderButton(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
+        protected void renderWidget(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
             var minecraftClient = MinecraftClient.getInstance();
             context.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
             RenderSystem.enableBlend();
             RenderSystem.enableDepthTest();
-            context.drawNineSlicedTexture(WIDGETS_TEXTURE, this.getX(), this.getY(), 20, this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY());
+            context.drawGuiTexture(BUTTON_TEXTURES.get(this.active, this.isSelected()), this.getX(), this.getY(), 20, this.getHeight());
             context.drawItem(this.value.getStack(), this.getX() + 2, this.getY() + 2);
-            context.drawNineSlicedTexture(WIDGETS_TEXTURE, this.getX() + 20, this.getY(), this.getWidth() - 20, this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY());
+            context.drawGuiTexture(BUTTON_TEXTURES.get(this.active, this.isSelected()), this.getX() + 20, this.getY(), this.getWidth() - 20, this.getHeight());
             context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             drawScrollableText(context, minecraftClient.textRenderer, this.getMessage(), this.getX() + 22, this.getY(), this.getX() + this.getWidth() - 2, this.getY() + this.getHeight(), (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
         }
@@ -234,7 +228,10 @@ public class MValueScreen extends Screen {
     }
 
     public abstract static class MValueSliderButton<T extends Number, K extends MValue.MValueMinMax<T>> extends MValueButton<T, K> {
-        private static final Identifier TEXTURE = new Identifier("textures/gui/slider.png");
+        public static final Identifier SLIDER_TEXTURE = Identifier.ofVanilla("widget/slider");
+        public static final Identifier SLIDER_HIGHLIGHTED_TEXTURE = Identifier.ofVanilla("widget/slider_highlighted");
+        public static final Identifier SLIDER_HANDLE_TEXTURE = Identifier.ofVanilla("widget/slider_handle");
+        public static final Identifier SLIDER_HANDLE_HIGHLIGHTED_TEXTURE = Identifier.ofVanilla("widget/slider_handle_highlighted");
         protected double sliderValue;
         public boolean sliderFocused;
 
@@ -243,27 +240,25 @@ public class MValueScreen extends Screen {
             this.refreshFromValue();
         }
 
-        private int getYImage() {
-            var i = this.isFocused() && !this.sliderFocused ? 1 : 0;
-            return i * 20;
+        protected final Identifier getSliderTexture(boolean highlighted) {
+            return highlighted ? SLIDER_HIGHLIGHTED_TEXTURE : SLIDER_TEXTURE;
         }
 
-        private int getTextureV() {
-            var i = !this.hovered && !this.sliderFocused ? 2 : 3;
-            return i * 20;
+        protected final Identifier getSliderHandleTexture(boolean highlighted) {
+            return highlighted ? SLIDER_HANDLE_HIGHLIGHTED_TEXTURE : SLIDER_HANDLE_TEXTURE;
         }
 
         @Override
-        public void renderButton(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
+        protected void renderWidget(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
             var minecraftClient = MinecraftClient.getInstance();
             context.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableDepthTest();
-            context.drawNineSlicedTexture(WIDGETS_TEXTURE, this.getX(), this.getY(), 20, this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY());
+            context.drawGuiTexture(BUTTON_TEXTURES.get(this.active, this.isSelected()), this.getX(), this.getY(), 20, this.getHeight());
             context.drawItem(this.value.getStack(), this.getX() + 2, this.getY() + 2);
-            context.drawNineSlicedTexture(TEXTURE, this.getX() + 20, this.getY(), this.getWidth() - 20, this.getHeight(), 20, 4, 200, 20, 0, this.getYImage());
-            context.drawNineSlicedTexture(TEXTURE, this.getX() + 20 + (int)(this.sliderValue * (double)((this.width - 20) - 8)), this.getY(), 8, 20, 20, 4, 200, 20, 0, this.getTextureV());
+            context.drawGuiTexture(this.getSliderTexture(this.isFocused() && !this.sliderFocused), this.getX() + 20, this.getY(), this.getWidth() - 20, this.getHeight());
+            context.drawGuiTexture(this.getSliderHandleTexture(!this.hovered && !this.sliderFocused), this.getX() + 20 + (int)(this.sliderValue * (double)((this.width - 20) - 8)), this.getY(), 8, 20);
             context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             drawScrollableText(context, minecraftClient.textRenderer, this.getMessage(), this.getX() + 22, this.getY(), this.getX() + this.getWidth() - 2, this.getY() + this.getHeight(), (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
         }

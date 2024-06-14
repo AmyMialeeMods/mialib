@@ -1,14 +1,13 @@
 package xyz.amymialee.mialib.templates;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.advancement.criterion.Criterion;
 import net.minecraft.block.Block;
-import net.minecraft.block.entity.BannerPattern;
+import net.minecraft.block.DecoratedPotPattern;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.serialize.ArgumentSerializer;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Activity;
@@ -17,13 +16,13 @@ import net.minecraft.entity.ai.brain.Schedule;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.decoration.painting.PaintingVariant;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.CatVariant;
 import net.minecraft.entity.passive.FrogVariant;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.*;
+import net.minecraft.item.map.MapDecorationType;
 import net.minecraft.loot.condition.LootConditionType;
 import net.minecraft.loot.entry.LootPoolEntryType;
 import net.minecraft.loot.function.LootFunctionType;
@@ -32,11 +31,13 @@ import net.minecraft.loot.provider.number.LootNumberProviderType;
 import net.minecraft.loot.provider.score.LootScoreProviderType;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.potion.Potion;
+import net.minecraft.predicate.item.ItemSubPredicate;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.scoreboard.number.NumberFormatType;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.StatType;
@@ -70,7 +71,7 @@ import net.minecraft.world.gen.trunk.TrunkPlacerType;
 import net.minecraft.world.poi.PointOfInterestType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.amymialee.mialib.MiaLib;
+import xyz.amymialee.mialib.Mialib;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,21 +137,21 @@ public class MRegistry {
 
 	public Block registerBlockWithItem(String path, Block block, ItemGroup @NotNull ... groups) {
 		this.register(path, block);
-		Item.BLOCK_ITEMS.put(block, this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups));
+		Item.BLOCK_ITEMS.put(block, this.registerItem(path, new BlockItem(block, new Item.Settings()), groups));
 		return block;
 	}
 
 	@SafeVarargs
 	public final Block registerBlockWithItem(String path, Block block, RegistryKey<ItemGroup> @NotNull ... groups) {
 		this.register(path, block);
-		Item.BLOCK_ITEMS.put(block, this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups));
+		Item.BLOCK_ITEMS.put(block, this.registerItem(path, new BlockItem(block, new Item.Settings()), groups));
 		return block;
 	}
 
 	@SafeVarargs
 	public final Block registerBlockWithItem(String path, Block block, Consumer<Item> @NotNull ... groups) {
 		this.register(path, block);
-		Item.BLOCK_ITEMS.put(block, this.registerItem(path, new BlockItem(block, new FabricItemSettings()), groups));
+		Item.BLOCK_ITEMS.put(block, this.registerItem(path, new BlockItem(block, new Item.Settings()), groups));
 		return block;
 	}
 
@@ -172,7 +173,7 @@ public class MRegistry {
 			this.entityAttributeRegistrations.add(() -> FabricDefaultAttributeRegistry.register(entity, attributes));
 		}
 		if (eggData != null) {
-			var egg = new SpawnEggItem(entity, eggData.primaryColor, eggData.secondaryColor, new FabricItemSettings());
+			var egg = new SpawnEggItem(entity, eggData.primaryColor, eggData.secondaryColor, new Item.Settings());
 			this.register(path + "_spawn_egg", egg);
 			this.spawnEggs.put(entity, egg);
 		}
@@ -180,20 +181,20 @@ public class MRegistry {
 	}
 
 	public SoundEvent registerSound(String name) {
-		var id = new Identifier(this.namespace, name);
+		var id = Identifier.of(this.namespace, name);
 		var event = SoundEvent.of(id);
 		this.register(id, event);
 		return event;
 	}
 
 	public <T> T register(String path, T thing) {
-		return this.register(new Identifier(this.namespace, path), thing);
+		return this.register(Identifier.of(this.namespace, path), thing);
 	}
 
 	public <T> T register(Identifier id, T thing) {
 		if (this.built) {
 			var error = new IllegalStateException("Tried to register " + id + " to the " + this.namespace + " MRegistry after it was built!");
-            MiaLib.LOGGER.error("Failed to register {} to the {} MRegistry after it was built!", id, this.namespace, error);
+            Mialib.LOGGER.error("Failed to register {} to the {} MRegistry after it was built!", id, this.namespace, error);
 			throw error;
 		}
 		var registered = false;
@@ -211,7 +212,7 @@ public class MRegistry {
 		}
 		if (!registered) {
 			var error = new IllegalStateException("Failed to register " + id + " to the " + this.namespace + " MRegistry!");
-            MiaLib.LOGGER.error("Failed to register {} to the {} MRegistry!", id, this.namespace, error);
+            Mialib.LOGGER.error("Failed to register {} to the {} MRegistry!", id, this.namespace, error);
 			throw error;
 		}
 		return thing;
@@ -220,7 +221,7 @@ public class MRegistry {
 	@SuppressWarnings("unchecked")
 	public <T> void build() {
 		if (this.built) {
-            MiaLib.LOGGER.warn("Tried to build the {} MRegistry twice!", this.namespace);
+            Mialib.LOGGER.warn("Tried to build the {} MRegistry twice!", this.namespace);
 			return;
 		}
 		this.built = true;
@@ -242,11 +243,11 @@ public class MRegistry {
 	public static void tryBuildAll(String location) {
 		if (!REGISTRIES.isEmpty()) {
 			if (builtAll) {
-				MiaLib.LOGGER.info("Tried to build all MiaLib Registries on %s, but it was already built.".formatted(location));
+				Mialib.LOGGER.info("Tried to build all MiaLib Registries on %s, but it was already built.".formatted(location));
 				return;
 			}
 			builtAll = true;
-			MiaLib.LOGGER.info("Building %d MiaLib Registr%s on %s".formatted(REGISTRIES.size(), REGISTRIES.size() == 1 ? "y" : "ies", location));
+			Mialib.LOGGER.info("Building %d MiaLib Registr%s on %s".formatted(REGISTRIES.size(), REGISTRIES.size() == 1 ? "y" : "ies", location));
 			REGISTRIES.forEach(MRegistry::build);
 		}
 	}
@@ -257,13 +258,11 @@ public class MRegistry {
 		DEFAULT_REGISTRIES.put(Fluid.class, Registries.FLUID);
 		DEFAULT_REGISTRIES.put(StatusEffect.class, Registries.STATUS_EFFECT);
 		DEFAULT_REGISTRIES.put(Block.class, Registries.BLOCK);
-		DEFAULT_REGISTRIES.put(Enchantment.class, Registries.ENCHANTMENT);
 		DEFAULT_REGISTRIES.put(EntityType.class, Registries.ENTITY_TYPE);
 		DEFAULT_REGISTRIES.put(Item.class, Registries.ITEM);
 		DEFAULT_REGISTRIES.put(Potion.class, Registries.POTION);
 		DEFAULT_REGISTRIES.put(ParticleType.class, Registries.PARTICLE_TYPE);
 		DEFAULT_REGISTRIES.put(BlockEntityType.class, Registries.BLOCK_ENTITY_TYPE);
-		DEFAULT_REGISTRIES.put(PaintingVariant.class, Registries.PAINTING_VARIANT);
 		DEFAULT_REGISTRIES.put(Identifier.class, Registries.CUSTOM_STAT);
 		DEFAULT_REGISTRIES.put(ChunkStatus.class, Registries.CHUNK_STATUS);
 		DEFAULT_REGISTRIES.put(RuleTestType.class, Registries.RULE_TEST);
@@ -309,9 +308,14 @@ public class MRegistry {
 		DEFAULT_REGISTRIES.put(StructurePoolElementType.class, Registries.STRUCTURE_POOL_ELEMENT);
 		DEFAULT_REGISTRIES.put(CatVariant.class, Registries.CAT_VARIANT);
 		DEFAULT_REGISTRIES.put(FrogVariant.class, Registries.FROG_VARIANT);
-		DEFAULT_REGISTRIES.put(BannerPattern.class, Registries.BANNER_PATTERN);
 		DEFAULT_REGISTRIES.put(Instrument.class, Registries.INSTRUMENT);
+		DEFAULT_REGISTRIES.put(DecoratedPotPattern.class, Registries.DECORATED_POT_PATTERN);
 		DEFAULT_REGISTRIES.put(ItemGroup.class, Registries.ITEM_GROUP);
+		DEFAULT_REGISTRIES.put(Criterion.class, Registries.CRITERION);
+		DEFAULT_REGISTRIES.put(NumberFormatType.class, Registries.NUMBER_FORMAT_TYPE);
+		DEFAULT_REGISTRIES.put(ArmorMaterial.class, Registries.ARMOR_MATERIAL);
+		DEFAULT_REGISTRIES.put(ItemSubPredicate.Type.class, Registries.ITEM_SUB_PREDICATE_TYPE);
+		DEFAULT_REGISTRIES.put(MapDecorationType.class, Registries.MAP_DECORATION_TYPE);
 	}
 
 	public record EggData(int primaryColor, int secondaryColor) {

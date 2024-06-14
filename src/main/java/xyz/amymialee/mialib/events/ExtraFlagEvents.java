@@ -25,7 +25,6 @@ public class ExtraFlagEvents {
         }
         return ActionResult.PASS;
     };
-    public static final Event<HaveFlagCallback> SHOULD_BE_IMPERCEPTIBLE = EventFactory.createArrayBacked(HaveFlagCallback.class, callbacks -> (world, entity) -> CALLBACK_RESULT.apply(callbacks, world, entity));
     public static final Event<HaveFlagCallback> SHOULD_BE_INDESTRUCTIBLE = EventFactory.createArrayBacked(HaveFlagCallback.class, callbacks -> (world, entity) -> CALLBACK_RESULT.apply(callbacks, world, entity));
     public static final Event<HaveFlagCallback> SHOULD_BE_IMMORTAL = EventFactory.createArrayBacked(HaveFlagCallback.class, callbacks -> (world, entity) -> CALLBACK_RESULT.apply(callbacks, world, entity));
 
