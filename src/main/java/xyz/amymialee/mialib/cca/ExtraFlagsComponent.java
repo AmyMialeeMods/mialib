@@ -25,9 +25,6 @@ import xyz.amymialee.mialib.util.MMath;
  * Includes 3 flags:
  * </p>
  * <p>
- *  - Imperceptible: The entity is completely invisible, including feature renderers.
- * </p>
- * <p>
  *  - Indestructible: The entity cannot be damaged or destroyed.
  * </p>
  * <p>

@@ -10,6 +10,8 @@
     "EndPortalBlockMixin",
     "EntityMixin",
     "ItemEntityMixin",
+    "ItemMixin",
+    "ItemMixin$ItemSettingsMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "MobEntityMixin",
