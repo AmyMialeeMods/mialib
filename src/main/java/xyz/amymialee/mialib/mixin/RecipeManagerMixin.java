@@ -2,6 +2,7 @@ package xyz.amymialee.mialib.mixin;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.input.RecipeInput;
@@ -9,6 +10,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,17 +23,17 @@ import java.util.Optional;
 @Mixin(RecipeManager.class)
 public class RecipeManagerMixin {
     @Inject(method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/recipe/input/RecipeInput;Lnet/minecraft/world/World;)Ljava/util/Optional;", at = @At(value = "RETURN"), cancellable = true)
-    private <I extends RecipeInput, T extends Recipe<I>> void mialib$killRecipe(RecipeType<T> type, I input, World world, @NotNull CallbackInfoReturnable<Optional<T>> cir) {
+    private <I extends RecipeInput, T extends Recipe<I>> void mialib$killRecipe(RecipeType<T> type, I input, World world, @NotNull CallbackInfoReturnable<Optional<RecipeEntry<T>>> cir) {
         var optional = cir.getReturnValue();
-        if (optional.isPresent() && optional.get().getResult(world.getRegistryManager()).isIn(ItemModule.UNCRAFTABLE)) {
+        if (optional.isPresent() && optional.get().value().getResult(world.getRegistryManager()).isIn(ItemModule.UNCRAFTABLE)) {
             cir.setReturnValue(Optional.empty());
         }
     }
 
     @Inject(method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/recipe/input/RecipeInput;Lnet/minecraft/world/World;Lnet/minecraft/util/Identifier;)Ljava/util/Optional;", at = @At(value = "RETURN"), cancellable = true)
-    private <I extends RecipeInput, T extends Recipe<I>> void mialib$killRecipe(RecipeType<T> type, I input, World world, @Nullable Identifier id, @NotNull CallbackInfoReturnable<Optional<Pair<Identifier, T>>> cir) {
+    private <I extends RecipeInput, T extends Recipe<I>> void mialib$killRecipe(RecipeType<T> type, I input, World world, @Nullable Identifier id, @NotNull CallbackInfoReturnable<Optional<Pair<Identifier, RecipeEntry<T>>>> cir) {
         var optional = cir.getReturnValue();
-        if (optional.isPresent() && optional.get().getSecond().getResult(world.getRegistryManager()).isIn(ItemModule.UNCRAFTABLE)) {
+        if (optional.isPresent() && optional.get().getSecond().value().getResult(world.getRegistryManager()).isIn(ItemModule.UNCRAFTABLE)) {
             cir.setReturnValue(Optional.empty());
         }
     }
