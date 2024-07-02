@@ -10,7 +10,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -39,10 +38,10 @@ public class RecipeManagerMixin {
     }
 
     @Inject(method = "getAllMatches", at = @At(value = "RETURN"), cancellable = true)
-    private <I extends RecipeInput, T extends Recipe<I>> void mialib$killRecipes(RecipeType<T> type, I input, World world, @NotNull CallbackInfoReturnable<List<T>> cir) {
+    private <I extends RecipeInput, T extends Recipe<I>> void mialib$killRecipes(RecipeType<T> type, I input, World world, @NotNull CallbackInfoReturnable<List<RecipeEntry<T>>> cir) {
         var list = cir.getReturnValue();
         for (var i = 0; i < list.size(); i++) {
-            if (list.get(i).getResult(world.getRegistryManager()).isIn(ItemModule.UNCRAFTABLE)) {
+            if (list.get(i).value().getResult(world.getRegistryManager()).isIn(ItemModule.UNCRAFTABLE)) {
                 list.remove(i);
                 i--;
             }
