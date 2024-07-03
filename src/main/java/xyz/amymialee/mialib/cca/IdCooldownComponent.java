@@ -107,5 +107,10 @@ public class IdCooldownComponent implements AutoSyncedComponent, CommonTickingCo
 		tag.put("cooldowns", compound);
 	}
 
-	record Entry(int startTick, int endTick) {}
+	@Override
+	public boolean isRequiredOnClient() {
+		return false;
+	}
+
+	private record Entry(int startTick, int endTick) {}
 }

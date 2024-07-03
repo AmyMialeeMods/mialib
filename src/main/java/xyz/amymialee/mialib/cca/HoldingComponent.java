@@ -85,4 +85,9 @@ public class HoldingComponent implements AutoSyncedComponent, CommonTickingCompo
 		tag.putInt("tickAttacking", this.tickAttacking);
 		tag.putInt("tickUsing", this.tickUsing);
 	}
+
+	@Override
+	public boolean isRequiredOnClient() {
+		return false;
+	}
 }

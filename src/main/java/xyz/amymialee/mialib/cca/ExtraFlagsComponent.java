@@ -103,4 +103,9 @@ public class ExtraFlagsComponent implements AutoSyncedComponent {
         tag.putByte("flags", this.flags);
         tag.putByte("commandFlags", this.commandFlags);
     }
+
+    @Override
+    public boolean isRequiredOnClient() {
+        return false;
+    }
 }
