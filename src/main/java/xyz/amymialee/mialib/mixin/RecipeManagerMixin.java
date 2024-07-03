@@ -1,6 +1,7 @@
 package xyz.amymialee.mialib.mixin;
 
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
@@ -11,9 +12,11 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import xyz.amymialee.mialib.api.Craftability;
 import xyz.amymialee.mialib.modules.ItemModule;
 
 import java.util.List;
@@ -24,7 +27,7 @@ public class RecipeManagerMixin {
     @Inject(method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/recipe/input/RecipeInput;Lnet/minecraft/world/World;)Ljava/util/Optional;", at = @At(value = "RETURN"), cancellable = true)
     private <I extends RecipeInput, T extends Recipe<I>> void mialib$killRecipe(RecipeType<T> type, I input, World world, @NotNull CallbackInfoReturnable<Optional<RecipeEntry<T>>> cir) {
         var optional = cir.getReturnValue();
-        if (optional.isPresent() && optional.get().value().getResult(world.getRegistryManager()).isIn(ItemModule.UNCRAFTABLE)) {
+        if (optional.isPresent() && cannotBeCrafted(optional.get().value().getResult(world.getRegistryManager()))) {
             cir.setReturnValue(Optional.empty());
         }
     }
@@ -32,7 +35,7 @@ public class RecipeManagerMixin {
     @Inject(method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/recipe/input/RecipeInput;Lnet/minecraft/world/World;Lnet/minecraft/util/Identifier;)Ljava/util/Optional;", at = @At(value = "RETURN"), cancellable = true)
     private <I extends RecipeInput, T extends Recipe<I>> void mialib$killRecipe(RecipeType<T> type, I input, World world, @Nullable Identifier id, @NotNull CallbackInfoReturnable<Optional<Pair<Identifier, RecipeEntry<T>>>> cir) {
         var optional = cir.getReturnValue();
-        if (optional.isPresent() && optional.get().getSecond().value().getResult(world.getRegistryManager()).isIn(ItemModule.UNCRAFTABLE)) {
+        if (optional.isPresent() && cannotBeCrafted(optional.get().getSecond().value().getResult(world.getRegistryManager()))) {
             cir.setReturnValue(Optional.empty());
         }
     }
@@ -41,11 +44,22 @@ public class RecipeManagerMixin {
     private <I extends RecipeInput, T extends Recipe<I>> void mialib$killRecipes(RecipeType<T> type, I input, World world, @NotNull CallbackInfoReturnable<List<RecipeEntry<T>>> cir) {
         var list = cir.getReturnValue();
         for (var i = 0; i < list.size(); i++) {
-            if (list.get(i).value().getResult(world.getRegistryManager()).isIn(ItemModule.UNCRAFTABLE)) {
+            if (cannotBeCrafted(list.get(i).value().getResult(world.getRegistryManager()))) {
                 list.remove(i);
                 i--;
             }
         }
         cir.setReturnValue(list);
+    }
+
+    @Unique
+    private static boolean cannotBeCrafted(ItemStack stack) {
+        if (stack.isIn(ItemModule.UNCRAFTABLE))
+            return true;
+
+        if (stack.getItem() instanceof Craftability craftability && !craftability.canBeCrafted(stack))
+            return true;
+
+        return false;
     }
 }

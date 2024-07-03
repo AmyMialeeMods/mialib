@@ -30,15 +30,16 @@ public class ServerRecipeBookMixin {
 
     @ModifyExpressionValue(method = "sendInitRecipesPacket", at = @At(value = "FIELD", target = "Lnet/minecraft/server/network/ServerRecipeBook;recipes:Ljava/util/Set;"))
     private @NotNull Set<Identifier> mialib$ignoreRecipesInUncraftableTagInitPacket(Set<Identifier> original, @NotNull ServerPlayerEntity player) {
-        var registries = player.getWorld().getRegistryManager();
-        var recipes = player.getWorld().getRecipeManager();
-        var out = new HashSet<>(original);
-        out.removeIf(i -> recipes.get(i).filter(r -> !(r.value().getResult(registries).isIn(ItemModule.UNCRAFTABLE))).isEmpty());
-        return out;
+        return modifyRecipesSent(original, player);
     }
 
     @ModifyExpressionValue(method = "sendInitRecipesPacket", at = @At(value = "FIELD", target = "Lnet/minecraft/server/network/ServerRecipeBook;toBeDisplayed:Ljava/util/Set;"))
     private @NotNull Set<Identifier> mialib$ignoreDisplayInUncraftableTagInitPacket(Set<Identifier> original, @NotNull ServerPlayerEntity player) {
+        return modifyRecipesSent(original, player);
+    }
+
+    @NotNull
+    private Set<Identifier> modifyRecipesSent(Set<Identifier> original, @NotNull ServerPlayerEntity player) {
         var registries = player.getWorld().getRegistryManager();
         var recipes = player.getWorld().getRecipeManager();
         var out = new HashSet<>(original);
