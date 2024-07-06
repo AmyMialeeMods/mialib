@@ -33,9 +33,9 @@ public class RecipeManagerMixin {
     }
 
     @Inject(method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/recipe/input/RecipeInput;Lnet/minecraft/world/World;Lnet/minecraft/util/Identifier;)Ljava/util/Optional;", at = @At(value = "RETURN"), cancellable = true)
-    private <I extends RecipeInput, T extends Recipe<I>> void mialib$killRecipe(RecipeType<T> type, I input, World world, @Nullable Identifier id, @NotNull CallbackInfoReturnable<Optional<Pair<Identifier, RecipeEntry<T>>>> cir) {
+    private <I extends RecipeInput, T extends Recipe<I>> void mialib$killRecipe(RecipeType<T> type, I input, World world, @Nullable Identifier id, @NotNull CallbackInfoReturnable<Optional<RecipeEntry<T>>> cir) {
         var optional = cir.getReturnValue();
-        if (optional.isPresent() && cannotBeCrafted(optional.get().getSecond().value().getResult(world.getRegistryManager()))) {
+        if (optional.isPresent() && cannotBeCrafted(optional.get().value().getResult(world.getRegistryManager()))) {
             cir.setReturnValue(Optional.empty());
         }
     }
