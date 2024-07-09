@@ -227,6 +227,10 @@ public class MValueScreen extends Screen {
 
         @Override
         public void onClick(double mouseX, double mouseY) {
+            if (mouseX - (double)(this.getX() + 20) < 0) {
+                this.value.sendValue(this.value.getDefaultValue());
+                return;
+            }
             this.value.sendValue(!this.value.getValue());
         }
 
@@ -281,6 +285,10 @@ public class MValueScreen extends Screen {
 
         @Override
         public void onClick(double mouseX, double mouseY) {
+            if (mouseX - (double)(this.getX() + 20) < 0) {
+                this.value.sendValue(this.value.getDefaultValue());
+                return;
+            }
             this.setValueFromMouse(mouseX);
         }
 
@@ -316,6 +324,7 @@ public class MValueScreen extends Screen {
         }
 
         private void setValueFromMouse(double mouseX) {
+            if (mouseX - (double)(this.getX() + 24) < 0) return;
             this.setValue((mouseX - (double)(this.getX() + 24)) / (double)(this.width - 28));
         }
 

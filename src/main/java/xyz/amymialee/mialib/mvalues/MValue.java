@@ -139,6 +139,8 @@ public abstract class MValue<T> {
 
     public abstract T getValue();
 
+    public abstract T getDefaultValue();
+
     protected abstract void setValueInternal(T value);
 
     public abstract NbtCompound writeNbt(NbtCompound compound);
@@ -175,6 +177,11 @@ public abstract class MValue<T> {
         @Override
         public Boolean getValue() {
             return this.value;
+        }
+
+        @Override
+        public Boolean getDefaultValue() {
+            return this.defaultValue;
         }
 
         @Override
@@ -261,6 +268,11 @@ public abstract class MValue<T> {
         }
 
         @Override
+        public Integer getDefaultValue() {
+            return this.defaultValue;
+        }
+
+        @Override
         protected void setValueInternal(Integer value) {
             this.value = Objects.requireNonNull(value);
         }
@@ -331,6 +343,11 @@ public abstract class MValue<T> {
         @Override
         public Long getValue() {
             return this.value;
+        }
+
+        @Override
+        public Long getDefaultValue() {
+            return this.defaultValue;
         }
 
         @Override
@@ -407,6 +424,11 @@ public abstract class MValue<T> {
         }
 
         @Override
+        public Float getDefaultValue() {
+            return this.defaultValue;
+        }
+
+        @Override
         protected void setValueInternal(Float value) {
             this.value = Objects.requireNonNull(value);
         }
@@ -477,6 +499,11 @@ public abstract class MValue<T> {
         @Override
         public Double getValue() {
             return this.value;
+        }
+
+        @Override
+        public Double getDefaultValue() {
+            return this.defaultValue;
         }
 
         @Override
