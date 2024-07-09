@@ -2,7 +2,10 @@ package xyz.amymialee.mialib.modules;
 
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import xyz.amymialee.mialib.networking.*;
+import xyz.amymialee.mialib.networking.AttackingPayload;
+import xyz.amymialee.mialib.networking.FloatyPayload;
+import xyz.amymialee.mialib.networking.MValuePayload;
+import xyz.amymialee.mialib.networking.UsingPayload;
 
 public interface NetworkingModule {
     static void init() {

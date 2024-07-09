@@ -1,11 +1,8 @@
 package xyz.amymialee.mialib.modules;
 
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ActionResult;
-import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.cca.ExtraFlagsComponent;
 import xyz.amymialee.mialib.events.ExtraFlagEvents;
 import xyz.amymialee.mialib.events.MiaLibEvents;

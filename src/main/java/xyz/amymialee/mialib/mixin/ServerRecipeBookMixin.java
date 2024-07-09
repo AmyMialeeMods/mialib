@@ -9,6 +9,7 @@ import net.minecraft.server.network.ServerRecipeBook;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import xyz.amymialee.mialib.modules.ItemModule;
 
@@ -30,16 +31,16 @@ public class ServerRecipeBookMixin {
 
     @ModifyExpressionValue(method = "sendInitRecipesPacket", at = @At(value = "FIELD", target = "Lnet/minecraft/server/network/ServerRecipeBook;recipes:Ljava/util/Set;"))
     private @NotNull Set<Identifier> mialib$ignoreRecipesInUncraftableTagInitPacket(Set<Identifier> original, @NotNull ServerPlayerEntity player) {
-        return modifyRecipesSent(original, player);
+        return this.modifyRecipesSent(original, player);
     }
 
     @ModifyExpressionValue(method = "sendInitRecipesPacket", at = @At(value = "FIELD", target = "Lnet/minecraft/server/network/ServerRecipeBook;toBeDisplayed:Ljava/util/Set;"))
     private @NotNull Set<Identifier> mialib$ignoreDisplayInUncraftableTagInitPacket(Set<Identifier> original, @NotNull ServerPlayerEntity player) {
-        return modifyRecipesSent(original, player);
+        return this.modifyRecipesSent(original, player);
     }
 
-    @NotNull
-    private Set<Identifier> modifyRecipesSent(Set<Identifier> original, @NotNull ServerPlayerEntity player) {
+    @Unique
+    private @NotNull Set<Identifier> modifyRecipesSent(Set<Identifier> original, @NotNull ServerPlayerEntity player) {
         var registries = player.getWorld().getRegistryManager();
         var recipes = player.getWorld().getRecipeManager();
         var out = new HashSet<>(original);
