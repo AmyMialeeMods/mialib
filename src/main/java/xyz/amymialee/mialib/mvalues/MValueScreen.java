@@ -47,7 +47,23 @@ public class MValueScreen extends Screen {
             var left = i % 2 == 0;
             var x = this.width / 2 + (left ? -192 : 2);
             var y = this.height / 2 - 10 + (i / 2 - 2) * 24;
-            this.widgets.add(this.addDrawableChild(MVALUE_WIDGETS.get(value.getClass()).apply(x, y, value)));
+
+            if (!MVALUE_WIDGETS.containsKey(value.getClass())) {
+                Class<?> clazz = value.getClass();
+                while (true) {
+                    clazz = clazz.getSuperclass();
+                    if (clazz == null) {
+                        MVALUE_WIDGETS.put(clazz, null);
+                        break;
+                    }
+                    var function = MVALUE_WIDGETS.get(clazz);
+                    if (function == null) continue;
+                    MVALUE_WIDGETS.put(value.getClass(), function);
+                    break;
+                }
+            }
+            var function = MVALUE_WIDGETS.get(value.getClass());
+            if (function != null) this.widgets.add(this.addDrawableChild(function.apply(x, y, value)));
         }
         if (list.size() > 12) {
             this.addDrawableChild(new MValuePageWidget(this.width / 2 - 1, this.height / 2 + 87, true, Text.translatable("%s.screen.mvalues.page".formatted(Mialib.MOD_ID), this.mvaluePage + 1, list.size() / 12 + 1),
