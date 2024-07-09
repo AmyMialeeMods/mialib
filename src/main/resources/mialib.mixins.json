@@ -48,6 +48,7 @@
     "client.PlayerEntityRendererMixin",
     "client.ResourcePackManagerMixin",
     "interfaces.ClientWorldMixin",
+    "interfaces.DrawContextMixin",
     "interfaces.ServerListMixin"
   ],
   "server": [
