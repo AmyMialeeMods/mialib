@@ -38,6 +38,7 @@
       "mialib:extra_flags"
     ],
     "loom:injected_interfaces": {
+      "net/minecraft/class_332": ["xyz/amymialee/mialib/util/interfaces/MDrawContext"],
       "net/minecraft/class_1297": ["xyz/amymialee/mialib/util/interfaces/MEntity"],
       "net/minecraft/class_1792": ["xyz/amymialee/mialib/util/interfaces/MItem"],
       "net/minecraft/class_1542": ["xyz/amymialee/mialib/util/interfaces/MItemEntity"],
