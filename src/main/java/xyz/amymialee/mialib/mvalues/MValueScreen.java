@@ -271,10 +271,10 @@ public class MValueScreen extends Screen {
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableDepthTest();
-            context.drawGuiTexture(BUTTON_TEXTURES.get(this.active, this.isSelected()), this.getX(), this.getY(), 20, this.getHeight());
+            context.drawGuiTexture(BUTTON_TEXTURES.get(this.active, this.hovered), this.getX(), this.getY(), 20, this.getHeight());
             context.drawItem(this.value.getStack(), this.getX() + 2, this.getY() + 2);
-            context.drawGuiTexture(this.getSliderTexture(this.isFocused() && !this.sliderFocused), this.getX() + 20, this.getY(), this.getWidth() - 20, this.getHeight());
-            context.drawGuiTexture(this.getSliderHandleTexture(!this.hovered && !this.sliderFocused), this.getX() + 20 + (int)(this.sliderValue * (double)((this.width - 20) - 8)), this.getY(), 8, 20);
+            context.drawGuiTexture(this.getSliderTexture(this.hovered), this.getX() + 20, this.getY(), this.getWidth() - 20, this.getHeight());
+            context.drawGuiTexture(this.getSliderHandleTexture(this.hovered), this.getX() + 20 + (int)(this.sliderValue * (double)((this.width - 20) - 8)), this.getY(), 8, 20);
             context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             drawScrollableText(context, minecraftClient.textRenderer, this.getMessage(), this.getX() + 22, this.getY(), this.getX() + this.getWidth() - 2, this.getY() + this.getHeight(), (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
         }
