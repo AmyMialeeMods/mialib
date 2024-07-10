@@ -86,6 +86,7 @@ public class MValueScreen extends Screen {
             var y = this.height / 2 - 108;
             this.addDrawableChild(new MValueCategoryWidget(x, y, category, Text.translatable(category.getTranslationKey()), category == this.selectedCategory ? null : button -> {
                 this.selectedCategory = category;
+                this.mvaluePage = 0;
                 this.clearAndInit();
             }));
         }

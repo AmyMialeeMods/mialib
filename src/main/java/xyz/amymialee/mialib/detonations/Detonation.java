@@ -113,7 +113,7 @@ public class Detonation {
      */
     protected QuinConsumer<Double, Vec3d, Entity, Entity, Entity> damageEntity = (distance, pos, target, attacker, projectile) -> {
         var falloff = this.falloff.apply(distance, this.entityRadius.get()) * getExposure(pos, target);
-        var damage = (float) ((falloff * falloff + falloff) / this.damage.get() + 1.0);
+        var damage = (float) ((falloff * falloff + falloff) * this.damage.get());
         target.damage(target.getDamageSources().create(this.damageType.apply(distance), attacker, projectile), damage);
     };
     /**
