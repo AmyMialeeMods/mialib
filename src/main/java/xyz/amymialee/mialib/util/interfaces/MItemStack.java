@@ -1,10 +1,14 @@
 package xyz.amymialee.mialib.util.interfaces;
 
+import net.minecraft.component.ComponentType;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
 public interface MItemStack {
@@ -17,6 +21,10 @@ public interface MItemStack {
 	}
 
 	default ItemStack mialib$enchantStack(EnchantmentLevelEntry ... enchantmentLevelEntry) {
+		return ItemStack.EMPTY;
+	}
+
+	default <T> ItemStack mialib$set(ComponentType<? super T> type, @Nullable T value) {
 		return ItemStack.EMPTY;
 	}
 
@@ -33,6 +41,11 @@ public interface MItemStack {
 		for (var entry : enchantmentLevelEntry) {
 			stack.addEnchantment(entry.enchantment, entry.level);
 		}
+		return stack;
+	}
+
+	static <T> @NotNull ItemStack set(@NotNull ItemStack stack, ComponentType<? super T> type, @Nullable T value) {
+		stack.set(type, value);
 		return stack;
 	}
 }
