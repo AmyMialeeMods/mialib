@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.DecoratedPotPattern;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.serialize.ArgumentSerializer;
+import net.minecraft.component.ComponentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Activity;
@@ -314,6 +315,7 @@ public class MRegistry {
 		DEFAULT_REGISTRIES.put(Criterion.class, Registries.CRITERION);
 		DEFAULT_REGISTRIES.put(NumberFormatType.class, Registries.NUMBER_FORMAT_TYPE);
 		DEFAULT_REGISTRIES.put(ArmorMaterial.class, Registries.ARMOR_MATERIAL);
+		DEFAULT_REGISTRIES.put(ComponentType.class, Registries.DATA_COMPONENT_TYPE);
 		DEFAULT_REGISTRIES.put(ItemSubPredicate.Type.class, Registries.ITEM_SUB_PREDICATE_TYPE);
 		DEFAULT_REGISTRIES.put(MapDecorationType.class, Registries.MAP_DECORATION_TYPE);
 	}
