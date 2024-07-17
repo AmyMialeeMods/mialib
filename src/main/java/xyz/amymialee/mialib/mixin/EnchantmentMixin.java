@@ -53,7 +53,7 @@ public class EnchantmentMixin implements MEnchantment {
     private static class BuilderMixin {
         @Inject(method = "build", at = @At("RETURN"))
         private void mialib$setId(Identifier id, @NotNull CallbackInfoReturnable<Enchantment> cir) {
-            cir.getReturnValue().mialib$setId(id);
+            ((MEnchantment) cir.getReturnValue()).mialib$setId(id);
         }
     }
 }
