@@ -38,14 +38,15 @@
       "mialib:extra_flags"
     ],
     "loom:injected_interfaces": {
-      "net/minecraft/class_332": ["xyz/amymialee/mialib/util/interfaces/MDrawContext"],
+      "net/minecraft/class_332" : ["xyz/amymialee/mialib/util/interfaces/MDrawContext"],
+      "net/minecraft/class_1887": ["xyz/amymialee/mialib/util/interfaces/MEnchantment"],
       "net/minecraft/class_1297": ["xyz/amymialee/mialib/util/interfaces/MEntity"],
       "net/minecraft/class_1792": ["xyz/amymialee/mialib/util/interfaces/MItem"],
       "net/minecraft/class_1542": ["xyz/amymialee/mialib/util/interfaces/MItemEntity"],
       "net/minecraft/class_1761": ["xyz/amymialee/mialib/util/interfaces/MItemGroup"],
       "net/minecraft/class_1799": ["xyz/amymialee/mialib/util/interfaces/MItemStack"],
       "net/minecraft/class_1657": ["xyz/amymialee/mialib/util/interfaces/MPlayerEntity"],
-      "net/minecraft/class_641": ["xyz/amymialee/mialib/util/interfaces/MServerList"],
+      "net/minecraft/class_641" : ["xyz/amymialee/mialib/util/interfaces/MServerList"],
       "net/minecraft/class_1291": ["xyz/amymialee/mialib/util/interfaces/MStatusEffect"],
       "net/minecraft/class_2561": ["xyz/amymialee/mialib/util/interfaces/MText"],
       "net/minecraft/class_1937": ["xyz/amymialee/mialib/util/interfaces/MWorld"]
