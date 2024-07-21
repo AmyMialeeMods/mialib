@@ -8,6 +8,7 @@ import net.minecraft.util.ActionResult;
 import xyz.amymialee.mialib.cca.ExtraFlagsComponent;
 import xyz.amymialee.mialib.events.ExtraFlagEvents;
 import xyz.amymialee.mialib.events.MiaLibEvents;
+import xyz.amymialee.mialib.util.interfaces.MEnchantment;
 
 import java.util.Optional;
 
@@ -51,7 +52,7 @@ public interface EventModule {
         });
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, serverResourceManager, success) -> {
             var registry = server.getRegistryManager().get(RegistryKeys.ENCHANTMENT);
-            registry.forEach((a) -> a.mialib$setId(registry.getId(a)));
+            registry.forEach((a) -> ((MEnchantment) a).mialib$setId(registry.getId(a)));
         });
     }
 }
