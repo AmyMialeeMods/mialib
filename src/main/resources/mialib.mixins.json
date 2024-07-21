@@ -8,7 +8,6 @@
     "BlockMixin",
     "EnchantmentHelperMixin",
     "EnchantmentMixin",
-    "EnchantmentMixin$BuilderMixin",
     "EndPortalBlockMixin",
     "EntityMixin",
     "ItemEntityMixin",
