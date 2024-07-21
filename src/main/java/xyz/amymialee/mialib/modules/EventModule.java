@@ -1,7 +1,9 @@
 package xyz.amymialee.mialib.modules;
 
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.ActionResult;
 import xyz.amymialee.mialib.cca.ExtraFlagsComponent;
 import xyz.amymialee.mialib.events.ExtraFlagEvents;
@@ -46,6 +48,10 @@ public interface EventModule {
                 return ActionResult.SUCCESS;
             }
             return ActionResult.PASS;
+        });
+        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, serverResourceManager, success) -> {
+            var registry = server.getRegistryManager().get(RegistryKeys.ENCHANTMENT);
+            registry.forEach((a) -> a.mialib$setId(registry.getId(a)));
         });
     }
 }
