@@ -54,5 +54,9 @@ public interface EventModule {
             var registry = server.getRegistryManager().get(RegistryKeys.ENCHANTMENT);
             registry.forEach((a) -> ((MEnchantment) a).mialib$setId(registry.getId(a)));
         });
+        ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
+            var registry = server.getRegistryManager().get(RegistryKeys.ENCHANTMENT);
+            registry.forEach((a) -> ((MEnchantment) a).mialib$setId(registry.getId(a)));
+        });
     }
 }
