@@ -44,4 +44,12 @@ public class EnchantmentMixin implements MEnchantment {
         this.id = id;
         this.extraItems = TagKey.of(Registries.ITEM.getKey(), Identifier.of(id.getNamespace(), "enchantable/" + id.getPath()));
     }
+
+    @Mixin(Enchantment.Builder.class)
+    private static class BuilderMixin {
+        @Inject(method = "build", at = @At("RETURN"))
+        private void mialib$setId(Identifier id, @NotNull CallbackInfoReturnable<Enchantment> cir) {
+            ((MEnchantment) cir.getReturnValue()).mialib$setId(id);
+        }
+    }
 }
