@@ -92,7 +92,7 @@ public class MValueScreen extends Screen {
         }
         if (categories.size() > 12) {
             this.addDrawableChild(new MValuePageWidget(this.width / 2 + 174 + 11, this.height / 2 - 76, true, Text.translatable("%s.screen.mvalues.page".formatted(Mialib.MOD_ID), this.selectedCategoryPage + 1, categories.size() / 12 + 1),
-                    list.size() <= (1 + this.selectedCategoryPage) * 12 ? null : button -> {
+                    categories.size() <= (1 + this.selectedCategoryPage) * 12 ? null : button -> {
                         this.selectedCategoryPage++;
                         this.clearAndInit();
                     }));
