@@ -137,6 +137,10 @@ public abstract class MValue<T> {
         ClientPlayNetworking.send(new MValuePayload(this.id, this.writeNbt(new NbtCompound())));
     }
 
+    public T get() {
+        return this.getValue();
+    }
+
     public abstract T getValue();
 
     public abstract T getDefaultValue();
