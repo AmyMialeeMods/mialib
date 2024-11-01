@@ -82,6 +82,9 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		if (set.contains("generateRecipes")) {
 			pack.addProvider((dataOutput, future) -> new MRecipeProvider(this, dataOutput, future));
 		}
+		if (set.contains("generateDamageTypes")) {
+			pack.addProvider((dataOutput, future) -> new MDamageTypeProvider(this, dataOutput, future));
+		}
 		if (set.contains("generateFlatLevelGeneratorPresets")) {
 			pack.addProvider((dataOutput, future) -> new MFlatLevelGeneratorPresetProvider(this, dataOutput, future));
 		}
@@ -122,6 +125,8 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 	protected void generateItemModels(MModelProvider provider, ItemModelGenerator generator) {}
 
 	protected void generateRecipes(MRecipeProvider provider, RecipeExporter exporter) {}
+
+	protected void generateDamageTypes(MDamageTypeProvider provider, RegistryWrapper.WrapperLookup registries, FabricDynamicRegistryProvider.@NotNull Entries entries) {}
 
 	protected void generateFlatLevelGeneratorPresets(MFlatLevelGeneratorPresetProvider provider, Consumer<FlatLevelGeneratorPresetData> consumer) {}
 
@@ -258,6 +263,25 @@ public abstract class MDataGen implements DataGeneratorEntrypoint {
 		@Override
 		public void generate(RecipeExporter exporter) {
 			this.dataGen.generateRecipes(this, exporter);
+		}
+	}
+
+	protected static class MDamageTypeProvider extends FabricDynamicRegistryProvider {
+		private final MDataGen dataGen;
+
+		public MDamageTypeProvider(MDataGen gen, FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+			super(output, registriesFuture);
+			this.dataGen = gen;
+		}
+
+		@Override
+		protected void configure(RegistryWrapper.WrapperLookup registries, @NotNull Entries entries) {
+			this.dataGen.generateDamageTypes(this, registries, entries);
+		}
+
+		@Override
+		public @NotNull String getName() {
+			return "Damage Types";
 		}
 	}
 
