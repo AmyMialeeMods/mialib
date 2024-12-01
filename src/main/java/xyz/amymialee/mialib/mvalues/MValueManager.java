@@ -3,37 +3,37 @@ package xyz.amymialee.mialib.mvalues;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 import org.ladysnake.cca.api.v3.scoreboard.ScoreboardSyncCallback;
 import xyz.amymialee.mialib.Mialib;
-import xyz.amymialee.mialib.networking.MValuePayload;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MValueManager {
-    private static final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("mvalues.json");
-    private static final Map<Identifier, MValue<?>> MVALUES = new HashMap<>();
-    public static final List<MValueCategory> CATEGORIES = new ArrayList<>();
     public static MValueManager INSTANCE;
+    public static final Map<Identifier, MValue<?>> MVALUES = new HashMap<>();
+    public static final List<MValueCategory> CATEGORIES = new ArrayList<>();
     public final MinecraftServer server;
+    public final Path path;
 
-    private MValueManager(MinecraftServer server) {
-        this.server = server;
+    private MValueManager(@NotNull MinecraftServer server) {
         INSTANCE = this;
+        this.server = server;
+        this.path = FabricLoader.getInstance().getConfigDir().resolve("mvalues.json");
+        this.loadConfig();
         ScoreboardSyncCallback.EVENT.register((player, tracked) -> {
             for (var key : MVALUES.values()) ServerPlayNetworking.send(player, new MValuePayload(key.id, key.writeNbt(new NbtCompound())));
         });
-        loadConfig();
     }
 
     public static void create(MinecraftServer server) {
@@ -52,36 +52,41 @@ public class MValueManager {
         }
         MVALUES.put(mValue.id, mValue);
         if (!CATEGORIES.contains(category)) CATEGORIES.add(category);
-        category.values.add(mValue);
+        category.addValue(mValue);
     }
 
-    public static void saveConfig() {
+    public <T> void onChange(MValue<T> value) {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+            MValueManager.INSTANCE.saveConfig();
+            for (var player : MValueManager.INSTANCE.server.getPlayerManager().getPlayerList()) {
+                ServerPlayNetworking.send(player, new MValuePayload(value.id, value.type.writeNbt(new NbtCompound(), value)));
+            }
+        } else {
+            ClientPlayNetworking.send(new MValuePayload(value.id, value.type.writeNbt(new NbtCompound(), value)));
+        }
+    }
+
+    public void saveConfig() {
         try {
             var gson = new GsonBuilder().setPrettyPrinting().create();
             var json = new JsonObject();
-            for (var values : MVALUES.entrySet()) {
-                json.add(values.getKey().toString(), values.getValue().writeJson());
-            }
-            var jsonData = gson.toJson(json);
-            Files.writeString(configFile, jsonData);
+            for (var entry : MVALUES.entrySet()) json.add(entry.getKey().toString(), entry.getValue().writeJson());
+            Files.writeString(this.server.getOverworld().getChunkManager().getPersistentStateManager().directory.resolve("mvalues.json"), gson.toJson(json));
         } catch (Exception e) {
             Mialib.LOGGER.info(e.toString());
         }
     }
 
-    protected static void loadConfig() {
+    protected void loadConfig() {
         try {
-            var gson = new Gson();
-            var reader = Files.readString(configFile);
-            var data = gson.fromJson(reader, JsonObject.class);
+            var data = new Gson().fromJson(Files.readString(this.path), JsonObject.class);
             for (var values : MVALUES.entrySet()) {
-                if (data.has(values.getKey().toString())) {
-                    try {
-                        values.getValue().readJson(data.get(values.getKey().toString()));
-                    } catch (Exception e) {
-                        Mialib.LOGGER.info("Error loading mvalue data for {}", values.getKey().toString());
-                        Mialib.LOGGER.info(e.toString());
-                    }
+                if (!data.has(values.getKey().toString())) continue;
+                try {
+                    values.getValue().readJson(data.get(values.getKey().toString()));
+                } catch (Exception e) {
+                    Mialib.LOGGER.info("Error loading mvalue data for {}", values.getKey().toString());
+                    Mialib.LOGGER.info(e.toString());
                 }
             }
         } catch (FileNotFoundException e) {

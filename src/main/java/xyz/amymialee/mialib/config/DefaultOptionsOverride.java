@@ -35,10 +35,10 @@ public class DefaultOptionsOverride {
                     Mialib.LOGGER.warn("Failed to parse default options line {}, too many :", line);
                 }
             }
-        } catch (FileNotFoundException e) {
-            Mialib.LOGGER.info("Failed to find default options file {}", mialibFile, e);
-        } catch (Exception e) {
-            Mialib.LOGGER.warn("Failed to load default options file {}", mialibFile, e);
+        } catch (FileNotFoundException ignored) {
+            Mialib.LOGGER.info("Failed to find default options file {}", mialibFile);
+        } catch (Exception ignored) {
+            Mialib.LOGGER.warn("Failed to load default options file {}", mialibFile);
         }
     }
 

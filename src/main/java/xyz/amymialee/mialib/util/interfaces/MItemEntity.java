@@ -1,7 +1,6 @@
 package xyz.amymialee.mialib.util.interfaces;
 
-@SuppressWarnings("unused")
-public interface MItemEntity {
+public @SuppressWarnings("unused") interface MItemEntity {
     default int mialib$getMergeDelay() {
         return 0;
     }

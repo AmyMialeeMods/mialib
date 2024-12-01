@@ -27,7 +27,6 @@ import java.util.function.Supplier;
 public class GameMenuScreenMixin extends Screen {
     @Unique private static final Identifier LOGO_TEXTURE = Mialib.id("textures/gui/logo.png");
 
-    @SuppressWarnings("unused")
     protected GameMenuScreenMixin(Text title) {
         super(title);
     }
@@ -46,7 +45,7 @@ public class GameMenuScreenMixin extends Screen {
             @Override
             protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
                 super.renderWidget(context, mouseX, mouseY, delta);
-                context.drawTexture(LOGO_TEXTURE, this.getX() + 2, this.getY() + 2, 16, 16, 0, 0, 16, 16, 16, 16);
+                context.mialib$drawTexture(LOGO_TEXTURE, this.getX() + 2, this.getY() + 2, 16, 16, 16, 16);
             }
 
             @Override

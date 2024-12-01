@@ -81,54 +81,54 @@ public class MultiplayerServerListWidgetMixin extends AlwaysSelectedEntryListWid
         @Shadow @Final private MinecraftClient client;
         @Shadow protected abstract void swapEntries(int i, int j);
 
-        @Inject(method = "render", at = @At(value = "TAIL", target = "Lnet/minecraft/client/option/GameOptions;getTouchscreen()Lnet/minecraft/client/option/SimpleOption;"))
-        private void mialib$mialibServerMoveIcons(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta, CallbackInfo ci) {
-            if (this.client.options.getTouchscreen().getValue() || hovered) {
-                if (this.screen.getServerList().mialib$getMialibServers().contains(this.server)) {
-                    var o = mouseX - x;
-                    var p = mouseY - y;
-                    if (index > this.screen.getServerList().servers.size() + 1) {
-                        if (o < 16 && p < 16) {
-                            context.drawGuiTexture(MultiplayerServerListWidget.MOVE_UP_HIGHLIGHTED_TEXTURE, x, y, 32, 32);
-                        } else {
-                            context.drawGuiTexture(MultiplayerServerListWidget.MOVE_UP_TEXTURE, x, y, 32, 32);
-                        }
-                    }
-                    if (index < this.screen.getServerList().size()) {
-                        if (o < 16 && p > 16) {
-                            context.drawGuiTexture(MultiplayerServerListWidget.MOVE_DOWN_HIGHLIGHTED_TEXTURE, x, y, 32, 32);
-                        } else {
-                            context.drawGuiTexture(MultiplayerServerListWidget.MOVE_DOWN_TEXTURE, x, y, 32, 32);
-                        }
-                    }
-                }
-            }
-        }
+//        @Inject(method = "render", at = @At(value = "TAIL", target = "Lnet/minecraft/client/option/GameOptions;getTouchscreen()Lnet/minecraft/client/option/SimpleOption;"))
+//        private void mialib$mialibServerMoveIcons(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta, CallbackInfo ci) {
+//            if (this.client.options.getTouchscreen().getValue() || hovered) {
+//                if (this.screen.getServerList().mialib$getMialibServers().contains(this.server)) {
+//                    var o = mouseX - x;
+//                    var p = mouseY - y;
+//                    if (index > this.screen.getServerList().servers.size() + 1) {
+//                        if (o < 16 && p < 16) {
+//                            context.mialib$drawTexture(MultiplayerServerListWidget.MOVE_UP_HIGHLIGHTED_TEXTURE, x, y, 32, 32);
+//                        } else {
+//                            context.mialib$drawTexture(MultiplayerServerListWidget.MOVE_UP_TEXTURE, x, y, 32, 32);
+//                        }
+//                    }
+//                    if (index < this.screen.getServerList().size()) {
+//                        if (o < 16 && p > 16) {
+//                            context.mialib$drawTexture(MultiplayerServerListWidget.MOVE_DOWN_HIGHLIGHTED_TEXTURE, x, y, 32, 32);
+//                        } else {
+//                            context.mialib$drawTexture(MultiplayerServerListWidget.MOVE_DOWN_TEXTURE, x, y, 32, 32);
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
         @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/ServerList;size()I"))
         private int mialib$mialibServerMoveIconRemoval1(@NotNull ServerList instance, Operation<Integer> original) {
             return instance.servers.size();
         }
 
-        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 3))
-        private boolean mialib$mialibServerMoveIconRemoval1(DrawContext instance, Identifier texture, int x, int y, int width, int height) {
-            return !this.screen.getServerList().mialib$getMialibServers().contains(this.server);
-        }
+//        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 3))
+//        private boolean mialib$mialibServerMoveIconRemoval1(DrawContext instance, Identifier texture, int x, int y, int width, int height) {
+//            return !this.screen.getServerList().mialib$getMialibServers().contains(this.server);
+//        }
 
-        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 4))
-        private boolean mialib$mialibServerMoveIconRemoval2(DrawContext instance, Identifier texture, int x, int y, int width, int height) {
-            return !this.screen.getServerList().mialib$getMialibServers().contains(this.server);
-        }
+//        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 4))
+//        private boolean mialib$mialibServerMoveIconRemoval2(DrawContext instance, Identifier texture, int x, int y, int width, int height) {
+//            return !this.screen.getServerList().mialib$getMialibServers().contains(this.server);
+//        }
 
-        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 5))
-        private boolean mialib$mialibServerMoveIconRemoval3(DrawContext instance, Identifier texture, int x, int y, int width, int height) {
-            return !this.screen.getServerList().mialib$getMialibServers().contains(this.server);
-        }
+//        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 5))
+//        private boolean mialib$mialibServerMoveIconRemoval3(DrawContext instance, Identifier texture, int x, int y, int width, int height) {
+//            return !this.screen.getServerList().mialib$getMialibServers().contains(this.server);
+//        }
 
-        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 6))
-        private boolean mialib$mialibServerMoveIconRemoval4(DrawContext instance, Identifier texture, int x, int y, int width, int height) {
-            return !this.screen.getServerList().mialib$getMialibServers().contains(this.server);
-        }
+//        @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 6))
+//        private boolean mialib$mialibServerMoveIconRemoval4(DrawContext instance, Identifier texture, int x, int y, int width, int height) {
+//            return !this.screen.getServerList().mialib$getMialibServers().contains(this.server);
+//        }
 
         @SuppressWarnings("UnreachableCode")
         @Inject(method = "mouseClicked", at = @At(value = "HEAD"), cancellable = true)

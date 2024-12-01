@@ -23,6 +23,7 @@ import net.minecraft.entity.passive.CatVariant;
 import net.minecraft.entity.passive.FrogVariant;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.*;
+import net.minecraft.item.consume.*;
 import net.minecraft.item.map.MapDecorationType;
 import net.minecraft.loot.condition.LootConditionType;
 import net.minecraft.loot.entry.LootPoolEntryType;
@@ -35,6 +36,8 @@ import net.minecraft.potion.Potion;
 import net.minecraft.predicate.item.ItemSubPredicate;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.book.*;
+import net.minecraft.recipe.display.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -74,14 +77,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.amymialee.mialib.Mialib;
 
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-@SuppressWarnings({"unused", "UnusedReturnValue"})
-public class MRegistry {
+public @SuppressWarnings({"unused", "UnusedReturnValue"}) class MRegistry {
 	private static final Map<Class<?>, Registry<?>> DEFAULT_REGISTRIES = new HashMap<>();
 	public static final List<MRegistry> REGISTRIES = new ArrayList<>();
 	private static boolean builtAll = false;
@@ -92,7 +95,7 @@ public class MRegistry {
 	public final Map<EntityType<?>, SpawnEggItem> spawnEggs = new HashMap<>();
 	private Map<Class<?>, Registry<?>> registries;
 	private boolean built = false;
-
+	
 	public MRegistry(String namespace) {
 		this.namespace = namespace;
 		this.registries = new HashMap<>();
@@ -100,66 +103,63 @@ public class MRegistry {
 		this.objects = new HashMap<>();
 		REGISTRIES.add(this);
 	}
-
+	
 	public void clearRegistries() {
 		this.registries = new HashMap<>();
 	}
-
+	
 	public void addRegistry(Class<?> clazz, Registry<?> registry) {
 		this.registries.put(clazz, registry);
 	}
-
+	
 	public Item registerItem(String path, Item item, ItemGroup @NotNull ... groups) {
 		for (var group : groups) {
 			this.addToItemGroup(group, content -> content.add(item));
 		}
 		return this.register(path, item);
 	}
-
-	@SafeVarargs
-	public final Item registerItem(String path, Item item, RegistryKey<ItemGroup> @NotNull ... groups) {
+	
+	public @SafeVarargs final Item registerItem(String path, Item item, RegistryKey<ItemGroup> @NotNull ... groups) {
 		for (var group : groups) {
 			this.addToItemGroup(Registries.ITEM_GROUP.get(group), content -> content.add(item));
 		}
 		return this.register(path, item);
 	}
-
-	@SafeVarargs
-	public final Item registerItem(String path, Item item, Consumer<Item> @NotNull ... groups) {
+	
+	public @SafeVarargs final Item registerItem(String path, Item item, Consumer<Item> @NotNull ... groups) {
 		for (var group : groups) {
 			this.itemGroupRegistrations.add(() -> group.accept(item));
 		}
 		return this.register(path, item);
 	}
-
+	
 	public void addToItemGroup(ItemGroup group, Consumer<FabricItemGroupEntries> consumer) {
 		this.itemGroupRegistrations.add(() -> Registries.ITEM_GROUP.getKey(group).ifPresent(itemGroupRegistryKey -> ItemGroupEvents.modifyEntriesEvent(itemGroupRegistryKey).register(consumer::accept)));
 	}
-
+	
 	public Block registerBlockWithItem(String path, Block block, ItemGroup @NotNull ... groups) {
 		this.register(path, block);
 		Item.BLOCK_ITEMS.put(block, this.registerItem(path, new BlockItem(block, new Item.Settings()), groups));
 		return block;
 	}
-
-	@SafeVarargs
-	public final Block registerBlockWithItem(String path, Block block, RegistryKey<ItemGroup> @NotNull ... groups) {
+	
+	public @SafeVarargs final Block registerBlockWithItem(String path, Block block, RegistryKey<ItemGroup> @NotNull ... groups) {
 		this.register(path, block);
 		Item.BLOCK_ITEMS.put(block, this.registerItem(path, new BlockItem(block, new Item.Settings()), groups));
 		return block;
 	}
-
-	@SafeVarargs
-	public final Block registerBlockWithItem(String path, Block block, Consumer<Item> @NotNull ... groups) {
+	
+	
+	public @SafeVarargs final Block registerBlockWithItem(String path, Block block, Consumer<Item> @NotNull ... groups) {
 		this.register(path, block);
 		Item.BLOCK_ITEMS.put(block, this.registerItem(path, new BlockItem(block, new Item.Settings()), groups));
 		return block;
 	}
-
+	
 	public <T extends MobEntity> EntityType<T> registerEntity(String path, EntityType<T> entity, @Nullable EggData eggData) {
 		return this.registerEntity(path, entity, null, eggData);
 	}
-
+	
 	public <T extends LivingEntity> EntityType<T> registerEntity(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes) {
 		this.register(path, entity);
 		if (attributes != null) {
@@ -167,7 +167,7 @@ public class MRegistry {
 		}
 		return entity;
 	}
-
+	
 	public <T extends MobEntity> EntityType<T> registerEntity(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes, @Nullable EggData eggData) {
 		this.register(path, entity);
 		if (attributes != null) {
@@ -180,22 +180,22 @@ public class MRegistry {
 		}
 		return entity;
 	}
-
+	
 	public SoundEvent registerSound(String name) {
 		var id = Identifier.of(this.namespace, name);
 		var event = SoundEvent.of(id);
 		this.register(id, event);
 		return event;
 	}
-
+	
 	public <T> T register(String path, T thing) {
 		return this.register(Identifier.of(this.namespace, path), thing);
 	}
-
+	
 	public <T> T register(Identifier id, T thing) {
 		if (this.built) {
 			var error = new IllegalStateException("Tried to register " + id + " to the " + this.namespace + " MRegistry after it was built!");
-            Mialib.LOGGER.error("Failed to register {} to the {} MRegistry after it was built!", id, this.namespace, error);
+			Mialib.LOGGER.error("Failed to register {} to the {} MRegistry after it was built!", id, this.namespace, error);
 			throw error;
 		}
 		var registered = false;
@@ -213,46 +213,39 @@ public class MRegistry {
 		}
 		if (!registered) {
 			var error = new IllegalStateException("Failed to register " + id + " to the " + this.namespace + " MRegistry!");
-            Mialib.LOGGER.error("Failed to register {} to the {} MRegistry!", id, this.namespace, error);
+			Mialib.LOGGER.error("Failed to register {} to the {} MRegistry!", id, this.namespace, error);
 			throw error;
 		}
 		return thing;
 	}
-
-	@SuppressWarnings("unchecked")
-	public <T> void build() {
+	
+	public @SuppressWarnings("unchecked") <T> void build() {
 		if (this.built) {
-            Mialib.LOGGER.warn("Tried to build the {} MRegistry twice!", this.namespace);
+			Mialib.LOGGER.warn("Tried to build the {} MRegistry twice!", this.namespace);
 			return;
 		}
 		this.built = true;
 		for (var regEntry : this.objects.entrySet()) {
 			var registry = regEntry.getKey();
-			for (var entry : regEntry.getValue().entrySet()) {
-				Registry.register(((Registry<T>) registry), entry.getKey(), (T) entry.getValue());
-			}
+			for (var entry : regEntry.getValue().entrySet()) Registry.register(((Registry<T>) registry), entry.getKey(), (T) entry.getValue());
 		}
-		for (var itemGroupRegistration : this.itemGroupRegistrations) {
-			itemGroupRegistration.run();
-		}
-		for (var entityAttributeRegistration : this.entityAttributeRegistrations) {
-			entityAttributeRegistration.run();
-		}
+		for (var itemGroupRegistration : this.itemGroupRegistrations) itemGroupRegistration.run();
+		for (var entityAttributeRegistration : this.entityAttributeRegistrations) entityAttributeRegistration.run();
 		this.itemGroupRegistrations.clear();
 	}
-
+	
 	public static void tryBuildAll(String location) {
 		if (!REGISTRIES.isEmpty()) {
 			if (builtAll) {
-				Mialib.LOGGER.info("Tried to build all MiaLib Registries on %s, but it was already built.".formatted(location));
+				Mialib.LOGGER.info("Tried to build all MiaLib Registries on {}, but it was already built.", location);
 				return;
 			}
 			builtAll = true;
-			Mialib.LOGGER.info("Building %d MiaLib Registr%s on %s".formatted(REGISTRIES.size(), REGISTRIES.size() == 1 ? "y" : "ies", location));
+			Mialib.LOGGER.info("Building {} MiaLib Registr{} on {}", REGISTRIES.size(), REGISTRIES.size() == 1 ? "y" : "ies", location);
 			REGISTRIES.forEach(MRegistry::build);
 		}
 	}
-
+	
 	static {
 		DEFAULT_REGISTRIES.put(GameEvent.class, Registries.GAME_EVENT);
 		DEFAULT_REGISTRIES.put(SoundEvent.class, Registries.SOUND_EVENT);
@@ -309,17 +302,19 @@ public class MRegistry {
 		DEFAULT_REGISTRIES.put(StructurePoolElementType.class, Registries.STRUCTURE_POOL_ELEMENT);
 		DEFAULT_REGISTRIES.put(CatVariant.class, Registries.CAT_VARIANT);
 		DEFAULT_REGISTRIES.put(FrogVariant.class, Registries.FROG_VARIANT);
-		DEFAULT_REGISTRIES.put(Instrument.class, Registries.INSTRUMENT);
 		DEFAULT_REGISTRIES.put(DecoratedPotPattern.class, Registries.DECORATED_POT_PATTERN);
 		DEFAULT_REGISTRIES.put(ItemGroup.class, Registries.ITEM_GROUP);
 		DEFAULT_REGISTRIES.put(Criterion.class, Registries.CRITERION);
 		DEFAULT_REGISTRIES.put(NumberFormatType.class, Registries.NUMBER_FORMAT_TYPE);
-		DEFAULT_REGISTRIES.put(ArmorMaterial.class, Registries.ARMOR_MATERIAL);
 		DEFAULT_REGISTRIES.put(ComponentType.class, Registries.DATA_COMPONENT_TYPE);
 		DEFAULT_REGISTRIES.put(ItemSubPredicate.Type.class, Registries.ITEM_SUB_PREDICATE_TYPE);
 		DEFAULT_REGISTRIES.put(MapDecorationType.class, Registries.MAP_DECORATION_TYPE);
+		DEFAULT_REGISTRIES.put(ConsumeEffect.Type.class, Registries.CONSUME_EFFECT_TYPE);
+		DEFAULT_REGISTRIES.put(RecipeDisplay.Serializer.class, Registries.RECIPE_DISPLAY);
+		DEFAULT_REGISTRIES.put(SlotDisplay.Serializer.class, Registries.SLOT_DISPLAY);
+		DEFAULT_REGISTRIES.put(RecipeBookCategory.class, Registries.RECIPE_BOOK_CATEGORY);
 	}
-
+	
 	public record EggData(int primaryColor, int secondaryColor) {
 		public EggData(int color) {
 			this(color, color);

@@ -35,10 +35,10 @@ public class MialibProperties {
                     }
                 }
             }
-        } catch (FileNotFoundException e) {
-            Mialib.LOGGER.info("Failed to find mialib properties file {}", mialibFile, e);
-        } catch (Exception e) {
-            Mialib.LOGGER.warn("Failed to load mialib properties file {}", mialibFile, e);
+        } catch (FileNotFoundException ignored) {
+            Mialib.LOGGER.info("Failed to find mialib properties file {}", mialibFile);
+        } catch (Exception ignored) {
+            Mialib.LOGGER.warn("Failed to load mialib properties file {}", mialibFile);
         }
     }
 

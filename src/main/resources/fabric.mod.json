@@ -1,19 +1,26 @@
 {
   "schemaVersion": 1,
   "id": "mialib",
+  "version": "${version}",
+
   "name": "Mialib",
   "description": "Library for AmyMialee Mods",
   "authors": [
     "AmyMialee"
   ],
-  "version": "${version}",
-  "license": "All-Rights-Reserved",
-  "icon": "assets/mialib/icon.png",
+  "contributors": [],
   "contact": {
+    "email": "mialib@amymialee.xyz",
     "homepage": "http://amymialee.xyz/",
+    "irc": "",
     "sources": "https://github.com/AmyMialeeMods/mialib",
     "issues": "https://github.com/AmyMialeeMods/mialib/issues"
   },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/mialib/icon.png",
+
+  "accessWidener" : "mialib.accesswidener",
+  "environment": "*",
   "entrypoints": {
     "client": [
       "xyz.amymialee.mialib.MialibClient"
@@ -31,6 +38,14 @@
       "xyz.amymialee.mialib.Mialib"
     ]
   },
+  "mixins": [
+    "mialib.mixins.json"
+  ],
+
+  "depends": {
+    "fabric": "*"
+  },
+
   "custom": {
     "cardinal-components": [
       "mialib:identifier_cooldown",
@@ -47,22 +62,12 @@
       "net/minecraft/class_1799": ["xyz/amymialee/mialib/util/interfaces/MItemStack"],
       "net/minecraft/class_1657": ["xyz/amymialee/mialib/util/interfaces/MPlayerEntity"],
       "net/minecraft/class_641" : ["xyz/amymialee/mialib/util/interfaces/MServerList"],
-      "net/minecraft/class_1291": ["xyz/amymialee/mialib/util/interfaces/MStatusEffect"],
-      "net/minecraft/class_2561": ["xyz/amymialee/mialib/util/interfaces/MText"],
-      "net/minecraft/class_1937": ["xyz/amymialee/mialib/util/interfaces/MWorld"]
+      "net/minecraft/class_2561": ["xyz/amymialee/mialib/util/interfaces/MText"]
     },
     "modmenu": {
       "links": {
         "modmenu.discord": "https://discord.gg/P4dUsxv6An"
       }
     }
-  },
-  "accessWidener" : "mialib.accesswidener",
-  "mixins": [
-    "mialib.mixins.json"
-  ],
-  "environment": "*",
-  "depends": {
-    "fabric": "*"
   }
 }

@@ -14,11 +14,6 @@ import xyz.amymialee.mialib.Mialib;
 public class NetherPortalBlockMixin {
     @WrapOperation(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameRules;getBoolean(Lnet/minecraft/world/GameRules$Key;)Z"))
     private boolean mialib$spawningToggle(GameRules instance, GameRules.Key<GameRules.BooleanRule> rule, @NotNull Operation<Boolean> original) {
-        return original.call(instance, rule) && !Mialib.DISABLE_PIGLIN_PORTAL_SPAWNING.getValue();
-    }
-
-    @WrapOperation(method = "onEntityCollision", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;canUsePortals(Z)Z"))
-    private boolean mialib$portalToggle(Entity instance, boolean allowVehicles, Operation<Boolean> original) {
-        return original.call(instance, allowVehicles) && !Mialib.DISABLE_NETHER_PORTALS.getValue();
+        return original.call(instance, rule) && !Mialib.DISABLE_PIGLIN_PORTAL_SPAWNING.get();
     }
 }

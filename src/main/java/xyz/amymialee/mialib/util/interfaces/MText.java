@@ -5,8 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@SuppressWarnings("unused")
-public interface MText {
+public @SuppressWarnings("unused") interface MText {
 	default Text mialib$withColor(int color) {
 		return Text.empty();
 	}
@@ -64,14 +63,9 @@ public interface MText {
 	}
 
 	static Text repack(@NotNull List<Text> textList) {
-		if (textList.isEmpty()) {
-			return Text.literal("");
-		} else {
-			var first = textList.get(0);
-			for (var i = 1; i < textList.size(); i++) {
-				first = first.copy().append(textList.get(i));
-			}
-			return first;
-		}
+		if (textList.isEmpty()) return Text.literal("");
+		var first = textList.getFirst();
+		for (var i = 1; i < textList.size(); i++) first = first.copy().append(textList.get(i));
+		return first;
 	}
 }

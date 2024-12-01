@@ -13,8 +13,7 @@ import xyz.amymialee.mialib.util.MDir;
 
 @Mixin(ResourcePackManager.class)
 public class ResourcePackManagerMixin {
-    @SuppressWarnings("SuspiciousSystemArraycopy")
-    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableSet;copyOf([Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;"))
+    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableSet;copyOf([Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;"), remap = false)
     private ImmutableSet<ResourcePackProvider> mialib$moreDirs(Object @NotNull [] array, @NotNull Operation<ImmutableSet<ResourcePackProvider>> operation) {
         var universalDir = MDir.getMialibPath("datapacks/universal");
         var versionDir = MDir.getMialibPath("datapacks/pack_format_" + MinecraftVersion.CURRENT.getResourceVersion(ResourceType.SERVER_DATA));

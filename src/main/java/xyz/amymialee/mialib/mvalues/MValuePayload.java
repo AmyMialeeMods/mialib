@@ -1,4 +1,4 @@
-package xyz.amymialee.mialib.networking;
+package xyz.amymialee.mialib.mvalues;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -10,8 +10,6 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.Mialib;
-import xyz.amymialee.mialib.mvalues.MValueManager;
-import xyz.amymialee.mialib.mvalues.MValueScreen;
 
 public record MValuePayload(Identifier id, NbtCompound compound) implements CustomPayload {
 	public static final Id<MValuePayload> ID = new CustomPayload.Id<>(Mialib.id("mvalue"));
@@ -26,13 +24,11 @@ public record MValuePayload(Identifier id, NbtCompound compound) implements Cust
 		@Override
 		public void receive(@NotNull MValuePayload payload, ClientPlayNetworking.@NotNull Context context) {
 			var mValue = MValueManager.get(payload.id);
-			if (mValue != null) {
-				mValue.readNbt(payload.compound);
-				if (context.client().currentScreen instanceof MValueScreen screen) {
-					screen.refreshWidgets();
-				}
-			}
-		}
+            if (mValue == null) return;
+            mValue.readNbt(payload.compound);
+            if (!(context.client().currentScreen instanceof MValueScreen screen)) return;
+            screen.clearAndInit();
+        }
 	}
 
 	public static class ServerReceiver implements ServerPlayNetworking.PlayPayloadHandler<MValuePayload> {
@@ -40,11 +36,9 @@ public record MValuePayload(Identifier id, NbtCompound compound) implements Cust
 		public void receive(@NotNull MValuePayload payload, ServerPlayNetworking.@NotNull Context context) {
 			if (!context.player().hasPermissionLevel(4)) return;
 			var mValue = MValueManager.get(payload.id);
-			if (mValue != null) {
-				mValue.readNbt(payload.compound);
-				mValue.syncAll();
-				MValueManager.saveConfig();
-			}
-		}
+            if (mValue == null) return;
+            mValue.readNbt(payload.compound);
+            MValueManager.INSTANCE.saveConfig();
+        }
 	}
 }

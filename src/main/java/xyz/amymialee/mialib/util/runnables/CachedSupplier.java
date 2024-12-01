@@ -2,10 +2,10 @@ package xyz.amymialee.mialib.util.runnables;
 
 import java.util.function.Supplier;
 
-public class HoldingSupplier<T> implements Supplier<T> {
+public class CachedSupplier<T> implements Supplier<T> {
     private final T value;
 
-    public HoldingSupplier(T value) {
+    public CachedSupplier(T value) {
         this.value = value;
     }
 

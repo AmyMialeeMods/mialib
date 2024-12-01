@@ -7,32 +7,28 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import java.util.List;
 import java.util.Set;
 
-@SuppressWarnings("unused")
-public interface BlankMixinPlugin extends IMixinConfigPlugin {
-    @Override
-    default void onLoad(String mixinPackage) {}
+/**
+ * Mixin Plugin with all abstract methods given a default body
+ * Most of the mixin plugins I see used only actually use one or two of the methods, so why should they need to do them all?
+ */
+public @SuppressWarnings("unused") interface BlankMixinPlugin extends IMixinConfigPlugin {
+    default @Override void onLoad(String mixinPackage) {}
 
-    @Override
-    default String getRefMapperConfig() {
+    default @Override String getRefMapperConfig() {
         return null;
     }
 
-    @Override
-    default boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+    default @Override boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         return true;
     }
 
-    @Override
-    default void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {}
+    default @Override void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {}
 
-    @Override
-    default List<String> getMixins() {
+    default @Override List<String> getMixins() {
         return null;
     }
 
-    @Override
-    default void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
+    default @Override void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
 
-    @Override
-    default void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
+    default @Override void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
 }

@@ -15,8 +15,7 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-@SuppressWarnings("unused")
-public interface MRaycasting {
+public @SuppressWarnings("unused") interface MRaycasting {
 	BiPredicate<PlayerEntity, Entity> ANY_PLAYER_AND_ENTITY = (p, e) -> true;
 	Predicate<Entity> ANY_ENTITY = (e) -> true;
 

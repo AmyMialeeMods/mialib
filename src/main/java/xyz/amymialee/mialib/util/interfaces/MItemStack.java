@@ -8,8 +8,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("unused")
-public interface MItemStack {
+public @SuppressWarnings("unused") interface MItemStack {
 	default ItemStack mialib$enchantStack(RegistryEntry<Enchantment> enchantment) {
 		return this.mialib$enchantStack(enchantment, 1);
 	}
@@ -36,9 +35,7 @@ public interface MItemStack {
 	}
 
 	static @NotNull ItemStack enchantStack(@NotNull ItemStack stack, @NotNull EnchantmentLevelEntry @NotNull ... enchantmentLevelEntry) {
-		for (var entry : enchantmentLevelEntry) {
-			stack.addEnchantment(entry.enchantment, entry.level);
-		}
+		for (var entry : enchantmentLevelEntry) stack.addEnchantment(entry.enchantment, entry.level);
 		return stack;
 	}
 

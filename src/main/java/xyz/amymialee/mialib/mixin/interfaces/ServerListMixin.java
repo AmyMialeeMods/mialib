@@ -40,6 +40,7 @@ public abstract class ServerListMixin implements MServerList {
 
     @Shadow public abstract ServerInfo get(int index);
 
+    @Override
     @Unique
     public List<ServerInfo> mialib$getMialibServers() {
         return this.mialibServers;
@@ -101,15 +102,13 @@ public abstract class ServerListMixin implements MServerList {
         }
     }
 
-    @SuppressWarnings("SuspiciousMethodCalls")
     @WrapOperation(method = "remove", at = @At(value = "INVOKE", target = "Ljava/util/List;remove(Ljava/lang/Object;)Z", ordinal = 1))
     private boolean mialib$removeMialibServer(List<ServerInfo> instance, Object serverInfo, @NotNull Operation<Boolean> original) {
-        if (!original.call(instance, serverInfo)) {
-            return this.mialibServers.remove(serverInfo);
-        }
+        if (!original.call(instance, serverInfo)) return this.mialibServers.remove(serverInfo);
         return true;
     }
 
+    @Override
     @Unique
     public void mialib$addMialibServer(ServerInfo serverInfo) {
         this.mialibServers.add(serverInfo);
@@ -123,9 +122,7 @@ public abstract class ServerListMixin implements MServerList {
     @Inject(method = "swapEntries", at = @At("HEAD"), cancellable = true)
     public void mialib$swapMialibServerEntries(int index1, int index2, CallbackInfo ci) {
         var isEitherSeparator = index1 == this.servers.size() || index2 == this.servers.size();
-        if (isEitherSeparator) {
-            ci.cancel();
-        }
+        if (isEitherSeparator) ci.cancel();
         var isMialib1 = index1 > this.servers.size();
         var isMialib2 = index2 > this.servers.size();
         if (isMialib1 && isMialib2) {
@@ -149,9 +146,7 @@ public abstract class ServerListMixin implements MServerList {
 
     @WrapOperation(method = "method_44090", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/ServerList;replace(Lnet/minecraft/client/network/ServerInfo;Ljava/util/List;)Z", ordinal = 1))
     private static boolean mialib$updateMialibServers(ServerInfo serverInfo, List<ServerInfo> serverInfos, @NotNull Operation<Boolean> original, @Local(ordinal = 0) ServerList serverList) {
-        if (!original.call(serverInfo, serverInfos)) {
-            return original.call(serverInfo, serverList.mialib$getMialibServers());
-        }
+        if (!original.call(serverInfo, serverInfos)) return original.call(serverInfo, serverList.mialib$getMialibServers());
         return true;
     }
 

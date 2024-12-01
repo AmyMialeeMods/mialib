@@ -2,8 +2,7 @@ package xyz.amymialee.mialib.util;
 
 import xyz.amymialee.mialib.Mialib;
 
-@SuppressWarnings("unused")
-public interface MMath {
+public @SuppressWarnings("unused") interface MMath {
 	static int lerp(int a, int b, double t) {
 		return (int) Math.round(a + (b - a) * t);
 	}

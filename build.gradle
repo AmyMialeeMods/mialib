@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'fabric-loom' version '1.9-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -12,7 +12,7 @@ group = project.maven_group
 
 repositories {
     maven {
-        description = "Maven for Cardinal Components"
+        description = "Maven for Cardinal Components and Player Ability Lib"
         url = "https://maven.ladysnake.org/releases/"
     }
     maven {
@@ -31,6 +31,43 @@ dependencies {
     modImplementation include ("org.ladysnake.cardinal-components-api:cardinal-components-base:${project.cca_version}")
     modImplementation include ("org.ladysnake.cardinal-components-api:cardinal-components-entity:${project.cca_version}")
     modImplementation include ("org.ladysnake.cardinal-components-api:cardinal-components-scoreboard:${project.cca_version}")
+    modImplementation include ("io.github.ladysnake:PlayerAbilityLib:${pal_version}")
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/mialib.accesswidener")
+}
+
+fabricApi {
+    configureDataGeneration() {
+        modId = "mialib"
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+    filteringCharset "UTF-8"
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = 'UTF-8'
+    it.options.release = 21
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    archivesBaseName = project.archives_base_name
+    withSourcesJar()
+}
+
+jar {
+    from("LICENSE.md") {
+        rename { "${it}_${base.archivesName.get()}"}
+    }
 }
 
 publishing {
@@ -48,53 +85,5 @@ publishing {
                 basic(BasicAuthentication)
             }
         }
-    }
-}
-
-loom {
-    accessWidenerPath = file("src/main/resources/mialib.accesswidener")
-    runs {
-        datagen {
-            inherit server
-            name "Data Generation"
-            vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}"
-            vmArg "-Dfabric-api.datagen.modid=${project.archives_base_name}"
-            runDir "build/datagen"
-        }
-    }
-}
-
-sourceSets {
-    main {
-        resources {
-            srcDirs += ['src/main/generated']
-        }
-    }
-}
-
-processResources {
-    inputs.property "version", project.version
-    filteringCharset "UTF-8"
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = 'UTF-8'
-    it.options.release = 17
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-    archivesBaseName = project.archives_base_name
-    withSourcesJar()
-}
-
-jar {
-    from("LICENSE.md") {
-        rename { "${it}_${base.archivesName.get()}"}
     }
 }

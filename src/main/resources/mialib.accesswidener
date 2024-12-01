@@ -1,5 +1,8 @@
 accessWidener v2 named
 
+accessible field net/minecraft/world/PersistentStateManager directory Ljava/nio/file/Path;
+
+
 accessible field net/minecraft/world/GameRules rules Ljava/util/Map;
 accessible method net/minecraft/world/GameRules$Rule deserialize (Ljava/lang/String;)V
 accessible class net/minecraft/client/option/SimpleOption$Callbacks
@@ -24,3 +27,4 @@ accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerLi
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerScreen serverListWidget Lnet/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget;
 accessible method net/minecraft/client/gui/widget/EntryListWidget getRowTop (I)I
 accessible field net/minecraft/client/gui/screen/Screen drawables Ljava/util/List;
+

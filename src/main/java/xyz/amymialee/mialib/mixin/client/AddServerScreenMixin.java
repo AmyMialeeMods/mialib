@@ -46,7 +46,7 @@ public class AddServerScreenMixin extends Screen {
                 @Override
                 protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
                     super.renderWidget(context, mouseX, mouseY, delta);
-                    context.drawTexture(serverList.mialib$isEditingMialibServer() ? LOGO_TEXTURE : LOGO_GRAY_TEXTURE, this.getX() + 2, this.getY() + 2, 16, 16, 0, 0, 16, 16, 16, 16);
+                    context.mialib$drawTexture(serverList.mialib$isEditingMialibServer() ? LOGO_TEXTURE : LOGO_GRAY_TEXTURE, this.getX() + 2, this.getY() + 2, 16, 16, 16, 16);
                 }
 
                 @Override

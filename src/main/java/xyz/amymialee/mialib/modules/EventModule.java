@@ -14,12 +14,6 @@ import java.util.Optional;
 
 public interface EventModule {
     static void init() {
-        MiaLibEvents.SMELT_BROKEN_BLOCK.register((world, state, pos, blockEntity, entity, stack) -> {
-            if (stack.getItem().mialib$shouldSmelt(world, state, pos, blockEntity, entity, stack)) {
-                return ActionResult.SUCCESS;
-            }
-            return ActionResult.PASS;
-        });
         MiaLibEvents.DAMAGE_PREVENTION.register((entity, source) -> {
             var component = ExtraFlagsComponent.KEY.get(entity);
             return component.isIndestructible() || (!(entity instanceof LivingEntity) && component.isImmortal());
@@ -51,12 +45,12 @@ public interface EventModule {
             return ActionResult.PASS;
         });
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, serverResourceManager, success) -> {
-            var registry = server.getRegistryManager().get(RegistryKeys.ENCHANTMENT);
-            registry.forEach((a) -> ((MEnchantment) a).mialib$setId(registry.getId(a)));
+            var registry = server.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT);
+            registry.forEach((a) -> ((MEnchantment)a).mialib$setId(registry.getId(a)));
         });
         ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
-            var registry = server.getRegistryManager().get(RegistryKeys.ENCHANTMENT);
-            registry.forEach((a) -> ((MEnchantment) a).mialib$setId(registry.getId(a)));
+            var registry = server.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT);
+            registry.forEach((a) -> ((MEnchantment)a).mialib$setId(registry.getId(a)));
         });
     }
 }
