@@ -50,7 +50,7 @@ public class ExtraFlagsComponent implements AutoSyncedComponent {
     }
 
     public boolean canFly() {
-        return MMath.getByteFlag(this.flags, 2);
+        return MMath.getByteFlag(this.flags, 3);
     }
 
     private void setIndestructible(boolean indestructible) {

@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
-import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.util.runnables.CachedFunction;
 
 import java.util.function.Function;
@@ -62,8 +61,8 @@ public class MValueBuilder<T> {
         return this;
     }
 
-    public MValueBuilder<T> clientSide(boolean clientSide) {
-        this.clientSide = clientSide;
+    public MValueBuilder<T> clientSide() {
+        this.clientSide = true;
         this.permissionLevel = 0;
         return this;
     }

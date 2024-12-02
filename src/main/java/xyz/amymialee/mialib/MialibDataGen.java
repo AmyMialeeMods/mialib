@@ -31,16 +31,16 @@ public class MialibDataGen extends MDataGen {
             for (var enabled : new Pair[]{new Pair<>("enabled", "§aenabled"), new Pair<>("disabled", "§cdisabled")}) {
                 builder.add("commands.%s.indestructible.%s.%s".formatted(Mialib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Indestructibility %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
                 builder.add("commands.%s.immortal.%s.%s".formatted(Mialib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Immortality %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
-                builder.add("commands.%s.fly.%s.%s".formatted(Mialib.MOD_ID, enabled.getLeft(), single.getLeft()), "§Fly %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
+                builder.add("commands.%s.fly.%s.%s".formatted(Mialib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Fly %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
             }
         }
+        builder.add("mialib.screen.mvalues", "Mialib Value Editor");
         builder.add(MValue.DEFAULT_CATEGORY.getTranslationKey(), "MValues");
         builder.add(Mialib.DISABLE_PIGLIN_PORTAL_SPAWNING.getTranslationKey(), "Disable Piglin Spawning");
         builder.add(Mialib.DISABLE_PIGLIN_PORTAL_SPAWNING.getDescriptionTranslationKey(), "Disables piglins spawning from nether portals");
         builder.add(Mialib.DISABLE_END_PORTALS.getTranslationKey(), "Disable End Portals");
         builder.add(Mialib.DISABLE_END_PORTALS.getDescriptionTranslationKey(), "Disables end portals");
         builder.add("category.%s".formatted(Mialib.MOD_ID), Mialib.MOD_NAME);
-        builder.add("key.%s.mvalues".formatted(Mialib.MOD_ID), "Open %s Value Editor".formatted(Mialib.MOD_NAME));
         builder.add("%s.servers".formatted(Mialib.MOD_ID), "Mialib Servers");
         builder.add("%s.mialib_server.true".formatted(Mialib.MOD_ID), "Save to Mialib Server File: §aTrue");
         builder.add("%s.mialib_server.false".formatted(Mialib.MOD_ID), "Save to Mialib Server File: §cFalse");

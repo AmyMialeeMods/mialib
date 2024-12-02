@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.amymialee.mialib.Mialib;
+import xyz.amymialee.mialib.mvalues.MValueManager;
 import xyz.amymialee.mialib.mvalues.MValueScreen;
 
 import java.util.function.Supplier;
@@ -40,7 +41,16 @@ public class GameMenuScreenMixin extends Screen {
 
     @Inject(method = "initWidgets", at = @At("TAIL"))
     private void mialib$mvalues(CallbackInfo ci, @Share("button") @NotNull LocalRef<ButtonWidget> ref) {
-        if (this.client == null || this.client.player == null || !this.client.player.hasPermissionLevel(4)) return;
+        if (this.client == null || this.client.player == null) return;
+        var any = false;
+        var categories = MValueManager.CATEGORIES;
+        for (var category : categories) {
+            if (!category.getValues(this.client.player).isEmpty()) {
+                any = true;
+                break;
+            }
+        }
+        if (!any) return;
         var button = this.addDrawableChild(new ButtonWidget(ref.get().getX() - 20 - 4, ref.get().getY(), 20, 20, Text.translatable("%s.screen.mvalues".formatted(Mialib.MOD_ID)), (b) -> this.client.setScreen(new MValueScreen()), Supplier::get) {
             @Override
             protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {

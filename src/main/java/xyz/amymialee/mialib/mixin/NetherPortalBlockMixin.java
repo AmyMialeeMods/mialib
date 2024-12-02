@@ -3,7 +3,6 @@ package xyz.amymialee.mialib.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.NetherPortalBlock;
-import net.minecraft.entity.Entity;
 import net.minecraft.world.GameRules;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;

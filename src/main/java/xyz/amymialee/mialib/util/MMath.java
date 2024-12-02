@@ -68,7 +68,7 @@ public @SuppressWarnings("unused") interface MMath {
             Mialib.LOGGER.warn("Invalid byte flag read index: {}", flag);
 			return false;
 		}
-		return (data >> flag & 0x01) == 1;
+		return ((data >> flag) & 0x1) == 1;
 	}
 
 	static byte setByteFlag(byte data, int flag, boolean value) {

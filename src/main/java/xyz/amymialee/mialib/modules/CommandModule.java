@@ -18,21 +18,21 @@ public interface CommandModule {
                             .then(CommandManager.argument("targets", EntityArgumentType.entities())
                                     .executes(ctx -> executeIndestructible(ctx.getSource(), BoolArgumentType.getBool(ctx, "enabled"), EntityArgumentType.getEntities(ctx, "targets").toArray(new Entity[0])))
                             ).executes(ctx -> executeIndestructible(ctx.getSource(), BoolArgumentType.getBool(ctx, "enabled"), ctx.getSource().getPlayer()))
-                    ).executes(ctx -> ctx.getSource().getPlayer() == null ? 0 : executeIndestructible(ctx.getSource(), !ctx.getSource().getPlayer().mialib$isIndestructible(), ctx.getSource().getPlayer()))
+                    ).executes(ctx -> ctx.getSource().getPlayer() == null ? 0 : executeIndestructible(ctx.getSource(), !ExtraFlagsComponent.KEY.get(ctx.getSource().getPlayer()).hasIndestructibleCommand(), ctx.getSource().getPlayer()))
             );
             dispatcher.register(CommandManager.literal("immortal").requires(source -> source.hasPermissionLevel(4))
                     .then(CommandManager.argument("enabled", BoolArgumentType.bool())
                             .then(CommandManager.argument("targets", EntityArgumentType.entities())
                                     .executes(ctx -> executeImmortal(ctx.getSource(), BoolArgumentType.getBool(ctx, "enabled"), EntityArgumentType.getEntities(ctx, "targets").toArray(new Entity[0])))
                             ).executes(ctx -> executeImmortal(ctx.getSource(), BoolArgumentType.getBool(ctx, "enabled"), ctx.getSource().getPlayer()))
-                    ).executes(ctx -> ctx.getSource().getPlayer() == null ? 0 : executeImmortal(ctx.getSource(), !ctx.getSource().getPlayer().mialib$isImmortal(), ctx.getSource().getPlayer()))
+                    ).executes(ctx -> ctx.getSource().getPlayer() == null ? 0 : executeImmortal(ctx.getSource(), !ExtraFlagsComponent.KEY.get(ctx.getSource().getPlayer()).hasImmortalCommand(), ctx.getSource().getPlayer()))
             );
             dispatcher.register(CommandManager.literal("fly").requires(source -> source.hasPermissionLevel(4))
                     .then(CommandManager.argument("enabled", BoolArgumentType.bool())
                             .then(CommandManager.argument("targets", EntityArgumentType.entities())
                                     .executes(ctx -> executeFly(ctx.getSource(), BoolArgumentType.getBool(ctx, "enabled"), EntityArgumentType.getEntities(ctx, "targets").toArray(new Entity[0])))
                             ).executes(ctx -> executeFly(ctx.getSource(), BoolArgumentType.getBool(ctx, "enabled"), ctx.getSource().getPlayer()))
-                    ).executes(ctx -> ctx.getSource().getPlayer() == null ? 0 : executeFly(ctx.getSource(), !ctx.getSource().getPlayer().mialib$isImmortal(), ctx.getSource().getPlayer()))
+                    ).executes(ctx -> ctx.getSource().getPlayer() == null ? 0 : executeFly(ctx.getSource(), !ExtraFlagsComponent.KEY.get(ctx.getSource().getPlayer()).hasFlyCommand(), ctx.getSource().getPlayer()))
             );
         });
     }

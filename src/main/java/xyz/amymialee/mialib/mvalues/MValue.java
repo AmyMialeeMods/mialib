@@ -1,19 +1,16 @@
 package xyz.amymialee.mialib.mvalues;
 
 import com.google.gson.JsonElement;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.Widget;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.Mialib;
-import xyz.amymialee.mialib.mixin.interfaces.PlayerEntityMixin;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -56,6 +53,10 @@ public final class MValue<T> {
         return "mvalue.%s.%s.desc".formatted(this.id.getNamespace(), this.id.getPath());
     }
 
+    public String getValueAsString() {
+        return this.type.getValueAsString(this);
+    }
+
     public @NotNull Text getText() {
         return Text.translatable(this.getTranslationKey());
     }
@@ -92,7 +93,8 @@ public final class MValue<T> {
         this.type.readJson(json, this);
     }
 
-    public ClickableWidget getWidget(int x, int y) {
+    @Environment(EnvType.CLIENT)
+    public Object getWidget(int x, int y) {
         return this.type.getWidget(x, y, this);
     }
 }

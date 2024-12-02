@@ -2,17 +2,9 @@ package xyz.amymialee.mialib.mvalues;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.tooltip.TooltipState;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,7 +16,6 @@ import xyz.amymialee.mialib.util.runnables.CachedSupplier;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class MValueCategory {
@@ -92,8 +83,8 @@ public class MValueCategory {
                     && mouseY >= this.getY() - scroll
                     && mouseX < this.getX() + this.width
                     && mouseY < this.getY() + this.height - scroll;
-            context.mialib$drawTexture(this.enabled ? SelectionState.SELECTED.texture : (this.hovered ? SelectionState.HIGHLIGHTED : SelectionState.DESELECTED).texture, this.getX(), this.getY(), 24, 24, 24, 24);
-            context.drawItem(this.category.stackSupplier.get(), this.getX() + 4, this.getY() + 4);
+            context.mialib$drawTexture(this.enabled ? SelectionState.SELECTED.texture : (this.hovered ? SelectionState.HIGHLIGHTED : SelectionState.DESELECTED).texture, this.getX(), this.getY(), 22, 22, 22, 22);
+            context.drawItem(this.category.stackSupplier.get(), this.getX() + 3, this.getY() + 3);
         }
 
         @Override

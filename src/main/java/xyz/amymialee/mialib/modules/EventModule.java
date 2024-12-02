@@ -44,6 +44,13 @@ public interface EventModule {
             }
             return ActionResult.PASS;
         });
+        ExtraFlagEvents.SHOULD_FLY.register((world, entity) -> {
+            var component = ExtraFlagsComponent.KEY.get(entity);
+            if (component.hasFlyCommand()) {
+                return ActionResult.SUCCESS;
+            }
+            return ActionResult.PASS;
+        });
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, serverResourceManager, success) -> {
             var registry = server.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT);
             registry.forEach((a) -> ((MEnchantment)a).mialib$setId(registry.getId(a)));

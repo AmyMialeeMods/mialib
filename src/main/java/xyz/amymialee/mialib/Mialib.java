@@ -4,7 +4,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -22,7 +21,9 @@ import xyz.amymialee.mialib.cca.ExtraFlagsComponent;
 import xyz.amymialee.mialib.cca.HoldingComponent;
 import xyz.amymialee.mialib.modules.CommandModule;
 import xyz.amymialee.mialib.modules.EventModule;
-import xyz.amymialee.mialib.mvalues.*;
+import xyz.amymialee.mialib.mvalues.MValue;
+import xyz.amymialee.mialib.mvalues.MValueCategory;
+import xyz.amymialee.mialib.mvalues.MValuePayload;
 import xyz.amymialee.mialib.networking.AttackingPayload;
 import xyz.amymialee.mialib.networking.FloatyPayload;
 import xyz.amymialee.mialib.networking.UsingPayload;
@@ -45,10 +46,11 @@ public @SuppressWarnings("unused") class Mialib implements ModInitializer, Entit
     static {
         for (var i = 0; i < 32; i++) {
             var cat = new MValueCategory(Mialib.id(Mialib.MOD_ID + "_" + i), Registries.ITEM.getRandom(net.minecraft.util.math.random.Random.create()).get().value(), Identifier.ofVanilla("textures/block/purple_concrete.png"), 16, 16);
-            MValue.of(id("a" + "_" + i), MValue.BOOLEAN_FALSE).item(Registries.ITEM.getRandom(net.minecraft.util.math.random.Random.create()).get().value()).category(cat).build();
-            MValue.of(id("b" + "_" + i), MValue.BOOLEAN_TRUE).item(Registries.ITEM.getRandom(net.minecraft.util.math.random.Random.create()).get().value()).build();
+            MValue.of(id("a" + "_" + i), MValue.INTEGER).item(Registries.ITEM.getRandom(net.minecraft.util.math.random.Random.create()).get().value()).category(cat).build();
+            MValue.of(id("b" + "_" + i), MValue.DOUBLE).item(Registries.ITEM.getRandom(net.minecraft.util.math.random.Random.create()).get().value()).build();
         }
     }
+
     public @Override void onInitialize() {
         CommandModule.init();
         EventModule.init();

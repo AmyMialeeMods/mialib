@@ -17,7 +17,10 @@ import xyz.amymialee.mialib.Mialib;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MValueManager {
     public static MValueManager INSTANCE;
@@ -29,7 +32,7 @@ public class MValueManager {
     private MValueManager(@NotNull MinecraftServer server) {
         INSTANCE = this;
         this.server = server;
-        this.path = FabricLoader.getInstance().getConfigDir().resolve("mvalues.json");
+        this.path = FabricLoader.getInstance().getConfigDir().resolve(FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER ? "mvalues.json" : "mvaluesclient.json");
         this.loadConfig();
         ScoreboardSyncCallback.EVENT.register((player, tracked) -> {
             for (var key : MVALUES.values()) ServerPlayNetworking.send(player, new MValuePayload(key.id, key.writeNbt(new NbtCompound())));
@@ -57,12 +60,17 @@ public class MValueManager {
 
     public <T> void onChange(MValue<T> value) {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            MValueManager.INSTANCE.saveConfig();
+            if (value.clientSide) return;
+            this.saveConfig();
             for (var player : MValueManager.INSTANCE.server.getPlayerManager().getPlayerList()) {
                 ServerPlayNetworking.send(player, new MValuePayload(value.id, value.type.writeNbt(new NbtCompound(), value)));
             }
         } else {
-            ClientPlayNetworking.send(new MValuePayload(value.id, value.type.writeNbt(new NbtCompound(), value)));
+            if (value.clientSide) {
+                this.saveConfig();
+            } else {
+                ClientPlayNetworking.send(new MValuePayload(value.id, value.type.writeNbt(new NbtCompound(), value)));
+            }
         }
     }
 
@@ -70,8 +78,11 @@ public class MValueManager {
         try {
             var gson = new GsonBuilder().setPrettyPrinting().create();
             var json = new JsonObject();
-            for (var entry : MVALUES.entrySet()) json.add(entry.getKey().toString(), entry.getValue().writeJson());
-            Files.writeString(this.server.getOverworld().getChunkManager().getPersistentStateManager().directory.resolve("mvalues.json"), gson.toJson(json));
+            for (var entry : MVALUES.entrySet()) {
+                if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT != entry.getValue().clientSide) continue;
+                json.add(entry.getKey().toString(), entry.getValue().writeJson());
+            }
+            Files.writeString(this.path, gson.toJson(json));
         } catch (Exception e) {
             Mialib.LOGGER.info(e.toString());
         }
@@ -80,12 +91,13 @@ public class MValueManager {
     protected void loadConfig() {
         try {
             var data = new Gson().fromJson(Files.readString(this.path), JsonObject.class);
-            for (var values : MVALUES.entrySet()) {
-                if (!data.has(values.getKey().toString())) continue;
+            for (var entry : MVALUES.entrySet()) {
+                if (!data.has(entry.getKey().toString())) continue;
+                if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT != entry.getValue().clientSide) continue;
                 try {
-                    values.getValue().readJson(data.get(values.getKey().toString()));
+                    entry.getValue().readJson(data.get(entry.getKey().toString()));
                 } catch (Exception e) {
-                    Mialib.LOGGER.info("Error loading mvalue data for {}", values.getKey().toString());
+                    Mialib.LOGGER.info("Error loading mvalue data for {}", entry.getKey().toString());
                     Mialib.LOGGER.info(e.toString());
                 }
             }
