@@ -29,8 +29,7 @@ public class ExtraFlagEvents {
     public static final Event<HaveFlagCallback> SHOULD_BE_IMMORTAL = EventFactory.createArrayBacked(HaveFlagCallback.class, callbacks -> (world, entity) -> CALLBACK_RESULT.apply(callbacks, world, entity));
     public static final Event<HaveFlagCallback> SHOULD_FLY = EventFactory.createArrayBacked(HaveFlagCallback.class, callbacks -> (world, entity) -> CALLBACK_RESULT.apply(callbacks, world, entity));
 
-    @FunctionalInterface
-    public interface HaveFlagCallback {
+    public @FunctionalInterface interface HaveFlagCallback {
         ActionResult shouldHaveFlag(World world, Entity entity);
     }
 }

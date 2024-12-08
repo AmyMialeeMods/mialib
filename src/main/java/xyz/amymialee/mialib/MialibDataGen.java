@@ -40,6 +40,7 @@ public class MialibDataGen extends MDataGen {
         builder.add(Mialib.DISABLE_PIGLIN_PORTAL_SPAWNING.getDescriptionTranslationKey(), "Disables piglins spawning from nether portals");
         builder.add(Mialib.DISABLE_END_PORTALS.getTranslationKey(), "Disable End Portals");
         builder.add(Mialib.DISABLE_END_PORTALS.getDescriptionTranslationKey(), "Disables end portals");
+        builder.add("%s.mvalue.clientside".formatted(Mialib.MOD_ID), "[Client Side]");
         builder.add("category.%s".formatted(Mialib.MOD_ID), Mialib.MOD_NAME);
         builder.add("%s.servers".formatted(Mialib.MOD_ID), "Mialib Servers");
         builder.add("%s.mialib_server.true".formatted(Mialib.MOD_ID), "Save to Mialib Server File: §aTrue");

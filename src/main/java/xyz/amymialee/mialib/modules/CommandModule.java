@@ -58,16 +58,3 @@ public interface CommandModule {
         return targets.length;
     }
 }
-//            CommandRegistrationCallback.EVENT.register((dispatcher, reg, env) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
-//                    .then(CommandManager.literal(id.toString())
-//                            .then(CommandManager.argument("value", IntegerArgumentType.integer(this.min, this.max))
-//                                    .executes(ctx -> {
-//                                        this.setValue(IntegerArgumentType.getInteger(ctx, "value"));
-//                                        ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", Text.translatable(this.getTranslationKey()), this.getValue()), true);
-//                                        return this.value;
-//                                    })
-//                            ).executes(ctx -> {
-//                                ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.query", Text.translatable(this.getTranslationKey()), this.getValue()), false);
-//                                return this.value;
-//                            })
-//                    )));

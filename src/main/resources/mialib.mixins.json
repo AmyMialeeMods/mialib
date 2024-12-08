@@ -15,6 +15,7 @@
     "ItemStackMixin",
     "LivingEntityMixin",
     "NetherPortalBlockMixin",
+    "ServerScoreboardMixin",
     "interfaces.EntityMixin",
     "interfaces.ItemEntityMixin",
     "interfaces.ItemGroupMixin",
@@ -24,13 +25,13 @@
   ],
   "client": [
     "client.AddServerScreenMixin",
+    "client.ClientPlayNetworkHandlerMixin",
     "client.DrawContextMixin",
     "client.GameMenuScreenMixin",
     "client.GameOptionsMixin",
     "client.MinecraftClientMixin",
     "client.MultiplayerScreenMixin",
     "client.MultiplayerServerListWidgetMixin",
-    "client.MultiplayerServerListWidgetMixin$ServerEntryMixin",
     "client.ResourcePackManagerMixin",
     "interfaces.DrawContextMixin",
     "interfaces.ServerListMixin"

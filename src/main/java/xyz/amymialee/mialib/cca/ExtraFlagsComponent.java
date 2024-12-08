@@ -28,10 +28,10 @@ import xyz.amymialee.mialib.util.MMath;
  */
 public class ExtraFlagsComponent implements AutoSyncedComponent {
     public static final ComponentKey<ExtraFlagsComponent> KEY = ComponentRegistry.getOrCreate(Mialib.id("extra_flags"), ExtraFlagsComponent.class);
+    public static final AbilitySource FLY_ABILITY = Pal.getAbilitySource(Mialib.MOD_ID, "fly_command");
     private final Entity entity;
     private byte flags = 0;
     private byte commandFlags = 0;
-    public static final AbilitySource FLY_COMMAND = Pal.getAbilitySource(Mialib.MOD_ID, "fly_command");
 
     public ExtraFlagsComponent(Entity entity) {
         this.entity = entity;
@@ -71,9 +71,9 @@ public class ExtraFlagsComponent implements AutoSyncedComponent {
         this.sync();
         if (!(this.entity instanceof PlayerEntity player)) return;
         if (fly) {
-            FLY_COMMAND.grantTo(player, VanillaAbilities.ALLOW_FLYING);
+            FLY_ABILITY.grantTo(player, VanillaAbilities.ALLOW_FLYING);
         } else {
-            FLY_COMMAND.revokeFrom(player, VanillaAbilities.ALLOW_FLYING);
+            FLY_ABILITY.revokeFrom(player, VanillaAbilities.ALLOW_FLYING);
         }
     }
 
@@ -116,20 +116,17 @@ public class ExtraFlagsComponent implements AutoSyncedComponent {
         this.setFly(ExtraFlagEvents.SHOULD_FLY.invoker().shouldHaveFlag(this.entity.getWorld(), this.entity).isAccepted());
     }
 
-    @Override
-    public void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+    public @Override void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         this.flags = tag.getByte("flags");
         this.commandFlags = tag.getByte("commandFlags");
     }
 
-    @Override
-    public void writeToNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+    public @Override void writeToNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         tag.putByte("flags", this.flags);
         tag.putByte("commandFlags", this.commandFlags);
     }
 
-    @Override
-    public boolean isRequiredOnClient() {
+    public @Override boolean isRequiredOnClient() {
         return false;
     }
 }

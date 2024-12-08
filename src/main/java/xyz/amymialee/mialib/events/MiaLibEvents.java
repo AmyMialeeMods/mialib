@@ -16,33 +16,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public interface MiaLibEvents {
-    Event<SmeltBrokenBlockCallback> SMELT_BROKEN_BLOCK = EventFactory.createArrayBacked(SmeltBrokenBlockCallback.class, callbacks -> (world, state, pos, blockEntity, entity, stack) -> {
-        for (var callback : callbacks) {
-            var result = callback.shouldSmeltBlock(world, state, pos, blockEntity, entity, stack);
-            if (result != ActionResult.PASS) {
-                return result;
-            }
-        }
-        return ActionResult.PASS;
-    });
-
-    @FunctionalInterface
-    interface SmeltBrokenBlockCallback {
-        ActionResult shouldSmeltBlock(World world, BlockState state, BlockPos pos, @Nullable BlockEntity blockEntity, @Nullable Entity entity, ItemStack stack);
-    }
-
     Event<DamagePreventionCallback> DAMAGE_PREVENTION = EventFactory.createArrayBacked(DamagePreventionCallback.class, callbacks -> (entity, source) -> {
         for (var callback : callbacks) {
             var result = callback.isInvulnerableTo(entity, source);
-            if (result) {
-                return true;
-            }
+            if (result) return true;
         }
         return false;
     });
 
-    @FunctionalInterface
-    interface DamagePreventionCallback {
+    @FunctionalInterface interface DamagePreventionCallback {
         boolean isInvulnerableTo(Entity entity, DamageSource source);
     }
 
@@ -59,8 +41,7 @@ public interface MiaLibEvents {
         return Optional.of(damage);
     });
 
-    @FunctionalInterface
-    interface DamageInteractionCallback {
+    @FunctionalInterface interface DamageInteractionCallback {
         Optional<Float> modifyDamage(LivingEntity entity, DamageSource source, float amount);
     }
 }

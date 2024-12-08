@@ -28,3 +28,28 @@ accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerScreen s
 accessible method net/minecraft/client/gui/widget/EntryListWidget getRowTop (I)I
 accessible field net/minecraft/client/gui/screen/Screen drawables Ljava/util/List;
 
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget SERVER_PINGER_THREAD_POOL Ljava/util/concurrent/ThreadPoolExecutor;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget CANNOT_RESOLVE_TEXT Lnet/minecraft/text/Text;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget CANNOT_CONNECT_TEXT Lnet/minecraft/text/Text;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget PINGING_1_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget PINGING_2_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget PINGING_3_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget PINGING_4_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget PINGING_5_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget JOIN_HIGHLIGHTED_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget JOIN_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget PING_1_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget PING_2_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget PING_3_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget PING_4_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget PING_5_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget PINGING_TEXT Lnet/minecraft/text/Text;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget INCOMPATIBLE_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget INCOMPATIBLE_TEXT Lnet/minecraft/text/Text;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget UNREACHABLE_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget NO_CONNECTION_TEXT Lnet/minecraft/text/Text;
+accessible method net/minecraft/client/gui/widget/EntryListWidget ensureVisible (Lnet/minecraft/client/gui/widget/EntryListWidget$Entry;)V
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget ONLINE_TEXT Lnet/minecraft/text/Text;
+
+
+

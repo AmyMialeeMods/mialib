@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.amymialee.mialib.Mialib;
-import xyz.amymialee.mialib.mvalues.MValueManager;
+import xyz.amymialee.mialib.mvalues.MValueCategory;
 import xyz.amymialee.mialib.mvalues.MValueScreen;
 
 import java.util.function.Supplier;
@@ -43,7 +43,7 @@ public class GameMenuScreenMixin extends Screen {
     private void mialib$mvalues(CallbackInfo ci, @Share("button") @NotNull LocalRef<ButtonWidget> ref) {
         if (this.client == null || this.client.player == null) return;
         var any = false;
-        var categories = MValueManager.CATEGORIES;
+        var categories = MValueCategory.CATEGORIES;
         for (var category : categories) {
             if (!category.getValues(this.client.player).isEmpty()) {
                 any = true;

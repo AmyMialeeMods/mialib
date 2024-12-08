@@ -2,9 +2,12 @@ package xyz.amymialee.mialib.mvalues;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.builder.ArgumentBuilder;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.navigation.GuiNavigationType;
@@ -16,22 +19,23 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.input.KeyCodes;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.sound.SoundManager;
+import net.minecraft.command.CommandSource;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
+import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.util.runnables.Consumer3;
 
 public abstract class MValueType<T> {
     protected T defaultValue;
-
-    public void reset(@NotNull MValue<T> value) {
-        value.set(this.defaultValue);
-    }
 
     public abstract boolean set(MValue<T> mValue, T value);
 
@@ -61,9 +65,9 @@ public abstract class MValueType<T> {
                 @Override
                 public void onClick(double mouseX, double mouseY) {
                     if (mouseX < this.getX() + 18) {
-                        this.value.type.reset(this.value);
+                        this.value.send(this.value.type.defaultValue);
                     } else {
-                        this.value.set(!this.value.get());
+                        this.value.send(!this.value.get());
                     }
                 }
             };
@@ -138,7 +142,7 @@ public abstract class MValueType<T> {
 
         @Override
         public boolean set(@NotNull MValue<Integer> mValue, Integer value) {
-            mValue.value = Math.clamp(value, this.min, this.max);
+            mValue.value = Math.clamp(value, this.getMin(), this.getMax());
             return true;
         }
 
@@ -150,11 +154,7 @@ public abstract class MValueType<T> {
 
         @Override
         public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<Integer> value) {
-            if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-                value.value = compound.getInt("value");
-            } else {
-                value.set(compound.getInt("value"));
-            }
+            value.value = compound.getInt("value");
         }
 
         @Override
@@ -216,7 +216,7 @@ public abstract class MValueType<T> {
 
         @Override
         public boolean set(@NotNull MValue<Float> mValue, Float value) {
-            mValue.value = Math.clamp(value, this.min, this.max);
+            mValue.value = Math.clamp(value, this.getMin(), this.getMax());
             return true;
         }
 
@@ -228,11 +228,7 @@ public abstract class MValueType<T> {
 
         @Override
         public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<Float> value) {
-            if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-                value.value = compound.getFloat("value");
-            } else {
-                value.set(compound.getFloat("value"));
-            }
+            value.value = compound.getFloat("value");
         }
 
         @Override
@@ -289,7 +285,7 @@ public abstract class MValueType<T> {
 
         @Override
         public boolean set(@NotNull MValue<Long> mValue, Long value) {
-            mValue.value = Math.clamp(value, this.min, this.max);
+            mValue.value = Math.clamp(value, this.getMin(), this.getMax());
             return true;
         }
 
@@ -301,11 +297,7 @@ public abstract class MValueType<T> {
 
         @Override
         public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<Long> value) {
-            if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-                value.value = compound.getLong("value");
-            } else {
-                value.set(compound.getLong("value"));
-            }
+            value.value = compound.getLong("value");
         }
 
         @Override
@@ -367,7 +359,7 @@ public abstract class MValueType<T> {
 
         @Override
         public boolean set(@NotNull MValue<Double> mValue, Double value) {
-            mValue.value = Math.clamp(value, this.min, this.max);
+            mValue.value = Math.clamp(value, this.getMin(), this.getMax());
             return true;
         }
 
@@ -379,11 +371,7 @@ public abstract class MValueType<T> {
 
         @Override
         public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<Double> value) {
-            if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-                value.value = compound.getDouble("value");
-            } else {
-                value.set(compound.getDouble("value"));
-            }
+            value.value = compound.getDouble("value");
         }
 
         @Override
@@ -409,7 +397,16 @@ public abstract class MValueType<T> {
 
     @Environment(EnvType.CLIENT)
     public abstract static class MValueWidget<T> extends ClickableWidget {
-        protected static final ButtonTextures TEXTURES = new ButtonTextures(Identifier.ofVanilla("widget/button"), Identifier.ofVanilla("widget/button_disabled"), Identifier.ofVanilla("widget/button_highlighted"));
+        public @Environment(EnvType.CLIENT) static final ButtonTextures BUTTON_TEXTURES = new ButtonTextures(Mialib.id("widget/button"), Mialib.id("widget/button_disabled"), Mialib.id("widget/button_highlighted"));
+        public @Environment(EnvType.CLIENT) static final Identifier SLIDER_TEXTURE = Mialib.id("widget/slider");
+        public @Environment(EnvType.CLIENT) static final Identifier SLIDER_HIGHLIGHTED_TEXTURE = Mialib.id("widget/slider_highlighted");
+        public @Environment(EnvType.CLIENT) static final Identifier SLIDER_HANDLE_TEXTURE = Mialib.id("widget/slider_handle");
+        public @Environment(EnvType.CLIENT) static final Identifier SLIDER_HANDLE_HIGHLIGHTED_TEXTURE = Mialib.id("widget/slider_handle_highlighted");
+        public @Environment(EnvType.CLIENT) static final ButtonTextures CLIENT_BUTTON_TEXTURES = new ButtonTextures(Mialib.id("widget/client_button"), Mialib.id("widget/client_button_disabled"), Mialib.id("widget/client_button_highlighted"));
+        public @Environment(EnvType.CLIENT) static final Identifier CLIENT_SLIDER_TEXTURE = Mialib.id("widget/client_slider");
+        public @Environment(EnvType.CLIENT) static final Identifier CLIENT_SLIDER_HIGHLIGHTED_TEXTURE = Mialib.id("widget/client_slider_highlighted");
+        public @Environment(EnvType.CLIENT) static final Identifier CLIENT_SLIDER_HANDLE_TEXTURE = Mialib.id("widget/client_slider_handle");
+        public @Environment(EnvType.CLIENT) static final Identifier CLIENT_SLIDER_HANDLE_HIGHLIGHTED_TEXTURE = Mialib.id("widget/client_slider_handle_highlighted");
         public final MValue<T> value;
         public double scroll;
         public double velocity;
@@ -431,8 +428,9 @@ public abstract class MValueType<T> {
                     && mouseY >= this.getY() - scroll
                     && mouseX < this.getX() + this.width
                     && mouseY < this.getY() + this.height - scroll;
-            context.drawGuiTexture(RenderLayer::getGuiTextured, TEXTURES.get(true, this.hovered), this.getX(), this.getY(), 18, this.height, 0xFFFFFFFF);
-            context.drawGuiTexture(RenderLayer::getGuiTextured, TEXTURES.get(true, this.hovered), this.getX() + 18, this.getY(), this.width - 18, this.height, 0xFFFFFFFF);
+            var textures = this.value.clientSide ? CLIENT_BUTTON_TEXTURES : BUTTON_TEXTURES;
+            context.drawGuiTexture(RenderLayer::getGuiTextured, textures.get(true, this.hovered), this.getX(), this.getY(), 18, this.height, 0xFFFFFFFF);
+            context.drawGuiTexture(RenderLayer::getGuiTextured, textures.get(true, this.hovered), this.getX() + 18, this.getY(), this.width - 18, this.height, 0xFFFFFFFF);
             context.drawItem(this.value.getStack(), this.getX() + 1, this.getY() + 1);
             final Consumer3<Float, Float, Float> moveAndScale = (x, y, s) -> {
                 context.getMatrices().push();
@@ -470,10 +468,6 @@ public abstract class MValueType<T> {
 
     @Environment(EnvType.CLIENT)
     public abstract static class MValueSliderWidget<T> extends MValueWidget<T> {
-        private static final Identifier TEXTURE = Identifier.ofVanilla("widget/slider");
-        private static final Identifier HIGHLIGHTED_TEXTURE = Identifier.ofVanilla("widget/slider_highlighted");
-        private static final Identifier HANDLE_TEXTURE = Identifier.ofVanilla("widget/slider_handle");
-        private static final Identifier HANDLE_HIGHLIGHTED_TEXTURE = Identifier.ofVanilla("widget/slider_handle_highlighted");
         public double sliderValue;
         public boolean sliderFocused;
         public double mouseX;
@@ -486,11 +480,13 @@ public abstract class MValueType<T> {
         public abstract void resetSliderValue();
 
         private Identifier getTexture() {
-            return this.isFocused() && !this.sliderFocused ? HIGHLIGHTED_TEXTURE : TEXTURE;
+            if (this.value.clientSide) return this.isFocused() && !this.sliderFocused ? CLIENT_SLIDER_HIGHLIGHTED_TEXTURE : CLIENT_SLIDER_TEXTURE;
+            return this.isFocused() && !this.sliderFocused ? SLIDER_HIGHLIGHTED_TEXTURE : SLIDER_TEXTURE;
         }
 
         private Identifier getHandleTexture() {
-            return !this.hovered && !this.sliderFocused ? HANDLE_TEXTURE : HANDLE_HIGHLIGHTED_TEXTURE;
+            if (this.value.clientSide) return !this.hovered && !this.sliderFocused ? CLIENT_SLIDER_HANDLE_TEXTURE : CLIENT_SLIDER_HANDLE_HIGHLIGHTED_TEXTURE;
+            return !this.hovered && !this.sliderFocused ? SLIDER_HANDLE_TEXTURE : SLIDER_HANDLE_HIGHLIGHTED_TEXTURE;
         }
 
         @Override
@@ -521,7 +517,8 @@ public abstract class MValueType<T> {
                     && mouseY >= this.getY() - scroll
                     && mouseX < this.getX() + this.width
                     && mouseY < this.getY() + this.height - scroll;
-            context.drawGuiTexture(RenderLayer::getGuiTextured, TEXTURES.get(true, this.hovered), this.getX(), this.getY(), 18, this.height, 0xFFFFFFFF);
+            var textures = this.value.clientSide ? CLIENT_BUTTON_TEXTURES : BUTTON_TEXTURES;
+            context.drawGuiTexture(RenderLayer::getGuiTextured, textures.get(true, this.hovered), this.getX(), this.getY(), 18, this.height, 0xFFFFFFFF);
             context.drawGuiTexture(RenderLayer::getGuiTextured, this.getTexture(), this.getX() + 18, this.getY(), this.getWidth() - 18, this.getHeight(), ColorHelper.getWhite(this.alpha));
             context.drawGuiTexture(RenderLayer::getGuiTextured, this.getHandleTexture(), this.getX() + 18 + (int)(this.sliderValue * (double)(this.width - 8 - 18)), this.getY(), 8, this.getHeight(), ColorHelper.getWhite(this.alpha));
             context.drawItem(this.value.getStack(), this.getX() + 1, this.getY() + 1);
@@ -548,7 +545,7 @@ public abstract class MValueType<T> {
         @Override
         public void onClick(double mouseX, double mouseY) {
             if (mouseX < this.getX() + 18) {
-                this.value.type.reset(this.value);
+                this.value.send(this.value.type.defaultValue);
                 this.resetSliderValue();
             } else {
                 this.setValueFromMouse(mouseX);
@@ -558,7 +555,7 @@ public abstract class MValueType<T> {
         @Override
         public void onRelease(double mouseX, double mouseY) {
             super.playDownSound(MinecraftClient.getInstance().getSoundManager());
-            if (this.sliderFocused) this.value.set(this.getValue());
+            if (this.sliderFocused) this.value.send(this.getValue());
         }
 
         @Override

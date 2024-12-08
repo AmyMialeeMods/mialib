@@ -30,18 +30,14 @@ import java.util.List;
 
 @Mixin(ServerList.class)
 public abstract class ServerListMixin implements MServerList {
-    @Unique private final List<ServerInfo> mialibServers = new ArrayList<>();
-    @Unique private boolean isEditingMialibServer = false;
-    @Unique private ServerInfo editTarget;
+    private @Unique final List<ServerInfo> mialibServers = new ArrayList<>();
+    private @Unique boolean isEditingMialibServer;
+    private @Unique ServerInfo editTarget;
 
     @Shadow @Final private MinecraftClient client;
-    @Shadow public abstract void saveFile();
-    @Shadow @Final public List<ServerInfo> servers;
-
     @Shadow public abstract ServerInfo get(int index);
 
-    @Override
-    @Unique
+    @Override @Unique
     public List<ServerInfo> mialib$getMialibServers() {
         return this.mialibServers;
     }
@@ -53,9 +49,7 @@ public abstract class ServerListMixin implements MServerList {
             var serverFile = NbtIo.read(MDir.getMialibPath("mialibservers.dat"));
             if (serverFile == null) return;
             var servers = serverFile.getList("servers", NbtElement.COMPOUND_TYPE);
-            for (var i = 0; i < servers.size(); i++) {
-                this.mialibServers.add(ServerInfo.fromNbt(servers.getCompound(i)));
-            }
+            for (var i = 0; i < servers.size(); i++) this.mialibServers.add(ServerInfo.fromNbt(servers.getCompound(i)));
         } catch (Exception e) {
             Mialib.LOGGER.error("Couldn't load mialib server list", e);
         }
@@ -84,89 +78,44 @@ public abstract class ServerListMixin implements MServerList {
         }
     }
 
-    @Inject(method = "get(I)Lnet/minecraft/client/network/ServerInfo;", at = @At("HEAD"), cancellable = true)
-    public void mialib$getMialibServer(int index, CallbackInfoReturnable<ServerInfo> cir) {
-        if (index >= this.servers.size()) cir.setReturnValue(this.mialibServers.get(index - this.servers.size()));
-    }
-
-
-
     @Inject(method = "get(Ljava/lang/String;)Lnet/minecraft/client/network/ServerInfo;", at = @At("RETURN"), cancellable = true)
-    private void mialib$getMialibServerByAddress(String address, @NotNull CallbackInfoReturnable<ServerInfo> cir) {
-        if (cir.getReturnValue() == null) {
-            for (var serverInfo : this.mialibServers) {
-                if (serverInfo.address.equals(address)) {
-                    cir.setReturnValue(serverInfo);
-                }
-            }
+    private void mialib$serverbyaddress(String address, @NotNull CallbackInfoReturnable<ServerInfo> cir) {
+        if (cir.getReturnValue() != null) return;
+        for (var serverInfo : this.mialibServers) {
+            if (!serverInfo.address.equals(address)) continue;
+            cir.setReturnValue(serverInfo);
         }
     }
 
     @WrapOperation(method = "remove", at = @At(value = "INVOKE", target = "Ljava/util/List;remove(Ljava/lang/Object;)Z", ordinal = 1))
-    private boolean mialib$removeMialibServer(List<ServerInfo> instance, Object serverInfo, @NotNull Operation<Boolean> original) {
-        if (!original.call(instance, serverInfo)) return this.mialibServers.remove(serverInfo);
+    private boolean mialib$remove(List<ServerInfo> instance, Object serverInfo, @NotNull Operation<Boolean> original) {
+        if (!original.call(instance, serverInfo) && serverInfo instanceof ServerInfo) return this.mialibServers.remove(serverInfo);
         return true;
     }
 
-    @Override
-    @Unique
-    public void mialib$addMialibServer(ServerInfo serverInfo) {
-        this.mialibServers.add(serverInfo);
-    }
-
-    @Inject(method = "size", at = @At("RETURN"), cancellable = true)
-    public void mialib$serverCount(@NotNull CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(cir.getReturnValue() + this.mialibServers.size());
-    }
-
-    @Inject(method = "swapEntries", at = @At("HEAD"), cancellable = true)
-    public void mialib$swapMialibServerEntries(int index1, int index2, CallbackInfo ci) {
-        var isEitherSeparator = index1 == this.servers.size() || index2 == this.servers.size();
-        if (isEitherSeparator) ci.cancel();
-        var isMialib1 = index1 > this.servers.size();
-        var isMialib2 = index2 > this.servers.size();
-        if (isMialib1 && isMialib2) {
-            var serverInfo = this.mialibServers.get(index1 - 1 - this.servers.size());
-            this.mialibServers.set(index1 - 1 - this.servers.size(), this.mialibServers.get(index2 - 1 - this.servers.size()));
-            this.mialibServers.set(index2 - 1 - this.servers.size(), serverInfo);
-            this.saveFile();
-            ci.cancel();
-        } else if (isMialib1 != isMialib2) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = "set", at = @At("HEAD"), cancellable = true)
-    public void mialib$setMialibServer(int index, ServerInfo serverInfo, CallbackInfo ci) {
-        if (index >= this.servers.size()) {
-            this.mialibServers.set(index - this.servers.size(), serverInfo);
-            ci.cancel();
-        }
-    }
-
     @WrapOperation(method = "method_44090", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/ServerList;replace(Lnet/minecraft/client/network/ServerInfo;Ljava/util/List;)Z", ordinal = 1))
-    private static boolean mialib$updateMialibServers(ServerInfo serverInfo, List<ServerInfo> serverInfos, @NotNull Operation<Boolean> original, @Local(ordinal = 0) ServerList serverList) {
+    private static boolean mialib$update(ServerInfo serverInfo, List<ServerInfo> serverInfos, @NotNull Operation<Boolean> original, @Local(ordinal = 0) ServerList serverList) {
         if (!original.call(serverInfo, serverInfos)) return original.call(serverInfo, serverList.mialib$getMialibServers());
         return true;
     }
 
-    @Override
-    public boolean mialib$isEditingMialibServer() {
+    public @Override void mialib$addMialibServer(ServerInfo serverInfo) {
+        this.mialibServers.add(serverInfo);
+    }
+
+    public @Override boolean mialib$isEditingMialibServer() {
         return this.isEditingMialibServer;
     }
 
-    @Override
-    public void mialib$setEditingMialibServer(boolean editing) {
+    public @Override void mialib$setEditingMialibServer(boolean editing) {
         this.isEditingMialibServer = editing;
     }
 
-    @Override
-    public void mialib$setEditTarget(ServerInfo serverInfo) {
+    public @Override void mialib$setEditTarget(ServerInfo serverInfo) {
         this.editTarget = serverInfo;
     }
 
-    @Override
-    public ServerInfo mialib$getEditTarget() {
+    public @Override ServerInfo mialib$getEditTarget() {
         return this.editTarget;
     }
 }

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class MValueCategory {
+    public static final List<MValueCategory> CATEGORIES = new ArrayList<>();
     private final List<MValue<?>> values = new ArrayList<>();
     public final Identifier id;
     public final Supplier<ItemStack> stackSupplier;
@@ -40,6 +41,7 @@ public class MValueCategory {
         this.backgroundTexture = backgroundTexture;
         this.width = width;
         this.height = height;
+        CATEGORIES.add(this);
     }
 
     public void addValue(MValue<?> value) {

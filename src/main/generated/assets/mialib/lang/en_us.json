@@ -24,6 +24,7 @@
   "flat_world_preset.mialib.dev_ready": "Dev Ready",
   "mialib.mialib_server.false": "Save to Mialib Server File: §cFalse",
   "mialib.mialib_server.true": "Save to Mialib Server File: §aTrue",
+  "mialib.mvalue.clientside": "[Client Side]",
   "mialib.screen.mvalues": "Mialib Value Editor",
   "mialib.servers": "Mialib Servers",
   "mvalue.mialib.disable_end_portals": "Disable End Portals",

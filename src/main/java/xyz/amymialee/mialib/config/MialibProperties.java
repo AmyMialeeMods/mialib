@@ -48,8 +48,7 @@ public class MialibProperties {
             properties.add(this);
         }
 
-        @Override
-        protected void load(String value) {
+        protected @Override void load(String value) {
             try {
                 this.internalOnlySet(Boolean.parseBoolean(value));
             } catch (Exception e) {

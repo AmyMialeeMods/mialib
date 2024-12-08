@@ -1,9 +1,13 @@
 package xyz.amymialee.mialib.mvalues;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.util.runnables.CachedFunction;
@@ -74,7 +78,11 @@ public class MValueBuilder<T> {
 
     public MValue<T> build() {
         var value = new MValue<>(this.id, this.type, this.stackFunction, this.permissionLevel, this.clientSide, this.canChange);
-        MValueManager.register(this.category, value);
+        if (this.clientSide) {
+            MVClientManager.register(this.category, value);
+        } else {
+            MVServerManager.register(this.category, value);
+        }
         return value;
     }
 }

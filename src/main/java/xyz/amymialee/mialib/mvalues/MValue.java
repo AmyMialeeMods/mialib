@@ -3,6 +3,7 @@ package xyz.amymialee.mialib.mvalues;
 import com.google.gson.JsonElement;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -62,7 +63,9 @@ public final class MValue<T> {
     }
 
     public @NotNull Text getDescription() {
-        return Text.translatable(this.getDescriptionTranslationKey());
+        var description = Text.translatable(this.getDescriptionTranslationKey());
+        if (this.clientSide) description = description.append(Text.literal("\n").append(Text.translatable("%s.mvalue.clientside".formatted(Mialib.MOD_ID)).withColor(0xBD6898)));
+        return description;
     }
 
     public ItemStack getStack() {
@@ -74,12 +77,18 @@ public final class MValue<T> {
     }
 
     public void set(T value) {
-        if (this.type.set(this, value) && MValueManager.INSTANCE.isClient()) MValueManager.INSTANCE.onChangeClient(this);
+        this.type.set(this, value);
+        if (this.clientSide) MVClientManager.INSTANCE.onChange(this);
     }
 
-    public void serverUpdate(NbtCompound compound) {
-        this.readNbt(compound);
-        if (this.type.set(this, this.get())) MValueManager.INSTANCE.onChangeServer(this);
+    @Environment(EnvType.CLIENT)
+    public void send(T value) {
+        this.type.set(this, value);
+        if (!this.clientSide) {
+            ClientPlayNetworking.send(new MValuePayload(this.id, this.type.writeNbt(new NbtCompound(), this)));
+        } else {
+            MVClientManager.INSTANCE.onChange(this);
+        }
     }
 
     public NbtCompound writeNbt(NbtCompound compound) {

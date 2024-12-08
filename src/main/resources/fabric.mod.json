@@ -28,16 +28,10 @@
     "main": [
       "xyz.amymialee.mialib.Mialib"
     ],
-    "server": [
-      "xyz.amymialee.mialib.MialibServer"
-    ],
     "fabric-datagen": [
       "xyz.amymialee.mialib.MialibDataGen"
     ],
     "cardinal-components-entity": [
-      "xyz.amymialee.mialib.Mialib"
-    ],
-    "cardinal-components-scoreboard": [
       "xyz.amymialee.mialib.Mialib"
     ]
   },

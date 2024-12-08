@@ -51,16 +51,11 @@ import java.util.function.Consumer;
  * Any overridden methods will run their respective provider.
  */
 public @SuppressWarnings("unused") abstract class MDataGen implements DataGeneratorEntrypoint {
-	private static boolean initialized = false;
 	private String name;
 
 	@Override
 	public void onInitializeDataGenerator(@NotNull FabricDataGenerator generator) {
         this.name = generator.getModId();
-		if (!initialized) {
-			MRegistry.tryBuildAll("%s Datagen".formatted(generator.getModId()));
-			initialized = true;
-		}
 		var pack = generator.createPack();
 		var set = new HashSet<String>();
 		for (var method : this.getClass().getDeclaredMethods()) set.add(method.getName());

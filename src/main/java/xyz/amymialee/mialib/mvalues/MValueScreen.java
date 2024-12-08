@@ -35,7 +35,7 @@ public class MValueScreen extends Screen {
         if (this.client == null || this.client.player == null) return;
         var centreX = this.width / 2;
         var centreY = this.height / 2;
-        var categories = MValueManager.CATEGORIES;
+        var categories = MValueCategory.CATEGORIES;
         for (var i = 0; i < categories.size(); i++) {
             var category = categories.get(i);
             if (category.getValues(this.client.player).isEmpty()) continue;
@@ -73,7 +73,7 @@ public class MValueScreen extends Screen {
     public void render(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
         if (this.client == null) return;
         this.renderBackground(context, mouseX, mouseY, delta);
-        this.categoryScroll = Math.clamp(this.categoryScroll + this.categoryVelocity, 0, Math.max(0, (MValueManager.CATEGORIES.size() / 2f + 1) * 25 - 7.75 * 25));
+        this.categoryScroll = Math.clamp(this.categoryScroll + this.categoryVelocity, 0, Math.max(0, (MValueCategory.CATEGORIES.size() / 2f + 1) * 25 - 7.75 * 25));
         this.categoryVelocity *= .96f;
         this.valueScroll = Math.clamp(this.valueScroll + this.valueVelocity, 0, Math.max(0, (this.selectedCategory.getValues(this.client.player).size() / 2f + 1) * 21 - 9 * 21));
         this.valueVelocity *= .96f;

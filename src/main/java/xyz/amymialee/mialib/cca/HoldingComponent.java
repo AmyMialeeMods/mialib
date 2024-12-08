@@ -34,8 +34,16 @@ public class HoldingComponent implements AutoSyncedComponent, CommonTickingCompo
 		return this.attacking;
 	}
 
+	public boolean isUsing() {
+		return this.using;
+	}
+
 	public int getAttackTicks() {
 		return this.tickAttacking;
+	}
+
+	public int getUsageTicks() {
+		return this.tickUsing;
 	}
 
 	public void setAttacking(boolean attacking) {
@@ -43,21 +51,12 @@ public class HoldingComponent implements AutoSyncedComponent, CommonTickingCompo
 		this.sync();
 	}
 
-	public boolean isUsing() {
-		return this.using;
-	}
-
-	public int getUsageTicks() {
-		return this.tickUsing;
-	}
-
 	public void setUsing(boolean using) {
 		this.using = using;
 		this.sync();
 	}
 
-	@Override
-	public void tick() {
+	public @Override void tick() {
 		if (this.attacking) {
 			this.tickAttacking++;
 		} else {
@@ -70,24 +69,21 @@ public class HoldingComponent implements AutoSyncedComponent, CommonTickingCompo
 		}
 	}
 
-	@Override
-	public void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+	public @Override void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
 		this.attacking = tag.getBoolean("using");
 		this.using = tag.getBoolean("using");
 		this.tickAttacking = tag.getInt("tickAttacking");
 		this.tickUsing = tag.getInt("tickUsing");
 	}
 
-	@Override
-	public void writeToNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+	public @Override void writeToNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
 		tag.putBoolean("using", this.attacking);
 		tag.putBoolean("using", this.using);
 		tag.putInt("tickAttacking", this.tickAttacking);
 		tag.putInt("tickUsing", this.tickUsing);
 	}
 
-	@Override
-	public boolean isRequiredOnClient() {
+	public @Override boolean isRequiredOnClient() {
 		return false;
 	}
 }

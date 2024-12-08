@@ -35,7 +35,7 @@ public class AddServerScreenMixin extends Screen {
     }
 
     @Inject(method = "init", at = @At("TAIL"))
-    private void mialib$mialibServers(CallbackInfo ci, @Share("button") @NotNull LocalRef<ButtonWidget> ref) {
+    private void mialib$serverButton(CallbackInfo ci, @Share("button") @NotNull LocalRef<ButtonWidget> ref) {
         if (this.parent instanceof MultiplayerScreen multiplayerScreen) {
             var serverList = multiplayerScreen.getServerList();
             serverList.mialib$setEditingMialibServer(serverList.mialib$getMialibServers().contains(multiplayerScreen.getServerList().mialib$getEditTarget()));
