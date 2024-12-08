@@ -36,6 +36,9 @@
     ],
     "cardinal-components-entity": [
       "xyz.amymialee.mialib.Mialib"
+    ],
+    "cardinal-components-scoreboard": [
+      "xyz.amymialee.mialib.Mialib"
     ]
   },
   "mixins": [
@@ -50,7 +53,8 @@
     "cardinal-components": [
       "mialib:identifier_cooldown",
       "mialib:holding",
-      "mialib:extra_flags"
+      "mialib:extra_flags",
+      "mialib:mvalues"
     ],
     "loom:injected_interfaces": {
       "net/minecraft/class_332" : ["xyz/amymialee/mialib/util/interfaces/MDrawContext"],

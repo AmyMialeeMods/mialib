@@ -39,7 +39,7 @@ public record MValuePayload(Identifier id, NbtCompound compound) implements Cust
 		public void receive(@NotNull MValuePayload payload, ServerPlayNetworking.@NotNull Context context) {
 			var value = MValueManager.get(payload.id);
             if (value == null || !context.player().hasPermissionLevel(value.permissionLevel) || !value.canChange.test(context.player())) return;
-            value.readNbt(payload.compound);
+            value.serverUpdate(payload.compound);
 			Text text = Text.translatable("chat.type.admin", context.player().getDisplayName(), Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString())).formatted(Formatting.GRAY, Formatting.ITALIC);
 			if (context.server().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK)) {
 				for (var serverPlayerEntity : context.server().getPlayerManager().getPlayerList()) {

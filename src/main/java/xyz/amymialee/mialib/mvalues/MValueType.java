@@ -83,11 +83,7 @@ public abstract class MValueType<T> {
 
         @Override
         public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<Boolean> value) {
-            if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-                value.value = compound.getBoolean("value");
-            } else {
-                value.set(compound.getBoolean("value"));
-            }
+            value.value = compound.getBoolean("value");
         }
 
         @Override

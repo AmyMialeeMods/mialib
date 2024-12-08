@@ -74,7 +74,12 @@ public final class MValue<T> {
     }
 
     public void set(T value) {
-        if (this.type.set(this, value)) MValueManager.INSTANCE.onChange(this);
+        if (this.type.set(this, value) && MValueManager.INSTANCE.isClient()) MValueManager.INSTANCE.onChangeClient(this);
+    }
+
+    public void serverUpdate(NbtCompound compound) {
+        this.readNbt(compound);
+        if (this.type.set(this, this.get())) MValueManager.INSTANCE.onChangeServer(this);
     }
 
     public NbtCompound writeNbt(NbtCompound compound) {

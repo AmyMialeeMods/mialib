@@ -15,6 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
 import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
+import org.ladysnake.cca.api.v3.scoreboard.ScoreboardComponentFactoryRegistry;
+import org.ladysnake.cca.api.v3.scoreboard.ScoreboardComponentInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.amymialee.mialib.cca.ExtraFlagsComponent;
@@ -23,6 +25,7 @@ import xyz.amymialee.mialib.modules.CommandModule;
 import xyz.amymialee.mialib.modules.EventModule;
 import xyz.amymialee.mialib.mvalues.MValue;
 import xyz.amymialee.mialib.mvalues.MValueCategory;
+import xyz.amymialee.mialib.mvalues.MValueManager;
 import xyz.amymialee.mialib.mvalues.MValuePayload;
 import xyz.amymialee.mialib.networking.AttackingPayload;
 import xyz.amymialee.mialib.networking.FloatyPayload;
@@ -30,7 +33,7 @@ import xyz.amymialee.mialib.networking.UsingPayload;
 
 import java.util.Random;
 
-public @SuppressWarnings("unused") class Mialib implements ModInitializer, EntityComponentInitializer {
+public @SuppressWarnings("unused") class Mialib implements ModInitializer, EntityComponentInitializer, ScoreboardComponentInitializer {
     public static final String MOD_ID = "mialib";
     public static final String MOD_NAME = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow().getMetadata().getName();
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
@@ -44,7 +47,7 @@ public @SuppressWarnings("unused") class Mialib implements ModInitializer, Entit
     public static final MValue<Boolean> UNCAP_MVALUES = MValue.of(id("uncap_mvalues"), MValue.BOOLEAN_FALSE).build();
 
     static {
-        for (var i = 0; i < 32; i++) {
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) for (var i = 0; i < 32; i++) {
             var cat = new MValueCategory(Mialib.id(Mialib.MOD_ID + "_" + i), Registries.ITEM.getRandom(net.minecraft.util.math.random.Random.create()).get().value(), Identifier.ofVanilla("textures/block/purple_concrete.png"), 16, 16);
             MValue.of(id("a" + "_" + i), MValue.INTEGER).item(Registries.ITEM.getRandom(net.minecraft.util.math.random.Random.create()).get().value()).category(cat).build();
             MValue.of(id("b" + "_" + i), MValue.DOUBLE).item(Registries.ITEM.getRandom(net.minecraft.util.math.random.Random.create()).get().value()).build();
@@ -67,6 +70,11 @@ public @SuppressWarnings("unused") class Mialib implements ModInitializer, Entit
     public @Override void registerEntityComponentFactories(@NotNull EntityComponentFactoryRegistry registry) {
         registry.beginRegistration(PlayerEntity.class, HoldingComponent.KEY).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(HoldingComponent::new);
         registry.beginRegistration(Entity.class, ExtraFlagsComponent.KEY).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(ExtraFlagsComponent::new);
+    }
+
+    @Override
+    public void registerScoreboardComponentFactories(ScoreboardComponentFactoryRegistry registry) {
+        registry.registerScoreboardComponent(MValueManager.KEY, (scoreboard, server) -> new MValueManager(server));
     }
 
     public static @NotNull Identifier id(String path) {
