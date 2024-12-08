@@ -1,13 +1,9 @@
 package xyz.amymialee.mialib.mvalues;
 
-import com.mojang.brigadier.arguments.IntegerArgumentType;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.util.runnables.CachedFunction;
@@ -19,6 +15,7 @@ import java.util.function.Supplier;
 public class MValueBuilder<T> {
     private final Identifier id;
     private final MValueType<T> type;
+    private String translationKey;
     private MValueCategory category = MValue.DEFAULT_CATEGORY;
     private Function<MValue<T>, ItemStack> stackFunction = new CachedFunction<>(Items.DIAMOND.getDefaultStack());
     private int permissionLevel = 4;
@@ -28,6 +25,12 @@ public class MValueBuilder<T> {
     protected MValueBuilder(Identifier id, MValueType<T> type) {
         this.id = id;
         this.type = type;
+        this.translationKey = "mvalue.%s.%s".formatted(id.getNamespace(), id.getPath());
+    }
+
+    public MValueBuilder<T> translationKey(String translationKey) {
+        this.translationKey = translationKey;
+        return this;
     }
 
     public MValueBuilder<T> category(MValueCategory category) {
@@ -77,7 +80,7 @@ public class MValueBuilder<T> {
     }
 
     public MValue<T> build() {
-        var value = new MValue<>(this.id, this.type, this.stackFunction, this.permissionLevel, this.clientSide, this.canChange);
+        var value = new MValue<>(this.id, this.translationKey, this.type, this.stackFunction, this.permissionLevel, this.clientSide, this.canChange);
         if (this.clientSide) {
             MVClientManager.register(this.category, value);
         } else {

@@ -1,32 +1,20 @@
 accessWidener v2 named
 
-accessible field net/minecraft/world/PersistentStateManager directory Ljava/nio/file/Path;
-
-
-accessible field net/minecraft/world/GameRules rules Ljava/util/Map;
-accessible method net/minecraft/world/GameRules$Rule deserialize (Ljava/lang/String;)V
-accessible class net/minecraft/client/option/SimpleOption$Callbacks
-accessible field net/minecraft/client/gui/widget/SliderWidget sliderFocused Z
-accessible method net/minecraft/client/gui/widget/CyclingButtonWidget <init> (IIIILnet/minecraft/text/Text;Lnet/minecraft/text/Text;ILjava/lang/Object;Lnet/minecraft/client/gui/widget/CyclingButtonWidget$Values;Ljava/util/function/Function;Ljava/util/function/Function;Lnet/minecraft/client/gui/widget/CyclingButtonWidget$UpdateCallback;Lnet/minecraft/client/option/SimpleOption$TooltipFactory;Z)V
-accessible class net/minecraft/world/gen/FlatLevelGeneratorPresets$Registrar
-accessible method net/minecraft/world/gen/FlatLevelGeneratorPresets of (Ljava/lang/String;)Lnet/minecraft/registry/RegistryKey;
-accessible field net/minecraft/client/sound/Source pointer I
 accessible class net/minecraft/client/option/GameOptions$Visitor
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerScreen serverListWidget Lnet/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget;
 accessible method net/minecraft/client/option/GameOptions isTrue (Ljava/lang/String;)Z
 accessible method net/minecraft/client/option/GameOptions isFalse (Ljava/lang/String;)Z
-accessible method net/minecraft/client/gui/screen/Screen clearAndInit ()V
-accessible method net/minecraft/client/gui/widget/EntryListWidget addEntry (Lnet/minecraft/client/gui/widget/EntryListWidget$Entry;)I
-accessible field net/minecraft/client/option/ServerList servers Ljava/util/List;
-accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget screen Lnet/minecraft/client/gui/screen/multiplayer/MultiplayerScreen;
 accessible field net/minecraft/client/gui/screen/multiplayer/AddServerScreen server Lnet/minecraft/client/network/ServerInfo;
 accessible field net/minecraft/client/option/ServerList hiddenServers Ljava/util/List;
-accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget MOVE_UP_HIGHLIGHTED_TEXTURE Lnet/minecraft/util/Identifier;
-accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget MOVE_UP_TEXTURE Lnet/minecraft/util/Identifier;
-accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget MOVE_DOWN_HIGHLIGHTED_TEXTURE Lnet/minecraft/util/Identifier;
-accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget MOVE_DOWN_TEXTURE Lnet/minecraft/util/Identifier;
-accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerScreen serverListWidget Lnet/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget;
-accessible method net/minecraft/client/gui/widget/EntryListWidget getRowTop (I)I
+accessible method net/minecraft/client/gui/widget/EntryListWidget addEntry (Lnet/minecraft/client/gui/widget/EntryListWidget$Entry;)I
+accessible method net/minecraft/client/gui/screen/Screen clearAndInit ()V
 accessible field net/minecraft/client/gui/screen/Screen drawables Ljava/util/List;
+
+
+
+
+
+
 
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget SERVER_PINGER_THREAD_POOL Ljava/util/concurrent/ThreadPoolExecutor;
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget CANNOT_RESOLVE_TEXT Lnet/minecraft/text/Text;
@@ -38,6 +26,10 @@ accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerLi
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget PINGING_5_TEXTURE Lnet/minecraft/util/Identifier;
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget JOIN_HIGHLIGHTED_TEXTURE Lnet/minecraft/util/Identifier;
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget JOIN_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget MOVE_UP_HIGHLIGHTED_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget MOVE_UP_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget MOVE_DOWN_HIGHLIGHTED_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget MOVE_DOWN_TEXTURE Lnet/minecraft/util/Identifier;
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget PING_1_TEXTURE Lnet/minecraft/util/Identifier;
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget PING_2_TEXTURE Lnet/minecraft/util/Identifier;
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget PING_3_TEXTURE Lnet/minecraft/util/Identifier;
@@ -48,8 +40,8 @@ accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerLi
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget INCOMPATIBLE_TEXT Lnet/minecraft/text/Text;
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget UNREACHABLE_TEXTURE Lnet/minecraft/util/Identifier;
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget NO_CONNECTION_TEXT Lnet/minecraft/text/Text;
-accessible method net/minecraft/client/gui/widget/EntryListWidget ensureVisible (Lnet/minecraft/client/gui/widget/EntryListWidget$Entry;)V
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget ONLINE_TEXT Lnet/minecraft/text/Text;
+accessible method net/minecraft/client/gui/widget/EntryListWidget ensureVisible (Lnet/minecraft/client/gui/widget/EntryListWidget$Entry;)V
 
 
 

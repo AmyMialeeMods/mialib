@@ -69,6 +69,7 @@ public class MValueCategory {
         public boolean enabled;
         public double scroll;
         public double velocity;
+        private boolean scissorContains;
 
         public MValueCategoryWidget(int x, int y, @NotNull MValueCategory value, PressAction consumer) {
             super(x, y, 24, 24, Text.translatable(value.getTranslationKey()), consumer, DEFAULT_NARRATION_SUPPLIER);
@@ -80,7 +81,8 @@ public class MValueCategory {
         @Override
         protected void renderWidget(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
             var scroll = this.scroll + this.velocity * delta;
-            this.hovered = context.scissorContains(mouseX, mouseY)
+            this.scissorContains = context.scissorContains(mouseX, mouseY);
+            this.hovered = this.scissorContains
                     && mouseX >= this.getX()
                     && mouseY >= this.getY() - scroll
                     && mouseX < this.getX() + this.width
@@ -91,7 +93,7 @@ public class MValueCategory {
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            return super.mouseClicked(mouseX, mouseY + this.scroll, button);
+            return this.scissorContains && super.mouseClicked(mouseX, mouseY + this.scroll, button);
         }
 
         @Override

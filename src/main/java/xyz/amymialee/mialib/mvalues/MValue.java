@@ -18,6 +18,7 @@ import java.util.function.Predicate;
 
 public final class MValue<T> {
     public static final MValueCategory DEFAULT_CATEGORY = new MValueCategory(Mialib.id(Mialib.MOD_ID), Items.DIAMOND, Identifier.ofVanilla("textures/block/purple_concrete.png"), 16, 16);
+    public static final MValueCategory MINECRAFT_CATEGORY = new MValueCategory(Identifier.ofVanilla("minecraft"), Items.GRASS_BLOCK, Identifier.ofVanilla("textures/block/stone.png"), 16, 16);
     public static final MValueType.MValueBoolean BOOLEAN_TRUE = new MValueType.MValueBoolean(true);
     public static final MValueType.MValueBoolean BOOLEAN_FALSE = new MValueType.MValueBoolean(false);
     public static final MValueType.MValueInteger INTEGER = new MValueType.MValueInteger(100, 1, 100);
@@ -25,6 +26,7 @@ public final class MValue<T> {
     public static final MValueType.MValueLong LONG = new MValueType.MValueLong(100, 1, 100);
     public static final MValueType.MValueDouble DOUBLE = new MValueType.MValueDouble(1d, 0d, 1d);
     public final Identifier id;
+    public final String translationKey;
     public final MValueType<T> type;
     public final Function<MValue<T>, ItemStack> stackFunction;
     public final int permissionLevel;
@@ -32,8 +34,9 @@ public final class MValue<T> {
     public final Predicate<PlayerEntity> canChange;
     T value;
 
-    public MValue(Identifier id, @NotNull MValueType<T> type, Function<MValue<T>, ItemStack> stackFunction, int permissionLevel, boolean clientSide, Predicate<PlayerEntity> canChange) {
+    public MValue(Identifier id, String translationKey, @NotNull MValueType<T> type, Function<MValue<T>, ItemStack> stackFunction, int permissionLevel, boolean clientSide, Predicate<PlayerEntity> canChange) {
         this.id = id;
+        this.translationKey = translationKey;
         this.type = type;
         this.stackFunction = stackFunction;
         this.permissionLevel = permissionLevel;
@@ -47,11 +50,11 @@ public final class MValue<T> {
     }
 
     public @NotNull String getTranslationKey() {
-        return "mvalue.%s.%s".formatted(this.id.getNamespace(), this.id.getPath());
+        return this.translationKey;
     }
 
     public @NotNull String getDescriptionTranslationKey() {
-        return "mvalue.%s.%s.desc".formatted(this.id.getNamespace(), this.id.getPath());
+        return this.translationKey + ".desc";
     }
 
     public String getValueAsString() {

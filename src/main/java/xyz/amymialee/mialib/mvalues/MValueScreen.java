@@ -8,11 +8,15 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
 import xyz.amymialee.mialib.Mialib;
+
+import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class MValueScreen extends Screen {
@@ -48,6 +52,10 @@ public class MValueScreen extends Screen {
                 this.clearAndInit();
             }));
         }
+        if (categories.size() > 14) {
+            this.addDrawableChild(new ScrollButtonWidget(centreX - WIDTH / 2 + 23 + 11, centreY + HEIGHT / 2 - 5, ScrollButtonWidget.Type.NEXT, (a) -> this.categoryVelocity += a));
+            this.addDrawableChild(new ScrollButtonWidget(centreX - WIDTH / 2 + 23, centreY + HEIGHT / 2 - 5, ScrollButtonWidget.Type.PREVIOUS, (a) -> this.categoryVelocity -= a));
+        }
         var values = this.selectedCategory.getValues(this.client.player);
         for (var i = 0; i < values.size(); i++) {
             var value = values.get(i);
@@ -55,7 +63,11 @@ public class MValueScreen extends Screen {
             var y = centreY + 7 + 3 - HEIGHT / 2 + (i / 2) * 21;
             this.addDrawableChild(((Element & Drawable & Selectable) value.getWidget(x, y)));
         }
-        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> this.close()).dimensions(this.width / 2 - 100, this.height / 2 + HEIGHT / 2 + 60, 200, 80).build());
+        if (values.size() > 16) {
+            this.addDrawableChild(new ScrollButtonWidget((int) (centreX - (11f / 2f) - WIDTH / 2f + 209.5f + 11), centreY + HEIGHT / 2 - 5, ScrollButtonWidget.Type.NEXT, (a) -> this.valueVelocity += a));
+            this.addDrawableChild(new ScrollButtonWidget((int) (centreX - (11f / 2f) - WIDTH / 2f + 209.5f), centreY + HEIGHT / 2 - 5, ScrollButtonWidget.Type.PREVIOUS, (a) -> this.valueVelocity -= a));
+        }
+        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> this.close()).dimensions(this.width / 2 - 100, centreY + HEIGHT / 2 + 10, 200, 20).build());
     }
 
     @Override
@@ -101,23 +113,26 @@ public class MValueScreen extends Screen {
             }
             context.disableScissor();
         }
-        context.enableScissor(left + 7, this.height / 2 - 93, right - 7, this.height / 2 + 93);
         for (var drawable : this.drawables) {
             context.getMatrices().push();
             if (drawable instanceof MValueCategory.MValueCategoryWidget widget) {
+                context.enableScissor(left + 7, this.height / 2 - 93, right - 7, this.height / 2 + 93);
                 widget.scroll = this.categoryScroll;
                 widget.velocity = this.categoryVelocity;
                 context.getMatrices().translate(0, -(this.categoryScroll + this.categoryVelocity * delta), 0);
-            }
-            if (drawable instanceof MValueType.MValueWidget<?> widget) {
+            } else if (drawable instanceof MValueType.MValueWidget<?> widget) {
+                context.enableScissor(left + 7, this.height / 2 - 93, right - 7, this.height / 2 + 93);
                 widget.scroll = this.valueScroll;
                 widget.velocity = this.valueVelocity;
                 context.getMatrices().translate(0, -(this.valueScroll + this.valueVelocity * delta), 0);
+            } else {
+                context.enableScissor(0, 0, this.width, this.height);
+                context.getMatrices().translate(0, 0, 190);
             }
             drawable.render(context, mouseX, mouseY, delta);
+            context.disableScissor();
             context.getMatrices().pop();
         }
-        context.disableScissor();
         context.getMatrices().push();
         context.getMatrices().translate(0, 0, 180);
         context.mialib$drawTexture(WINDOW_TEXTURE, left, this.height / 2f - 100, 370, 200, 370, 200);
@@ -127,96 +142,51 @@ public class MValueScreen extends Screen {
         context.getMatrices().pop();
     }
 
-//
-//    public static class MValueIntegerButton extends MValueSliderButton<Integer, MValue.MValueInteger> {
-//        protected MValueIntegerButton(int x, int y, @NotNull MValue.MValueInteger value) {
-//            super(x, y, value);
-//        }
-//
-//        @Override
-//        public void refreshFromValue() {
-//            this.sliderValue = (double) (this.value.getValue() - this.value.getMin()) / (this.value.getMax() - this.value.getMin());
-//            this.refreshMessage();
-//        }
-//
-//        @Override
-//        protected void setValue(double value) {
-//            var clamped = MathHelper.clamp(value, 0.0, 1.0);
-//            if (clamped != this.sliderValue) {
-//                this.value.sendValue((int) Math.round(clamped * (this.value.getMax() - this.value.getMin()) + this.value.getMin()));
-//            }
-//        }
-//    }
-//
-//    public static class MValueLongButton extends MValueSliderButton<Long, MValue.MValueLong> {
-//        protected MValueLongButton(int x, int y, @NotNull MValue.MValueLong value) {
-//            super(x, y, value);
-//        }
-//
-//        @Override
-//        public void refreshFromValue() {
-//            this.sliderValue = (double) (this.value.getValue() - this.value.getMin()) / (this.value.getMax() - this.value.getMin());
-//            this.refreshMessage();
-//        }
-//
-//        @Override
-//        protected void setValue(double value) {
-//            var clamped = MathHelper.clamp(value, 0.0, 1.0);
-//            if (clamped != this.sliderValue) {
-//                this.value.sendValue(Math.round(clamped * (this.value.getMax() - this.value.getMin()) + this.value.getMin()));
-//            }
-//        }
-//    }
-//
-//    public static class MValueFloatButton extends MValueSliderButton<Float, MValue.MValueFloat> {
-//        protected MValueFloatButton(int x, int y, @NotNull MValue.MValueFloat value) {
-//            super(x, y, value);
-//        }
-//
-//        @Override
-//        public void refreshFromValue() {
-//            this.sliderValue = (this.value.getValue() - this.value.getMin()) / (this.value.getMax() - this.value.getMin());
-//            this.refreshMessage();
-//        }
-//
-//        @Override
-//        public void refreshMessage() {
-//            this.setMessage(Text.translatable(this.value.getTranslationKey()).append(Text.literal(": %.2f".formatted(this.value.getValue()))));
-//            this.setTooltip(Tooltip.of(Text.translatable(this.value.getDescriptionTranslationKey())));
-//        }
-//
-//        @Override
-//        protected void setValue(double value) {
-//            var clamped = MathHelper.clamp(value, 0.0, 1.0);
-//            if (clamped != this.sliderValue) {
-//                this.value.sendValue((float) (clamped * (this.value.getMax() - this.value.getMin()) + this.value.getMin()));
-//            }
-//        }
-//    }
-//
-//    public static class MValueDoubleButton extends MValueSliderButton<Double, MValue.MValueDouble> {
-//        protected MValueDoubleButton(int x, int y, @NotNull MValue.MValueDouble value) {
-//            super(x, y, value);
-//        }
-//
-//        @Override
-//        public void refreshFromValue() {
-//            this.sliderValue = (this.value.getValue() - this.value.getMin()) / (this.value.getMax() - this.value.getMin());
-//            this.refreshMessage();
-//        }
-//
-//        @Override
-//        public void refreshMessage() {
-//            this.setMessage(Text.translatable(this.value.getTranslationKey()).append(Text.literal(": %.2f".formatted(this.value.getValue()))));
-//            this.setTooltip(Tooltip.of(Text.translatable(this.value.getDescriptionTranslationKey())));
-//        }
-//
-//        @Override
-//        protected void setValue(double value) {
-//            var clamped = MathHelper.clamp(value, 0.0, 1.0);
-//            if (clamped != this.sliderValue) {
-//                this.value.sendValue(clamped * (this.value.getMax() - this.value.getMin()) + this.value.getMin());
-//            }
-//        }
-//    }
+    public static class ScrollButtonWidget extends ButtonWidget {
+        public static final Identifier SCROLL_BUTTONS = Identifier.of("fabric", "textures/gui/creative_buttons.png");
+        private final Consumer<Float> action;
+        private final Type type;
+
+        public ScrollButtonWidget(int x, int y, @NotNull Type type, Consumer<Float> action) {
+            super(x, y, 11, 12, type.text, (a) -> {
+            }, ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
+            this.action = action;
+            this.type = type;
+        }
+
+        @Override
+        protected void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+            if (!this.visible) return;
+            if (this.isFocused()) {
+                if (this.isHovered()) {
+                    this.action.accept(delta);
+                } else {
+                    this.setFocused(false);
+                }
+            }
+            var u = this.active && this.isHovered() ? 22 : 0;
+            var v = this.active ? 0 : 12;
+            drawContext.drawTexture(RenderLayer::getGuiTextured, SCROLL_BUTTONS, this.getX(), this.getY(), u + (this.type == Type.NEXT ? 11 : 0), v, 11, 12, 256, 256);
+        }
+
+        @Override
+        public boolean mouseReleased(double mouseX, double mouseY, int button) {
+            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                this.setFocused(false);
+                return true;
+            }
+            return super.mouseReleased(mouseX, mouseY, button);
+        }
+
+        public enum Type {
+            NEXT(Text.literal(">")),
+            PREVIOUS(Text.literal("<"));
+
+            final Text text;
+
+            Type(Text text) {
+                this.text = text;
+            }
+        }
+    }
 }

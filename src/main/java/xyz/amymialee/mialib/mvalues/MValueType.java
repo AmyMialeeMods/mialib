@@ -2,10 +2,6 @@ package xyz.amymialee.mialib.mvalues;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import com.mojang.brigadier.arguments.BoolArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.builder.ArgumentBuilder;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -19,16 +15,12 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.input.KeyCodes;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.sound.SoundManager;
-import net.minecraft.command.CommandSource;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 import xyz.amymialee.mialib.Mialib;
@@ -410,6 +402,7 @@ public abstract class MValueType<T> {
         public final MValue<T> value;
         public double scroll;
         public double velocity;
+        public boolean scissorContains;
 
         public MValueWidget(int x, int y, @NotNull MValue<T> value) {
             super(x, y, 144, 18, Text.translatable(value.getTranslationKey()));
@@ -423,7 +416,8 @@ public abstract class MValueType<T> {
             var client = MinecraftClient.getInstance();
             if (client == null || client.world == null) return;
             var scroll = this.scroll + this.velocity * delta;
-            this.hovered = context.scissorContains(mouseX, mouseY)
+            this.scissorContains = context.scissorContains(mouseX, mouseY);
+            this.hovered = this.scissorContains
                     && mouseX >= this.getX()
                     && mouseY >= this.getY() - scroll
                     && mouseX < this.getX() + this.width
@@ -457,7 +451,7 @@ public abstract class MValueType<T> {
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            return super.mouseClicked(mouseX, mouseY + this.scroll, button);
+            return this.scissorContains && super.mouseClicked(mouseX, mouseY + this.scroll, button);
         }
 
         @Override
