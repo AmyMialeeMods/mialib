@@ -14,6 +14,5 @@ public interface ExtrasModule {
     MValue<Boolean> DISABLE_PIGLIN_PORTAL_SPAWNING = MValue.of(Mialib.id("disable_piglin_portal_spawning"), MValue.BOOLEAN_FALSE).item((v) -> v.get() ? Items.ROTTEN_FLESH : Items.GOLD_NUGGET).build();
     MValue<Boolean> DISABLE_END_PORTALS = MValue.of(Mialib.id("disable_end_portals"), MValue.BOOLEAN_FALSE).item((v) -> v.get() ? Items.END_STONE_BRICK_SLAB : Items.END_PORTAL_FRAME).build();
 
-    static void init() {
-    }
+    static void init() {}
 }

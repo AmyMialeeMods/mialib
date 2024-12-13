@@ -31,10 +31,6 @@ public @SuppressWarnings("unused") class Mialib implements ModInitializer, Entit
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
     public static final Random RANDOM = new Random();
 
-    public static @NotNull Identifier id(String path) {
-        return Identifier.of(MOD_ID, path);
-    }
-
     public @Override void onInitialize() {
         CommandModule.init();
         EventModule.init();
@@ -52,5 +48,9 @@ public @SuppressWarnings("unused") class Mialib implements ModInitializer, Entit
     public @Override void registerEntityComponentFactories(@NotNull EntityComponentFactoryRegistry registry) {
         registry.beginRegistration(PlayerEntity.class, HoldingComponent.KEY).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(HoldingComponent::new);
         registry.beginRegistration(Entity.class, ExtraFlagsComponent.KEY).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(ExtraFlagsComponent::new);
+    }
+
+    public static @NotNull Identifier id(String path) {
+        return Identifier.of(MOD_ID, path);
     }
 }

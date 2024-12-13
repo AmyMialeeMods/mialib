@@ -112,7 +112,7 @@ public abstract class MValueType<T> {
         @Override
         protected void registerServerCommand(MValue<Boolean> value) {
             CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
-                    .then(CommandManager.literal(value.id.toUnderscoreSeparatedString())
+                    .then(CommandManager.literal(value.id.toString())
                             .then(CommandManager.argument("enabled", BoolArgumentType.bool())
                                     .executes(ctx -> {
                                         value.set(BoolArgumentType.getBool(ctx, "enabled"));
@@ -129,7 +129,7 @@ public abstract class MValueType<T> {
         @Override
         protected void registerClientCommand(MValue<Boolean> value) {
             ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
-                    .then(ClientCommandManager.literal(value.id.toUnderscoreSeparatedString())
+                    .then(ClientCommandManager.literal(value.id.toString())
                             .then(ClientCommandManager.argument("enabled", BoolArgumentType.bool())
                                     .executes(ctx -> {
                                         value.set(BoolArgumentType.getBool(ctx, "enabled"));
@@ -223,7 +223,7 @@ public abstract class MValueType<T> {
         protected void registerServerCommand(@NotNull MValue<Integer> value) {
             if (value.type instanceof MValueType.MValueMinMax<Integer> minMax) {
                 CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
-                        .then(CommandManager.literal(value.id.toUnderscoreSeparatedString())
+                        .then(CommandManager.literal(value.id.toString())
                                 .then(CommandManager.argument("value", IntegerArgumentType.integer(minMax.getMin(), minMax.getMax()))
                                         .executes(ctx -> {
                                             value.set(IntegerArgumentType.getInteger(ctx, "value"));
@@ -242,7 +242,7 @@ public abstract class MValueType<T> {
         protected void registerClientCommand(@NotNull MValue<Integer> value) {
             if (value.type instanceof MValueType.MValueMinMax<Integer> minMax) {
                 ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
-                        .then(ClientCommandManager.literal(value.id.toUnderscoreSeparatedString())
+                        .then(ClientCommandManager.literal(value.id.toString())
                                 .then(ClientCommandManager.argument("value", IntegerArgumentType.integer(minMax.getMin(), minMax.getMax()))
                                         .executes(ctx -> {
                                             value.set(IntegerArgumentType.getInteger(ctx, "value"));
@@ -334,7 +334,7 @@ public abstract class MValueType<T> {
         protected void registerServerCommand(@NotNull MValue<Float> value) {
             if (value.type instanceof MValueType.MValueMinMax<Float> minMax) {
                 CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
-                        .then(CommandManager.literal(value.id.toUnderscoreSeparatedString())
+                        .then(CommandManager.literal(value.id.toString())
                                 .then(CommandManager.argument("value", FloatArgumentType.floatArg(minMax.getMin(), minMax.getMax()))
                                         .executes(ctx -> {
                                             value.set(FloatArgumentType.getFloat(ctx, "value"));
@@ -353,7 +353,7 @@ public abstract class MValueType<T> {
         protected void registerClientCommand(@NotNull MValue<Float> value) {
             if (value.type instanceof MValueType.MValueMinMax<Float> minMax) {
                 ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
-                        .then(ClientCommandManager.literal(value.id.toUnderscoreSeparatedString())
+                        .then(ClientCommandManager.literal(value.id.toString())
                                 .then(ClientCommandManager.argument("value", FloatArgumentType.floatArg(minMax.getMin(), minMax.getMax()))
                                         .executes(ctx -> {
                                             value.set(FloatArgumentType.getFloat(ctx, "value"));
@@ -440,7 +440,7 @@ public abstract class MValueType<T> {
         protected void registerServerCommand(@NotNull MValue<Long> value) {
             if (value.type instanceof MValueType.MValueMinMax<Long> minMax) {
                 CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
-                        .then(CommandManager.literal(value.id.toUnderscoreSeparatedString())
+                        .then(CommandManager.literal(value.id.toString())
                                 .then(CommandManager.argument("value", LongArgumentType.longArg(minMax.getMin(), minMax.getMax()))
                                         .executes(ctx -> {
                                             value.set(LongArgumentType.getLong(ctx, "value"));
@@ -459,7 +459,7 @@ public abstract class MValueType<T> {
         protected void registerClientCommand(@NotNull MValue<Long> value) {
             if (value.type instanceof MValueType.MValueMinMax<Long> minMax) {
                 ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
-                        .then(ClientCommandManager.literal(value.id.toUnderscoreSeparatedString())
+                        .then(ClientCommandManager.literal(value.id.toString())
                                 .then(ClientCommandManager.argument("value", LongArgumentType.longArg(minMax.getMin(), minMax.getMax()))
                                         .executes(ctx -> {
                                             value.set(LongArgumentType.getLong(ctx, "value"));
@@ -551,7 +551,7 @@ public abstract class MValueType<T> {
         protected void registerServerCommand(@NotNull MValue<Double> value) {
             if (value.type instanceof MValueType.MValueMinMax<Double> minMax) {
                 CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
-                        .then(CommandManager.literal(value.id.toUnderscoreSeparatedString())
+                        .then(CommandManager.literal(value.id.toString())
                                 .then(CommandManager.argument("value", DoubleArgumentType.doubleArg(minMax.getMin(), minMax.getMax()))
                                         .executes(ctx -> {
                                             value.set(DoubleArgumentType.getDouble(ctx, "value"));
@@ -570,7 +570,7 @@ public abstract class MValueType<T> {
         protected void registerClientCommand(@NotNull MValue<Double> value) {
             if (value.type instanceof MValueType.MValueMinMax<Double> minMax) {
                 ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
-                        .then(ClientCommandManager.literal(value.id.toUnderscoreSeparatedString())
+                        .then(ClientCommandManager.literal(value.id.toString())
                                 .then(ClientCommandManager.argument("value", DoubleArgumentType.doubleArg(minMax.getMin(), minMax.getMax()))
                                         .executes(ctx -> {
                                             value.set(DoubleArgumentType.getDouble(ctx, "value"));

@@ -40,6 +40,10 @@ public class MValueScreen extends Screen {
         var centreX = this.width / 2;
         var centreY = this.height / 2;
         var categories = MValueCategory.CATEGORIES;
+        if (categories.size() > 14) {
+            this.addDrawableChild(new ScrollButtonWidget(centreX - WIDTH / 2 + 23 + 11, centreY + HEIGHT / 2 - 5, ScrollButtonWidget.Type.NEXT, (a) -> this.categoryVelocity += a));
+            this.addDrawableChild(new ScrollButtonWidget(centreX - WIDTH / 2 + 23, centreY + HEIGHT / 2 - 5, ScrollButtonWidget.Type.PREVIOUS, (a) -> this.categoryVelocity -= a));
+        }
         for (var i = 0; i < categories.size(); i++) {
             var category = categories.get(i);
             if (category.getValues(this.client.player).isEmpty()) continue;
@@ -52,20 +56,16 @@ public class MValueScreen extends Screen {
                 this.clearAndInit();
             }));
         }
-        if (categories.size() > 14) {
-            this.addDrawableChild(new ScrollButtonWidget(centreX - WIDTH / 2 + 23 + 11, centreY + HEIGHT / 2 - 5, ScrollButtonWidget.Type.NEXT, (a) -> this.categoryVelocity += a));
-            this.addDrawableChild(new ScrollButtonWidget(centreX - WIDTH / 2 + 23, centreY + HEIGHT / 2 - 5, ScrollButtonWidget.Type.PREVIOUS, (a) -> this.categoryVelocity -= a));
-        }
         var values = this.selectedCategory.getValues(this.client.player);
+        if (values.size() > 16) {
+            this.addDrawableChild(new ScrollButtonWidget((int) (centreX - (11f / 2f) - WIDTH / 2f + 209.5f + 11), centreY + HEIGHT / 2 - 5, ScrollButtonWidget.Type.NEXT, (a) -> this.valueVelocity += a));
+            this.addDrawableChild(new ScrollButtonWidget((int) (centreX - (11f / 2f) - WIDTH / 2f + 209.5f), centreY + HEIGHT / 2 - 5, ScrollButtonWidget.Type.PREVIOUS, (a) -> this.valueVelocity -= a));
+        }
         for (var i = 0; i < values.size(); i++) {
             var value = values.get(i);
             var x = centreX + 66 + 3 - WIDTH / 2 + (i % 2 == 0 ? 0 : 147);
             var y = centreY + 7 + 3 - HEIGHT / 2 + (i / 2) * 21;
             this.addDrawableChild(((Element & Drawable & Selectable) value.getWidget(x, y)));
-        }
-        if (values.size() > 16) {
-            this.addDrawableChild(new ScrollButtonWidget((int) (centreX - (11f / 2f) - WIDTH / 2f + 209.5f + 11), centreY + HEIGHT / 2 - 5, ScrollButtonWidget.Type.NEXT, (a) -> this.valueVelocity += a));
-            this.addDrawableChild(new ScrollButtonWidget((int) (centreX - (11f / 2f) - WIDTH / 2f + 209.5f), centreY + HEIGHT / 2 - 5, ScrollButtonWidget.Type.PREVIOUS, (a) -> this.valueVelocity -= a));
         }
         this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> this.close()).dimensions(this.width / 2 - 100, centreY + HEIGHT / 2 + 10, 200, 20).build());
     }
