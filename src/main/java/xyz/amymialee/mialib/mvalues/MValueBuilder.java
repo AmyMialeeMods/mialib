@@ -86,6 +86,7 @@ public class MValueBuilder<T> {
         } else {
             MVServerManager.register(this.category, value);
         }
+        value.type.registerCommand(value);
         return value;
     }
 }

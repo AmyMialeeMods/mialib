@@ -9,11 +9,13 @@ import net.minecraft.client.gui.screen.multiplayer.AddServerScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerServerListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.network.MultiplayerServerListPinger;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.ServerList;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,6 +33,10 @@ public abstract class MultiplayerScreenMixin extends Screen {
     @Shadow private ButtonWidget buttonEdit;
     @Shadow private ButtonWidget buttonDelete;
     @Shadow protected abstract void connect(ServerInfo entry);
+
+    @Shadow
+    @Final
+    private MultiplayerServerListPinger serverListPinger;
 
     protected MultiplayerScreenMixin(Text title) {
         super(title);
@@ -56,14 +62,27 @@ public abstract class MultiplayerScreenMixin extends Screen {
                 this.serverList.remove(serverInfo);
                 this.serverList.mialib$addMialibServer(serverInfo);
             }
-        } else {
+        }
+        return serverInfo;
+    }
+
+    @Inject(method = "editEntry", at = @At("TAIL"))
+    private void mialib$edit(boolean confirmedAction, CallbackInfo ci) {
+        var entry = this.serverListWidget.getSelectedOrNull();
+        if (!confirmedAction || !(entry instanceof MialibServerWidget widget)) return;
+        var serverInfo = widget.getServer();
+        if (!this.serverList.mialib$isEditingMialibServer()) {
             if (this.serverList.mialib$getMialibServers().contains(serverInfo)) {
                 var hidden = this.serverList.hiddenServers.contains(serverInfo);
-                this.serverList.remove(serverInfo);
+                this.serverList.mialib$getMialibServers().remove(serverInfo);
                 this.serverList.add(serverInfo, hidden);
             }
         }
-        return serverInfo;
+        serverInfo.name = this.selectedEntry.name;
+        serverInfo.address = this.selectedEntry.address;
+        serverInfo.copyWithSettingsFrom(this.selectedEntry);
+        this.serverList.saveFile();
+        this.serverListWidget.setServers(this.serverList);
     }
 
     @WrapOperation(method = "addEntry", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/ServerList;add(Lnet/minecraft/client/network/ServerInfo;Z)V"))
@@ -99,41 +118,25 @@ public abstract class MultiplayerScreenMixin extends Screen {
     @Inject(method = "updateButtonActivationStates", at = @At("TAIL"))
     private void mialib$updateButtonActivationStates(CallbackInfo ci) {
         var entry = this.serverListWidget.getSelectedOrNull();
-        if (entry instanceof MialibServerWidget) {
-            this.buttonEdit.active = true;
-            this.buttonDelete.active = true;
-        }
+        if (!(entry instanceof MialibServerWidget)) return;
+        this.buttonEdit.active = true;
+        this.buttonDelete.active = true;
     }
 
     @Inject(method = "connect()V", at = @At("TAIL"))
     private void mialib$connect(CallbackInfo ci) {
         var entry = this.serverListWidget.getSelectedOrNull();
-        if (entry instanceof MialibServerWidget widget) {
-            this.connect(widget.getServer());
-        }
+        if (!(entry instanceof MialibServerWidget widget)) return;
+        this.connect(widget.getServer());
     }
 
     @Inject(method = "removeEntry", at = @At("TAIL"))
     private void mialib$remove(boolean confirmedAction, CallbackInfo ci) {
         var entry = this.serverListWidget.getSelectedOrNull();
-        if (confirmedAction && entry instanceof MialibServerWidget widget) {
-            this.serverList.remove(widget.getServer());
-            this.serverList.saveFile();
-            this.serverListWidget.setSelected(null);
-            this.serverListWidget.setServers(this.serverList);
-        }
-    }
-
-    @Inject(method = "editEntry", at = @At("TAIL"))
-    private void mialib$edit(boolean confirmedAction, CallbackInfo ci) {
-        var entry = this.serverListWidget.getSelectedOrNull();
-        if (confirmedAction && entry instanceof MialibServerWidget widget) {
-            var serverInfo = widget.getServer();
-            serverInfo.name = this.selectedEntry.name;
-            serverInfo.address = this.selectedEntry.address;
-            serverInfo.copyWithSettingsFrom(this.selectedEntry);
-            this.serverList.saveFile();
-            this.serverListWidget.setServers(this.serverList);
-        }
+        if (!confirmedAction || !(entry instanceof MialibServerWidget widget)) return;
+        this.serverList.remove(widget.getServer());
+        this.serverList.saveFile();
+        this.serverListWidget.setSelected(null);
+        this.serverListWidget.setServers(this.serverList);
     }
 }

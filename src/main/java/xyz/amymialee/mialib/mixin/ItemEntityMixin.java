@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.amymialee.mialib.Mialib;
+import xyz.amymialee.mialib.modules.ExtrasModule;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin {
@@ -19,11 +19,11 @@ public abstract class ItemEntityMixin {
 
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     public void mialib$undestroyable(ServerWorld world, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (this.getStack().isIn(Mialib.UNDESTROYABLE)) cir.setReturnValue(false);
+        if (this.getStack().isIn(ExtrasModule.UNDESTROYABLE)) cir.setReturnValue(false);
     }
 
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ItemEntity;discard()V", ordinal = 1))
     private void mialib$youth(ItemEntity entity, Operation<Void> original) {
-        if (!this.getStack().isIn(Mialib.UNDESTROYABLE)) original.call(entity);
+        if (!this.getStack().isIn(ExtrasModule.UNDESTROYABLE)) original.call(entity);
     }
 }

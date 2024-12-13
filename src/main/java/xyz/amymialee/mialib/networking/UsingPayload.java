@@ -10,7 +10,7 @@ import xyz.amymialee.mialib.Mialib;
 
 public record UsingPayload(boolean using) implements CustomPayload {
 	public static final Id<UsingPayload> ID = new CustomPayload.Id<>(Mialib.id("using"));
-	public static final PacketCodec<PacketByteBuf, UsingPayload> CODEC = PacketCodec.tuple(PacketCodecs.BOOL, UsingPayload::using, UsingPayload::new);
+    public static final PacketCodec<PacketByteBuf, UsingPayload> CODEC = PacketCodec.tuple(PacketCodecs.BOOLEAN, UsingPayload::using, UsingPayload::new);
 
 	@Override
 	public Id<? extends CustomPayload> getId() {

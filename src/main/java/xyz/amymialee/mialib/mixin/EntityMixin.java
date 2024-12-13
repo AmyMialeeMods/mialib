@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.events.MiaLibEvents;
+import xyz.amymialee.mialib.modules.ExtrasModule;
 
 @Mixin(Entity.class)
 public class EntityMixin {
@@ -25,7 +25,7 @@ public class EntityMixin {
 
     @WrapOperation(method = "tickInVoid", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;discard()V"))
     protected void mialib$tickInVoid(Entity instance, Operation<Void> original) {
-        if (instance instanceof ItemEntity item && item.getStack().isIn(Mialib.UNDESTROYABLE)) return;
+        if (instance instanceof ItemEntity item && item.getStack().isIn(ExtrasModule.UNDESTROYABLE)) return;
         original.call(instance);
     }
 }

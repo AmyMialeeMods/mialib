@@ -41,6 +41,7 @@ loom {
 fabricApi {
     configureDataGeneration() {
         modId = "mialib"
+        client = true
     }
 }
 

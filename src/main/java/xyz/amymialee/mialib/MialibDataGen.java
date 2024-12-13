@@ -13,6 +13,7 @@ import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.FlatLevelGeneratorPreset;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
 import org.jetbrains.annotations.NotNull;
+import xyz.amymialee.mialib.modules.ExtrasModule;
 import xyz.amymialee.mialib.mvalues.MValue;
 import xyz.amymialee.mialib.templates.MDataGen;
 
@@ -25,8 +26,8 @@ public class MialibDataGen extends MDataGen {
     protected @Override void generateTranslations(@NotNull MLanguageProvider provider, RegistryWrapper.WrapperLookup registryLookup, FabricLanguageProvider.@NotNull TranslationBuilder builder) {
         builder.add("flat_world_preset." + DEV_READY.getValue().toTranslationKey(), "Dev Ready");
         builder.add("flat_world_preset." + BLAST_PROOF.getValue().toTranslationKey(), "Blast Proof");
-        builder.add(provider.getTagTranslationKey(Mialib.UNDESTROYABLE), "Undestroyable");
-        builder.add(provider.getTagTranslationKey(Mialib.UNBREAKABLE), "Unbreakable");
+        builder.add(provider.getTagTranslationKey(ExtrasModule.UNDESTROYABLE), "Undestroyable");
+        builder.add(provider.getTagTranslationKey(ExtrasModule.UNBREAKABLE), "Unbreakable");
         for (var single : new Pair[]{new Pair<>("self", "self"), new Pair<>("single", "%s entity"), new Pair<>("multiple", "%s entities")}) {
             for (var enabled : new Pair[]{new Pair<>("enabled", "§aenabled"), new Pair<>("disabled", "§cdisabled")}) {
                 builder.add("commands.%s.indestructible.%s.%s".formatted(Mialib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Indestructibility %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
@@ -36,10 +37,10 @@ public class MialibDataGen extends MDataGen {
         }
         builder.add("mialib.screen.mvalues", "Mialib Value Editor");
         builder.add(MValue.DEFAULT_CATEGORY.getTranslationKey(), "MValues");
-        builder.add(Mialib.DISABLE_PIGLIN_PORTAL_SPAWNING.getTranslationKey(), "Disable Piglin Spawning");
-        builder.add(Mialib.DISABLE_PIGLIN_PORTAL_SPAWNING.getDescriptionTranslationKey(), "Disables piglins spawning from nether portals");
-        builder.add(Mialib.DISABLE_END_PORTALS.getTranslationKey(), "Disable End Portals");
-        builder.add(Mialib.DISABLE_END_PORTALS.getDescriptionTranslationKey(), "Disables end portals");
+        builder.add(ExtrasModule.DISABLE_PIGLIN_PORTAL_SPAWNING.getTranslationKey(), "Disable Piglin Spawning");
+        builder.add(ExtrasModule.DISABLE_PIGLIN_PORTAL_SPAWNING.getDescriptionTranslationKey(), "Disables piglins spawning from nether portals");
+        builder.add(ExtrasModule.DISABLE_END_PORTALS.getTranslationKey(), "Disable End Portals");
+        builder.add(ExtrasModule.DISABLE_END_PORTALS.getDescriptionTranslationKey(), "Disables end portals");
         builder.add("%s.mvalue.clientside".formatted(Mialib.MOD_ID), "[Client Side]");
         builder.add("category.%s".formatted(Mialib.MOD_ID), Mialib.MOD_NAME);
         builder.add("%s.servers".formatted(Mialib.MOD_ID), "Mialib Servers");
@@ -50,8 +51,8 @@ public class MialibDataGen extends MDataGen {
     }
 
     protected @Override void generateItemTags(MDataGen.@NotNull MItemTagProvider provider, RegistryWrapper.WrapperLookup arg) {
-        provider.getOrCreateTagBuilder(Mialib.UNDESTROYABLE);
-        provider.getOrCreateTagBuilder(Mialib.UNBREAKABLE);
+        provider.getOrCreateTagBuilder(ExtrasModule.UNDESTROYABLE);
+        provider.getOrCreateTagBuilder(ExtrasModule.UNBREAKABLE);
     }
 
     protected @Override void generateFlatLevelGeneratorPresetTags(@NotNull MFlatLevelGeneratorPresetTagProvider provider, RegistryWrapper.WrapperLookup arg) {

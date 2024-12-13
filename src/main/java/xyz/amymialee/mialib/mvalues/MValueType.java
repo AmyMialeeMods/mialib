@@ -2,8 +2,12 @@ package xyz.amymialee.mialib.mvalues;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.mojang.brigadier.arguments.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.navigation.GuiNavigationType;
@@ -16,6 +20,7 @@ import net.minecraft.client.input.KeyCodes;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -42,6 +47,18 @@ public abstract class MValueType<T> {
     public abstract JsonElement writeJson(MValue<T> value);
 
     public abstract void readJson(JsonElement json, MValue<T> value);
+
+    public void registerCommand(@NotNull MValue<T> value) {
+        if (value.clientSide) {
+            this.registerClientCommand(value);
+        } else {
+            this.registerServerCommand(value);
+        }
+    }
+
+    protected abstract void registerServerCommand(MValue<T> value);
+
+    protected abstract void registerClientCommand(MValue<T> value);
 
     @Environment(EnvType.CLIENT)
     public abstract Object getWidget(int x, int y, MValue<T> mValue);
@@ -90,6 +107,39 @@ public abstract class MValueType<T> {
         @Override
         public void readJson(@NotNull JsonElement json, @NotNull MValue<Boolean> value) {
             value.set(json.getAsBoolean());
+        }
+
+        @Override
+        protected void registerServerCommand(MValue<Boolean> value) {
+            CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                    .then(CommandManager.literal(value.id.toUnderscoreSeparatedString())
+                            .then(CommandManager.argument("enabled", BoolArgumentType.bool())
+                                    .executes(ctx -> {
+                                        value.set(BoolArgumentType.getBool(ctx, "enabled"));
+                                        MVServerManager.INSTANCE.onChange(value);
+                                        ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()), true);
+                                        return 1;
+                                    })
+                            ).executes(ctx -> {
+                                ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()), false);
+                                return 1;
+                            }))));
+        }
+
+        @Override
+        protected void registerClientCommand(MValue<Boolean> value) {
+            ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                    .then(ClientCommandManager.literal(value.id.toUnderscoreSeparatedString())
+                            .then(ClientCommandManager.argument("enabled", BoolArgumentType.bool())
+                                    .executes(ctx -> {
+                                        value.set(BoolArgumentType.getBool(ctx, "enabled"));
+                                        ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()));
+                                        return 1;
+                                    })
+                            ).executes(ctx -> {
+                                ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()));
+                                return 1;
+                            }))));
         }
     }
 
@@ -168,6 +218,43 @@ public abstract class MValueType<T> {
         public Integer getMax() {
             return this.max;
         }
+
+        @Override
+        protected void registerServerCommand(@NotNull MValue<Integer> value) {
+            if (value.type instanceof MValueType.MValueMinMax<Integer> minMax) {
+                CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                        .then(CommandManager.literal(value.id.toUnderscoreSeparatedString())
+                                .then(CommandManager.argument("value", IntegerArgumentType.integer(minMax.getMin(), minMax.getMax()))
+                                        .executes(ctx -> {
+                                            value.set(IntegerArgumentType.getInteger(ctx, "value"));
+                                            MVServerManager.INSTANCE.onChange(value);
+                                            ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()), true);
+                                            return 1;
+                                        })
+                                ).executes(ctx -> {
+                                    ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()), false);
+                                    return 1;
+                                }))));
+            }
+        }
+
+        @Override
+        protected void registerClientCommand(@NotNull MValue<Integer> value) {
+            if (value.type instanceof MValueType.MValueMinMax<Integer> minMax) {
+                ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                        .then(ClientCommandManager.literal(value.id.toUnderscoreSeparatedString())
+                                .then(ClientCommandManager.argument("value", IntegerArgumentType.integer(minMax.getMin(), minMax.getMax()))
+                                        .executes(ctx -> {
+                                            value.set(IntegerArgumentType.getInteger(ctx, "value"));
+                                            ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()));
+                                            return 1;
+                                        })
+                                ).executes(ctx -> {
+                                    ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()));
+                                    return 1;
+                                }))));
+            }
+        }
     }
 
     public static final class MValueFloat extends MValueMinMax<Float> {
@@ -242,6 +329,43 @@ public abstract class MValueType<T> {
         public Float getMax() {
             return this.max;
         }
+
+        @Override
+        protected void registerServerCommand(@NotNull MValue<Float> value) {
+            if (value.type instanceof MValueType.MValueMinMax<Float> minMax) {
+                CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                        .then(CommandManager.literal(value.id.toUnderscoreSeparatedString())
+                                .then(CommandManager.argument("value", FloatArgumentType.floatArg(minMax.getMin(), minMax.getMax()))
+                                        .executes(ctx -> {
+                                            value.set(FloatArgumentType.getFloat(ctx, "value"));
+                                            MVServerManager.INSTANCE.onChange(value);
+                                            ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()), true);
+                                            return 1;
+                                        })
+                                ).executes(ctx -> {
+                                    ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()), false);
+                                    return 1;
+                                }))));
+            }
+        }
+
+        @Override
+        protected void registerClientCommand(@NotNull MValue<Float> value) {
+            if (value.type instanceof MValueType.MValueMinMax<Float> minMax) {
+                ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                        .then(ClientCommandManager.literal(value.id.toUnderscoreSeparatedString())
+                                .then(ClientCommandManager.argument("value", FloatArgumentType.floatArg(minMax.getMin(), minMax.getMax()))
+                                        .executes(ctx -> {
+                                            value.set(FloatArgumentType.getFloat(ctx, "value"));
+                                            ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()));
+                                            return 1;
+                                        })
+                                ).executes(ctx -> {
+                                    ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()));
+                                    return 1;
+                                }))));
+            }
+        }
     }
 
     public static final class MValueLong extends MValueMinMax<Long> {
@@ -310,6 +434,43 @@ public abstract class MValueType<T> {
         @Override
         public Long getMax() {
             return this.max;
+        }
+
+        @Override
+        protected void registerServerCommand(@NotNull MValue<Long> value) {
+            if (value.type instanceof MValueType.MValueMinMax<Long> minMax) {
+                CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                        .then(CommandManager.literal(value.id.toUnderscoreSeparatedString())
+                                .then(CommandManager.argument("value", LongArgumentType.longArg(minMax.getMin(), minMax.getMax()))
+                                        .executes(ctx -> {
+                                            value.set(LongArgumentType.getLong(ctx, "value"));
+                                            MVServerManager.INSTANCE.onChange(value);
+                                            ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()), true);
+                                            return 1;
+                                        })
+                                ).executes(ctx -> {
+                                    ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()), false);
+                                    return 1;
+                                }))));
+            }
+        }
+
+        @Override
+        protected void registerClientCommand(@NotNull MValue<Long> value) {
+            if (value.type instanceof MValueType.MValueMinMax<Long> minMax) {
+                ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                        .then(ClientCommandManager.literal(value.id.toUnderscoreSeparatedString())
+                                .then(ClientCommandManager.argument("value", LongArgumentType.longArg(minMax.getMin(), minMax.getMax()))
+                                        .executes(ctx -> {
+                                            value.set(LongArgumentType.getLong(ctx, "value"));
+                                            ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()));
+                                            return 1;
+                                        })
+                                ).executes(ctx -> {
+                                    ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()));
+                                    return 1;
+                                }))));
+            }
         }
     }
 
@@ -384,6 +545,43 @@ public abstract class MValueType<T> {
         @Override
         public Double getMax() {
             return this.max;
+        }
+
+        @Override
+        protected void registerServerCommand(@NotNull MValue<Double> value) {
+            if (value.type instanceof MValueType.MValueMinMax<Double> minMax) {
+                CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                        .then(CommandManager.literal(value.id.toUnderscoreSeparatedString())
+                                .then(CommandManager.argument("value", DoubleArgumentType.doubleArg(minMax.getMin(), minMax.getMax()))
+                                        .executes(ctx -> {
+                                            value.set(DoubleArgumentType.getDouble(ctx, "value"));
+                                            MVServerManager.INSTANCE.onChange(value);
+                                            ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()), true);
+                                            return 1;
+                                        })
+                                ).executes(ctx -> {
+                                    ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()), false);
+                                    return 1;
+                                }))));
+            }
+        }
+
+        @Override
+        protected void registerClientCommand(@NotNull MValue<Double> value) {
+            if (value.type instanceof MValueType.MValueMinMax<Double> minMax) {
+                ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                        .then(ClientCommandManager.literal(value.id.toUnderscoreSeparatedString())
+                                .then(ClientCommandManager.argument("value", DoubleArgumentType.doubleArg(minMax.getMin(), minMax.getMax()))
+                                        .executes(ctx -> {
+                                            value.set(DoubleArgumentType.getDouble(ctx, "value"));
+                                            ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()));
+                                            return 1;
+                                        })
+                                ).executes(ctx -> {
+                                    ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()));
+                                    return 1;
+                                }))));
+            }
         }
     }
 
@@ -506,7 +704,8 @@ public abstract class MValueType<T> {
             if (client == null || client.world == null) return;
             this.mouseX = mouseX;
             var scroll = this.scroll + this.velocity * delta;
-            this.hovered = context.scissorContains(mouseX, mouseY)
+            this.scissorContains = context.scissorContains(mouseX, mouseY);
+            this.hovered = this.scissorContains
                     && mouseX >= this.getX()
                     && mouseY >= this.getY() - scroll
                     && mouseX < this.getX() + this.width

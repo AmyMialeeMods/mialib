@@ -6,10 +6,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
@@ -21,8 +17,7 @@ import xyz.amymialee.mialib.cca.ExtraFlagsComponent;
 import xyz.amymialee.mialib.cca.HoldingComponent;
 import xyz.amymialee.mialib.modules.CommandModule;
 import xyz.amymialee.mialib.modules.EventModule;
-import xyz.amymialee.mialib.mvalues.MValue;
-import xyz.amymialee.mialib.mvalues.MValueCategory;
+import xyz.amymialee.mialib.modules.ExtrasModule;
 import xyz.amymialee.mialib.mvalues.MValuePayload;
 import xyz.amymialee.mialib.networking.AttackingPayload;
 import xyz.amymialee.mialib.networking.FloatyPayload;
@@ -36,15 +31,14 @@ public @SuppressWarnings("unused") class Mialib implements ModInitializer, Entit
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
     public static final Random RANDOM = new Random();
 
-    public static final TagKey<Item> UNDESTROYABLE = TagKey.of(Registries.ITEM.getKey(), id("damage_immune"));
-    public static final TagKey<Item> UNBREAKABLE = TagKey.of(Registries.ITEM.getKey(), id("unbreakable"));
-
-    public static final MValue<Boolean> DISABLE_PIGLIN_PORTAL_SPAWNING = MValue.of(id("disable_piglin_portal_spawning"), MValue.BOOLEAN_FALSE).item((v) -> v.get() ? Items.ROTTEN_FLESH : Items.GOLD_NUGGET).build();
-    public static final MValue<Boolean> DISABLE_END_PORTALS = MValue.of(id("disable_end_portals"), MValue.BOOLEAN_FALSE).item((v) -> v.get() ? Items.END_STONE_BRICK_SLAB : Items.END_PORTAL_FRAME).build();
+    public static @NotNull Identifier id(String path) {
+        return Identifier.of(MOD_ID, path);
+    }
 
     public @Override void onInitialize() {
         CommandModule.init();
         EventModule.init();
+        ExtrasModule.init();
         PayloadTypeRegistry.playC2S().register(AttackingPayload.ID, AttackingPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(UsingPayload.ID, UsingPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(MValuePayload.ID, MValuePayload.CODEC);
@@ -58,9 +52,5 @@ public @SuppressWarnings("unused") class Mialib implements ModInitializer, Entit
     public @Override void registerEntityComponentFactories(@NotNull EntityComponentFactoryRegistry registry) {
         registry.beginRegistration(PlayerEntity.class, HoldingComponent.KEY).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(HoldingComponent::new);
         registry.beginRegistration(Entity.class, ExtraFlagsComponent.KEY).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(ExtraFlagsComponent::new);
-    }
-
-    public static @NotNull Identifier id(String path) {
-        return Identifier.of(MOD_ID, path);
     }
 }

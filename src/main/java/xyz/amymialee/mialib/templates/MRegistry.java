@@ -113,29 +113,12 @@ public @SuppressWarnings({"unused", "UnusedReturnValue"}) class MRegistry {
 		ItemGroupEvents.modifyEntriesEvent(Registries.ITEM_GROUP.getKey(group).orElseThrow()).register((entries) -> entries.add(stack));
 	}
 
-	public <T extends MobEntity> EntityType<T> register(String path, EntityType<T> entity, int color) {
-		return this.register(path, entity, color, color);
-	}
-
-	public <T extends MobEntity> EntityType<T> register(String path, EntityType<T> entity, int primaryColor, int secondaryColor) {
-		return this.register(path, entity, null, primaryColor, secondaryColor);
-	}
-	
-	public <T extends LivingEntity> EntityType<T> register(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes) {
+    public @SuppressWarnings("unchecked") <T extends LivingEntity> EntityType<T> register(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes) {
 		this.register(path, entity);
 		if (attributes != null) FabricDefaultAttributeRegistry.register(entity, attributes);
-		return entity;
-	}
-
-	public <T extends MobEntity> EntityType<T> register(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes, int color) {
-		return this.register(path, entity, attributes, color, color);
-	}
-
-	public <T extends MobEntity> EntityType<T> register(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes, int primaryColor, int secondaryColor) {
-		this.register(path, entity);
-		if (attributes != null) FabricDefaultAttributeRegistry.register(entity, attributes);
-		this.register(path + "_spawn_egg", new SpawnEggItem(entity, primaryColor, secondaryColor, new Item.Settings()));
-		return entity;
+        if (entity != null && entity.getBaseClass().isInstance(MobEntity.class))
+            this.register(path + "_spawn_egg", new SpawnEggItem((EntityType<? extends MobEntity>) entity, new Item.Settings()), ItemGroups.SPAWN_EGGS);
+        return entity;
 	}
 
 	public SoundEvent registerSound(String name) {
