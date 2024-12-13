@@ -25,6 +25,7 @@ public final class MValue<T> {
     public static final MValueType.MValueFloat FLOAT = new MValueType.MValueFloat(1f, 0f, 1f);
     public static final MValueType.MValueLong LONG = new MValueType.MValueLong(100, 1, 100);
     public static final MValueType.MValueDouble DOUBLE = new MValueType.MValueDouble(1d, 0d, 1d);
+    public static final MValueType.MValuePercent PERCENT = new MValueType.MValuePercent(1d, 0d, 1d);
     public final Identifier id;
     public final String translationKey;
     public final MValueType<T> type;

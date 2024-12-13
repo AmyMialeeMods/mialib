@@ -63,7 +63,7 @@ public abstract class MValueType<T> {
     @Environment(EnvType.CLIENT)
     public abstract Object getWidget(int x, int y, MValue<T> mValue);
 
-    public static final class MValueBoolean extends MValueType<Boolean> {
+    public static class MValueBoolean extends MValueType<Boolean> {
         MValueBoolean(boolean defaultValue) {
             this.defaultValue = defaultValue;
         }
@@ -151,7 +151,7 @@ public abstract class MValueType<T> {
         public abstract T getMax();
     }
 
-    public static final class MValueInteger extends MValueMinMax<Integer> {
+    public static class MValueInteger extends MValueMinMax<Integer> {
         public final int min;
         public final int max;
 
@@ -257,7 +257,7 @@ public abstract class MValueType<T> {
         }
     }
 
-    public static final class MValueFloat extends MValueMinMax<Float> {
+    public static class MValueFloat extends MValueMinMax<Float> {
         private final float min;
         private final float max;
 
@@ -368,7 +368,7 @@ public abstract class MValueType<T> {
         }
     }
 
-    public static final class MValueLong extends MValueMinMax<Long> {
+    public static class MValueLong extends MValueMinMax<Long> {
         private final long min;
         private final long max;
 
@@ -474,7 +474,7 @@ public abstract class MValueType<T> {
         }
     }
 
-    public static final class MValueDouble extends MValueMinMax<Double> {
+    public static class MValueDouble extends MValueMinMax<Double> {
         private final double min;
         private final double max;
 
@@ -582,6 +582,17 @@ public abstract class MValueType<T> {
                                     return 1;
                                 }))));
             }
+        }
+    }
+
+    public static final class MValuePercent extends MValueDouble {
+        MValuePercent(double defaultValue, double min, double max) {
+            super(defaultValue, min, max);
+        }
+
+        @Override
+        public @NotNull String getValueAsString(@NotNull MValue<Double> value) {
+            return "%.0f%%".formatted(value.get() * 100);
         }
     }
 
