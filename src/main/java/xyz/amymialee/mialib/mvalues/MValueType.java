@@ -642,14 +642,20 @@ public abstract class MValueType<T> {
                 context.drawText(client.textRenderer, text, 0, (int) y, 0xFFFFFFFF, true);
             }
             context.getMatrices().pop();
+            context.drawGuiTexture(RenderLayer::getGuiTextured, textures.get(true, true), mouseX, (int) (mouseY + this.scroll), 2, 2, 0xFFFFFFFF);
+
         }
 
         @Override
         public abstract void onClick(double mouseX, double mouseY);
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            return this.scissorContains && super.mouseClicked(mouseX, mouseY + this.scroll, button);
+        public boolean isMouseOver(double mouseX, double mouseY) {
+            return this.scissorContains && this.active && this.visible
+                    && mouseX >= this.getX()
+                    && mouseY >= this.getY() - this.scroll
+                    && mouseX < this.getX() + this.width
+                    && mouseY < this.getY() + this.height - this.scroll;
         }
 
         @Override
