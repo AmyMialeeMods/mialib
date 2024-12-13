@@ -9,12 +9,8 @@ accessible field net/minecraft/client/option/ServerList hiddenServers Ljava/util
 accessible method net/minecraft/client/gui/widget/EntryListWidget addEntry (Lnet/minecraft/client/gui/widget/EntryListWidget$Entry;)I
 accessible method net/minecraft/client/gui/screen/Screen clearAndInit ()V
 accessible field net/minecraft/client/gui/screen/Screen drawables Ljava/util/List;
-
-
-
-
-
-
+accessible field net/minecraft/client/gui/tooltip/Tooltip content Lnet/minecraft/text/Text;
+accessible field net/minecraft/client/gui/tooltip/Tooltip narration Lnet/minecraft/text/Text;
 
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget SERVER_PINGER_THREAD_POOL Ljava/util/concurrent/ThreadPoolExecutor;
 accessible field net/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget CANNOT_RESOLVE_TEXT Lnet/minecraft/text/Text;

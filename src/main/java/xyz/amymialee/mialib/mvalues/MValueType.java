@@ -8,6 +8,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.navigation.GuiNavigationType;
@@ -23,10 +24,12 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.util.runnables.Consumer3;
@@ -618,6 +621,21 @@ public abstract class MValueType<T> {
             this.value = value;
             this.setMessage(this.value.getText());
             this.setTooltip(Tooltip.of(this.value.getDescription()));
+        }
+
+        @Override
+        public void setTooltip(@Nullable Tooltip tooltip) {
+            if (tooltip != null) {
+                var name = this.value.id.getNamespace();
+                var container = FabricLoader.getInstance().getModContainer(this.value.id.getNamespace());
+                if (container.isPresent()) {
+                    name = container.get().getMetadata().getName();
+                }
+                var content = tooltip.content;
+                content = content.copy().append("\n").append(Text.literal(name).formatted(Formatting.BLUE));
+                tooltip = Tooltip.of(content, tooltip.narration);
+            }
+            super.setTooltip(tooltip);
         }
 
         @Override
