@@ -671,8 +671,6 @@ public abstract class MValueType<T> {
                 context.drawText(client.textRenderer, text, 0, (int) y, 0xFFFFFFFF, true);
             }
             context.getMatrices().pop();
-            context.drawGuiTexture(RenderLayer::getGuiTextured, textures.get(true, true), mouseX, (int) (mouseY + this.scroll), 2, 2, 0xFFFFFFFF);
-
         }
 
         @Override
