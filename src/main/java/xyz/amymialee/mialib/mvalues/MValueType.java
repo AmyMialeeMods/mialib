@@ -34,6 +34,9 @@ import org.lwjgl.glfw.GLFW;
 import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.util.runnables.Consumer3;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public abstract class MValueType<T> {
     protected T defaultValue;
 
@@ -67,7 +70,7 @@ public abstract class MValueType<T> {
     public abstract Object getWidget(int x, int y, MValue<T> mValue);
 
     public static class MValueBoolean extends MValueType<Boolean> {
-        MValueBoolean(boolean defaultValue) {
+        public MValueBoolean(boolean defaultValue) {
             this.defaultValue = defaultValue;
         }
 
@@ -158,7 +161,7 @@ public abstract class MValueType<T> {
         public final int min;
         public final int max;
 
-        MValueInteger(int defaultValue, int min, int max) {
+        public MValueInteger(int defaultValue, int min, int max) {
             this.defaultValue = defaultValue;
             this.min = min;
             this.max = max;
@@ -260,122 +263,11 @@ public abstract class MValueType<T> {
         }
     }
 
-    public static class MValueFloat extends MValueMinMax<Float> {
-        private final float min;
-        private final float max;
-
-        MValueFloat(float defaultValue, float min, float max) {
-            this.defaultValue = defaultValue;
-            this.min = min;
-            this.max = max;
-        }
-
-        @Override
-        public @NotNull String getValueAsString(@NotNull MValue<Float> value) {
-            return "%.2f".formatted(value.get());
-        }
-
-        @Override
-        public @NotNull Object getWidget(int x, int y, MValue<Float> value) {
-            var self = this;
-            return new MValueSliderWidget<>(x, y, value) {
-                @Override
-                public void resetSliderValue() {
-                    this.sliderValue = (this.value.get() - self.getMin()) / (self.getMax() - self.getMin());
-                }
-
-                @Override
-                protected Float getValue() {
-                    return (float) (self.min + (self.getMax() - self.min) * this.sliderValue);
-                }
-            };
-        }
-
-        @Override
-        public @NotNull MValueMinMax<Float> of(Float defaultValue, Float min, Float max) {
-            return new MValueFloat(defaultValue, min, max);
-        }
-
-        @Override
-        public boolean set(@NotNull MValue<Float> mValue, Float value) {
-            mValue.value = Math.clamp(value, this.getMin(), this.getMax());
-            return true;
-        }
-
-        @Override
-        public @NotNull NbtCompound writeNbt(@NotNull NbtCompound compound, @NotNull MValue<Float> value) {
-            compound.putFloat("value", value.get());
-            return compound;
-        }
-
-        @Override
-        public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<Float> value) {
-            value.value = compound.getFloat("value");
-        }
-
-        @Override
-        public @NotNull JsonElement writeJson(@NotNull MValue<Float> value) {
-            return new JsonPrimitive(value.get());
-        }
-
-        @Override
-        public void readJson(@NotNull JsonElement json, @NotNull MValue<Float> value) {
-            value.set(json.getAsFloat());
-        }
-
-        @Override
-        public Float getMin() {
-            return this.min;
-        }
-
-        @Override
-        public Float getMax() {
-            return this.max;
-        }
-
-        @Override
-        protected void registerServerCommand(@NotNull MValue<Float> value) {
-            if (value.type instanceof MValueType.MValueMinMax<Float> minMax) {
-                CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
-                        .then(CommandManager.literal(value.id.toString())
-                                .then(CommandManager.argument("value", FloatArgumentType.floatArg(minMax.getMin(), minMax.getMax()))
-                                        .executes(ctx -> {
-                                            value.set(FloatArgumentType.getFloat(ctx, "value"));
-                                            MVServerManager.INSTANCE.onChange(value);
-                                            ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()), true);
-                                            return 1;
-                                        })
-                                ).executes(ctx -> {
-                                    ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()), false);
-                                    return 1;
-                                }))));
-            }
-        }
-
-        @Override
-        protected void registerClientCommand(@NotNull MValue<Float> value) {
-            if (value.type instanceof MValueType.MValueMinMax<Float> minMax) {
-                ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
-                        .then(ClientCommandManager.literal(value.id.toString())
-                                .then(ClientCommandManager.argument("value", FloatArgumentType.floatArg(minMax.getMin(), minMax.getMax()))
-                                        .executes(ctx -> {
-                                            value.set(FloatArgumentType.getFloat(ctx, "value"));
-                                            ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()));
-                                            return 1;
-                                        })
-                                ).executes(ctx -> {
-                                    ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()));
-                                    return 1;
-                                }))));
-            }
-        }
-    }
-
     public static class MValueLong extends MValueMinMax<Long> {
         private final long min;
         private final long max;
 
-        MValueLong(long defaultValue, long min, long max) {
+        public MValueLong(long defaultValue, long min, long max) {
             this.defaultValue = defaultValue;
             this.min = min;
             this.max = max;
@@ -477,19 +369,163 @@ public abstract class MValueType<T> {
         }
     }
 
-    public static class MValueDouble extends MValueMinMax<Double> {
-        private final double min;
-        private final double max;
+    public static abstract class MValueRoundable<T> extends MValueMinMax<T> {
+        private final int decimals;
 
-        MValueDouble(double defaultValue, double min, double max) {
+        public MValueRoundable(int decimals) {
+            this.decimals = decimals;
+        }
+
+        public abstract MValueRoundable<T> of(T defaultValue, T min, T max, int decimals);
+
+        public int getDecimals() {
+            return this.decimals;
+        }
+    }
+
+    public static class MValueFloat extends MValueRoundable<Float> {
+        private final float min;
+        private final float max;
+
+        public MValueFloat(float defaultValue, float min, float max, int decimals) {
+            super(decimals);
             this.defaultValue = defaultValue;
             this.min = min;
             this.max = max;
         }
 
+        public MValueFloat(float defaultValue, float min, float max) {
+            this(defaultValue, min, max, 2);
+        }
+
+        @Override
+        public @NotNull String getValueAsString(@NotNull MValue<Float> value) {
+            var format = "%." + this.getDecimals() + "f";
+            return String.format(format, value.get());
+        }
+
+        @Override
+        public @NotNull Object getWidget(int x, int y, MValue<Float> value) {
+            var self = this;
+            return new MValueSliderWidget<>(x, y, value) {
+                @Override
+                public void resetSliderValue() {
+                    this.sliderValue = (this.value.get() - self.getMin()) / (self.getMax() - self.getMin());
+                }
+
+                @Override
+                protected Float getValue() {
+                    return (float) (self.min + (self.getMax() - self.min) * this.sliderValue);
+                }
+            };
+        }
+
+        @Override
+        public @NotNull MValueMinMax<Float> of(Float defaultValue, Float min, Float max) {
+            return new MValueFloat(defaultValue, min, max);
+        }
+
+        @Override
+        public MValueRoundable<Float> of(Float defaultValue, Float min, Float max, int decimals) {
+            return new MValueFloat(defaultValue, min, max, decimals);
+        }
+
+        @Override
+        public boolean set(@NotNull MValue<Float> mValue, Float value) {
+            var big = new BigDecimal(value);
+            big = big.setScale(this.getDecimals(), RoundingMode.HALF_UP);
+            mValue.value = Math.clamp(big.floatValue(), this.getMin(), this.getMax());
+            return true;
+        }
+
+        @Override
+        public @NotNull NbtCompound writeNbt(@NotNull NbtCompound compound, @NotNull MValue<Float> value) {
+            compound.putFloat("value", value.get());
+            return compound;
+        }
+
+        @Override
+        public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<Float> value) {
+            value.value = compound.getFloat("value");
+        }
+
+        @Override
+        public @NotNull JsonElement writeJson(@NotNull MValue<Float> value) {
+            return new JsonPrimitive(value.get());
+        }
+
+        @Override
+        public void readJson(@NotNull JsonElement json, @NotNull MValue<Float> value) {
+            value.set(json.getAsFloat());
+        }
+
+        @Override
+        public Float getMin() {
+            return this.min;
+        }
+
+        @Override
+        public Float getMax() {
+            return this.max;
+        }
+
+        @Override
+        protected void registerServerCommand(@NotNull MValue<Float> value) {
+            if (value.type instanceof MValueType.MValueMinMax<Float> minMax) {
+                CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                        .then(CommandManager.literal(value.id.toString())
+                                .then(CommandManager.argument("value", FloatArgumentType.floatArg(minMax.getMin(), minMax.getMax()))
+                                        .executes(ctx -> {
+                                            value.set(FloatArgumentType.getFloat(ctx, "value"));
+                                            MVServerManager.INSTANCE.onChange(value);
+                                            ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()), true);
+                                            return 1;
+                                        })
+                                ).executes(ctx -> {
+                                    ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()), false);
+                                    return 1;
+                                }))));
+            }
+        }
+
+        @Override
+        protected void registerClientCommand(@NotNull MValue<Float> value) {
+            if (value.type instanceof MValueType.MValueMinMax<Float> minMax) {
+                ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(4))
+                        .then(ClientCommandManager.literal(value.id.toString())
+                                .then(ClientCommandManager.argument("value", FloatArgumentType.floatArg(minMax.getMin(), minMax.getMax()))
+                                        .executes(ctx -> {
+                                            value.set(FloatArgumentType.getFloat(ctx, "value"));
+                                            ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()));
+                                            return 1;
+                                        })
+                                ).executes(ctx -> {
+                                    ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()));
+                                    return 1;
+                                }))));
+            }
+        }
+    }
+
+    public static class MValueDouble extends MValueRoundable<Double> {
+        private final double min;
+        private final double max;
+
+        public MValueDouble(double defaultValue, double min, double max, int decimals) {
+            super(decimals);
+            this.defaultValue = defaultValue;
+            this.min = min;
+            this.max = max;
+        }
+
+        public MValueDouble(double defaultValue, double min, double max) {
+            this(defaultValue, min, max, 2);
+        }
+
         @Override
         public @NotNull String getValueAsString(@NotNull MValue<Double> value) {
-            return "%.2f".formatted(value.get());
+            var format = "%." + this.getDecimals() + "f";
+            return String.format(format, value.get());
         }
 
         @Override
@@ -514,8 +550,15 @@ public abstract class MValueType<T> {
         }
 
         @Override
+        public MValueRoundable<Double> of(Double defaultValue, Double min, Double max, int decimals) {
+            return new MValueDouble(defaultValue, min, max, decimals);
+        }
+
+        @Override
         public boolean set(@NotNull MValue<Double> mValue, Double value) {
-            mValue.value = Math.clamp(value, this.getMin(), this.getMax());
+            var big = new BigDecimal(value);
+            big = big.setScale(this.getDecimals(), RoundingMode.HALF_UP);
+            mValue.value = Math.clamp(big.doubleValue(), this.getMin(), this.getMax());
             return true;
         }
 
@@ -588,9 +631,9 @@ public abstract class MValueType<T> {
         }
     }
 
-    public static final class MValuePercent extends MValueDouble {
-        MValuePercent(double defaultValue, double min, double max) {
-            super(defaultValue, min, max);
+    public static class MValuePercent extends MValueDouble {
+        public MValuePercent(double defaultValue, double min, double max) {
+            super(defaultValue, min, max, 0);
         }
 
         @Override
