@@ -1,5 +1,6 @@
 package xyz.amymialee.mialib;
 
+import com.google.common.reflect.Reflection;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -34,7 +35,7 @@ public @SuppressWarnings("unused") class Mialib implements ModInitializer, Entit
     public @Override void onInitialize() {
         CommandModule.init();
         EventModule.init();
-        ExtrasModule.init();
+        Reflection.initialize(ExtrasModule.class);
         PayloadTypeRegistry.playC2S().register(AttackingPayload.ID, AttackingPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(UsingPayload.ID, UsingPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(MValuePayload.ID, MValuePayload.CODEC);

@@ -121,7 +121,7 @@ public class MValueScreen extends Screen {
                 widget.scroll = this.categoryScroll;
                 widget.velocity = this.categoryVelocity;
                 context.getMatrices().translate(0, -(this.categoryScroll + this.categoryVelocity * delta), 0);
-            } else if (drawable instanceof MValueType.MValueWidget<?> widget) {
+            } else if (drawable instanceof MValueWidget<?> widget) {
                 context.enableScissor(left + 7, this.height / 2 - 93, right - 7, this.height / 2 + 93);
                 widget.scroll = this.valueScroll;
                 widget.velocity = this.valueVelocity;
