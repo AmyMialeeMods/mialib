@@ -46,7 +46,8 @@ public class MValueScreen extends Screen {
         }
         for (var i = 0; i < categories.size(); i++) {
             var category = categories.get(i);
-            if (category.getValues(this.client.player).isEmpty()) continue;
+            if (MValue.INVISIBLE_CATEGORY == category || category.getValues(this.client.player).isEmpty()) continue;
+            if (this.selectedCategory.getValues(this.client.player).isEmpty()) this.selectedCategory = category;
             var x = centreX + 7 + 3 - WIDTH / 2 + (i % 2 == 0 ? 0 : 25);
             var y = centreY + 7 + 3 - HEIGHT / 2 + (i / 2) * 25;
             this.addDrawableChild(category.getWidget(x, y, category == this.selectedCategory ? null : button -> {

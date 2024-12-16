@@ -18,6 +18,7 @@ import java.util.function.Predicate;
 
 public final class MValue<T> {
     public static final MValueCategory DEFAULT_CATEGORY = new MValueCategory(Mialib.id(Mialib.MOD_ID), Items.DIAMOND, Identifier.ofVanilla("textures/block/purple_concrete.png"), 16, 16);
+    public static final MValueCategory INVISIBLE_CATEGORY = new MValueCategory(Mialib.id(Mialib.MOD_ID), Items.LIGHT_GRAY_STAINED_GLASS_PANE, Identifier.ofVanilla("textures/block/light_gray_stained_glass.png"), 16, 16);
     public static final MValueCategory MINECRAFT_CATEGORY = new MValueCategory(Identifier.ofVanilla("minecraft"), Items.GRASS_BLOCK, Identifier.ofVanilla("textures/block/stone.png"), 16, 16);
     public static final MValueType.MValueBoolean BOOLEAN_TRUE = new MValueType.MValueBoolean(true);
     public static final MValueType.MValueBoolean BOOLEAN_FALSE = new MValueType.MValueBoolean(false);
