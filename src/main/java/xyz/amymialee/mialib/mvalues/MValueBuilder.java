@@ -8,6 +8,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.util.runnables.CachedFunction;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -21,6 +22,7 @@ public class MValueBuilder<T> {
     private int permissionLevel = 4;
     private boolean clientSide = false;
     private Predicate<PlayerEntity> canChange = (p) -> true;
+    private Consumer<MValue<T>> onChange = (value) -> {};
 
     protected MValueBuilder(Identifier id, MValueType<T> type) {
         this.id = id;
@@ -79,8 +81,13 @@ public class MValueBuilder<T> {
         return this;
     }
 
+    public MValueBuilder<T> onChange(Consumer<MValue<T>> onChange) {
+        this.onChange = onChange;
+        return this;
+    }
+
     public MValue<T> build() {
-        var value = new MValue<>(this.id, this.translationKey, this.type, this.stackFunction, this.permissionLevel, this.clientSide, this.canChange);
+        var value = new MValue<>(this.id, this.translationKey, this.type, this.stackFunction, this.permissionLevel, this.clientSide, this.canChange, this.onChange);
         if (this.clientSide) {
             MVClientManager.register(this.category, value);
         } else {

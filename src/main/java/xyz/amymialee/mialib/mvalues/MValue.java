@@ -13,6 +13,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.Mialib;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -34,9 +35,10 @@ public final class MValue<T> {
     public final int permissionLevel;
     public final boolean clientSide;
     public final Predicate<PlayerEntity> canChange;
+    public final Consumer<MValue<T>> onChange;
     T value;
 
-    public MValue(Identifier id, String translationKey, @NotNull MValueType<T> type, Function<MValue<T>, ItemStack> stackFunction, int permissionLevel, boolean clientSide, Predicate<PlayerEntity> canChange) {
+    public MValue(Identifier id, String translationKey, @NotNull MValueType<T> type, Function<MValue<T>, ItemStack> stackFunction, int permissionLevel, boolean clientSide, Predicate<PlayerEntity> canChange, Consumer<MValue<T>> onChange) {
         this.id = id;
         this.translationKey = translationKey;
         this.type = type;
@@ -44,6 +46,7 @@ public final class MValue<T> {
         this.permissionLevel = permissionLevel;
         this.clientSide = clientSide;
         this.canChange = canChange;
+        this.onChange = onChange;
         this.value = type.defaultValue;
     }
 
@@ -84,15 +87,17 @@ public final class MValue<T> {
     public void set(T value) {
         this.type.set(this, value);
         if (this.clientSide) MVClientManager.INSTANCE.onChange(this);
+        this.onChange.accept(this);
     }
 
     @Environment(EnvType.CLIENT)
     public void send(T value) {
         this.type.set(this, value);
-        if (!this.clientSide) {
-            ClientPlayNetworking.send(new MValuePayload(this.id, this.type.writeNbt(new NbtCompound(), this)));
-        } else {
+        if (this.clientSide) {
             MVClientManager.INSTANCE.onChange(this);
+            this.onChange.accept(this);
+        } else {
+            ClientPlayNetworking.send(new MValuePayload(this.id, this.type.writeNbt(new NbtCompound(), this)));
         }
     }
 
