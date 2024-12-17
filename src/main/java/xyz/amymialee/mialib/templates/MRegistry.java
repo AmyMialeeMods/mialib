@@ -111,7 +111,7 @@ public @SuppressWarnings({"unused", "UnusedReturnValue"}) class MRegistry {
 		var item = function.apply(settings.registryKey(key));
 		Registry.register(Registries.ITEM, key, item);
 		for (var group : groups) this.addToItemGroup(group, item.getDefaultStack());
-		return this.register(path, item);
+		return item;
 	}
 
 	public void addToItemGroup(RegistryKey<ItemGroup> group, ItemStack stack) {
