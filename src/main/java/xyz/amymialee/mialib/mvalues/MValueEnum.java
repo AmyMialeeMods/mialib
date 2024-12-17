@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class MValueEnum<T extends Enum<T>> extends MValueType<T> {
     public final Class<T> type;
-    public final Enum<T> defaultValue;
 
     public MValueEnum(@NotNull T defaultValue) {
         this.type = defaultValue.getDeclaringClass();
