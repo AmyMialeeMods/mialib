@@ -41,6 +41,7 @@ import net.minecraft.recipe.display.SlotDisplay;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.scoreboard.number.NumberFormatType;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.SoundEvent;
@@ -79,6 +80,7 @@ import xyz.amymialee.mialib.Mialib;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public @SuppressWarnings({"unused", "UnusedReturnValue"}) class MRegistry {
 	private static final Map<Class<?>, Registry<?>> DEFAULT_REGISTRIES = new HashMap<>();
@@ -100,24 +102,27 @@ public @SuppressWarnings({"unused", "UnusedReturnValue"}) class MRegistry {
 
 	public @SafeVarargs final Block register(String path, Block block, RegistryKey<ItemGroup> @NotNull ... groups) {
 		this.register(path, block);
-		Item.BLOCK_ITEMS.put(block, this.register(path, new BlockItem(block, new Item.Settings()), groups));
+		Item.BLOCK_ITEMS.put(block, this.register(path, new Item.Settings(), (s) -> new BlockItem(block, s), groups));
 		return block;
 	}
 	
-	public @SafeVarargs final Item register(String path, Item item, RegistryKey<ItemGroup> @NotNull ... groups) {
-		for (var group : groups) this.addToItemGroup(Registries.ITEM_GROUP.get(group), item.getDefaultStack());
+	public @SafeVarargs final Item register(String path, Item.@NotNull Settings settings, @NotNull Function<Item.Settings, Item> function, RegistryKey<ItemGroup> @NotNull ... groups) {
+		var key = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(this.namespace, path));
+		var item = function.apply(settings.registryKey(key));
+		Registry.register(Registries.ITEM, key, item);
+		for (var group : groups) this.addToItemGroup(group, item.getDefaultStack());
 		return this.register(path, item);
 	}
 
-	public void addToItemGroup(ItemGroup group, ItemStack stack) {
-		ItemGroupEvents.modifyEntriesEvent(Registries.ITEM_GROUP.getKey(group).orElseThrow()).register((entries) -> entries.add(stack));
+	public void addToItemGroup(RegistryKey<ItemGroup> group, ItemStack stack) {
+		ItemGroupEvents.modifyEntriesEvent(group).register((entries) -> entries.add(stack));
 	}
 
     public @SuppressWarnings("unchecked") <T extends LivingEntity> EntityType<T> register(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes) {
 		this.register(path, entity);
 		if (attributes != null) FabricDefaultAttributeRegistry.register(entity, attributes);
         if (entity != null && entity.getBaseClass().isInstance(MobEntity.class))
-            this.register(path + "_spawn_egg", new SpawnEggItem((EntityType<? extends MobEntity>) entity, new Item.Settings()), ItemGroups.SPAWN_EGGS);
+            this.register(path + "_spawn_egg", new Item.Settings(), (s) -> new SpawnEggItem((EntityType<? extends MobEntity>) entity, s), ItemGroups.SPAWN_EGGS);
         return entity;
 	}
 
