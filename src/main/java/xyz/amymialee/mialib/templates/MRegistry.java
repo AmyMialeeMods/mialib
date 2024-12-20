@@ -3,6 +3,7 @@ package xyz.amymialee.mialib.templates;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.advancement.criterion.Criterion;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.DecoratedPotPattern;
 import net.minecraft.block.entity.BlockEntityType;
@@ -100,12 +101,18 @@ public @SuppressWarnings({"unused", "UnusedReturnValue"}) class MRegistry {
 		this.registries.put(clazz, registry);
 	}
 
-	public @SafeVarargs final Block register(String path, Block block, RegistryKey<ItemGroup> @NotNull ... groups) {
-		this.register(path, block);
-		Item.BLOCK_ITEMS.put(block, this.register(path, new Item.Settings(), (s) -> new BlockItem(block, s), groups));
+	public @SafeVarargs final Block register(String path, AbstractBlock.@NotNull Settings settings, @NotNull Function<AbstractBlock.Settings, Block> function, RegistryKey<ItemGroup> @NotNull ... groups) {
+		var key = RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(this.namespace, path));
+		var block = function.apply(settings.registryKey(key));
+		Registry.register(Registries.BLOCK, key, block);
+		if (groups.length > 0) {
+			var item = this.register(path, new Item.Settings(), (s) -> new BlockItem(block, s), groups);
+			Item.BLOCK_ITEMS.put(block, item);
+			for (var group : groups) this.addToItemGroup(group, item.getDefaultStack());
+		}
 		return block;
 	}
-	
+
 	public @SafeVarargs final Item register(String path, Item.@NotNull Settings settings, @NotNull Function<Item.Settings, Item> function, RegistryKey<ItemGroup> @NotNull ... groups) {
 		var key = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(this.namespace, path));
 		var item = function.apply(settings.registryKey(key));
@@ -121,8 +128,7 @@ public @SuppressWarnings({"unused", "UnusedReturnValue"}) class MRegistry {
     public @SuppressWarnings("unchecked") <T extends LivingEntity> EntityType<T> register(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes) {
 		this.register(path, entity);
 		if (attributes != null) FabricDefaultAttributeRegistry.register(entity, attributes);
-        if (entity != null && entity.getBaseClass().isInstance(MobEntity.class))
-            this.register(path + "_spawn_egg", new Item.Settings(), (s) -> new SpawnEggItem((EntityType<? extends MobEntity>) entity, s), ItemGroups.SPAWN_EGGS);
+        if (entity != null && entity.getBaseClass().isInstance(MobEntity.class)) this.register(path + "_spawn_egg", new Item.Settings(), (s) -> new SpawnEggItem((EntityType<? extends MobEntity>) entity, s), ItemGroups.SPAWN_EGGS);
         return entity;
 	}
 
