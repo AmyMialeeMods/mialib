@@ -9,6 +9,7 @@ import net.minecraft.block.DecoratedPotPattern;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.serialize.ArgumentSerializer;
 import net.minecraft.component.ComponentType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Activity;
@@ -125,11 +126,23 @@ public @SuppressWarnings({"unused", "UnusedReturnValue"}) class MRegistry {
 		ItemGroupEvents.modifyEntriesEvent(group).register((entries) -> entries.add(stack));
 	}
 
-    public @SuppressWarnings("unchecked") <T extends LivingEntity> EntityType<T> register(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes) {
+	public <T extends Entity> EntityType<T> register(String path, EntityType.@NotNull Builder<T> builder) {
+		var key = RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(this.namespace, path));
+		var entity = builder.build(key);
+		return this.register(path, entity);
+	}
+
+	public <T extends LivingEntity> EntityType<T> register(String path, EntityType.@NotNull Builder<T> builder, @Nullable DefaultAttributeContainer.Builder attributes) {
+		var key = RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(this.namespace, path));
+		var entity = builder.build(key);
+		return this.register(path, entity, attributes);
+	}
+
+	public @SuppressWarnings("unchecked") <T extends LivingEntity> EntityType<T> register(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes) {
 		this.register(path, entity);
 		if (attributes != null) FabricDefaultAttributeRegistry.register(entity, attributes);
-        if (entity != null && entity.getBaseClass().isInstance(MobEntity.class)) this.register(path + "_spawn_egg", new Item.Settings(), (s) -> new SpawnEggItem((EntityType<? extends MobEntity>) entity, s), ItemGroups.SPAWN_EGGS);
-        return entity;
+		if (entity != null && entity.getBaseClass().isInstance(MobEntity.class)) this.register(path + "_spawn_egg", new Item.Settings(), (s) -> new SpawnEggItem((EntityType<? extends MobEntity>) entity, s), ItemGroups.SPAWN_EGGS);
+		return entity;
 	}
 
 	public SoundEvent registerSound(String name) {
