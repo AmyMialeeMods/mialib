@@ -117,8 +117,8 @@ public class ExtraFlagsComponent implements AutoSyncedComponent {
     }
 
     public @Override void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-        this.flags = tag.getByte("flags");
-        this.commandFlags = tag.getByte("commandFlags");
+        this.flags = tag.getByte("flags", (byte) 0);
+        this.commandFlags = tag.getByte("commandFlags", (byte) 0);
     }
 
     public @Override void writeToNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {

@@ -56,7 +56,7 @@ public class MValueLong extends MValueMinMax<Long> {
 
     @Override
     public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<Long> value) {
-        value.value = compound.getLong("value");
+        value.value = compound.getLong("value", this.defaultValue);
     }
 
     @Override

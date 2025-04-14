@@ -7,7 +7,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.ServerList;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.Util;
@@ -48,8 +47,14 @@ public abstract class ServerListMixin implements MServerList {
             this.mialibServers.clear();
             var serverFile = NbtIo.read(MDir.getMialibPath("mialibservers.dat"));
             if (serverFile == null) return;
-            var servers = serverFile.getList("servers", NbtElement.COMPOUND_TYPE);
-            for (var i = 0; i < servers.size(); i++) this.mialibServers.add(ServerInfo.fromNbt(servers.getCompound(i)));
+            var servers = serverFile.getList("servers");
+            if (servers.isPresent()) {
+                for (var i = 0; i < servers.get().size(); i++) {
+                    var compound = servers.get().getCompound(i);
+                    if (compound.isEmpty()) continue;
+                    this.mialibServers.add(ServerInfo.fromNbt(compound.get()));
+                }
+            }
         } catch (Exception e) {
             Mialib.LOGGER.error("Couldn't load mialib server list", e);
         }

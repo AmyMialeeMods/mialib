@@ -56,7 +56,7 @@ public class MValueInteger extends MValueMinMax<Integer> {
 
     @Override
     public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<Integer> value) {
-        value.value = compound.getInt("value");
+        value.value = compound.getInt("value", this.defaultValue);
     }
 
     @Override

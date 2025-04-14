@@ -36,24 +36,23 @@ public class AddServerScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("TAIL"))
     private void mialib$serverButton(CallbackInfo ci, @Share("button") @NotNull LocalRef<ButtonWidget> ref) {
-        if (this.parent instanceof MultiplayerScreen multiplayerScreen) {
-            var serverList = multiplayerScreen.getServerList();
-            serverList.mialib$setEditingMialibServer(serverList.mialib$getMialibServers().contains(multiplayerScreen.getServerList().mialib$getEditTarget()));
-            var button = new ButtonWidget(this.width / 2 + 104, this.height / 4 + 72, 20, 20, Text.empty(), (b) -> {
-                serverList.mialib$setEditingMialibServer(!serverList.mialib$isEditingMialibServer());
-                b.setTooltip(Tooltip.of(Text.translatable((serverList.mialib$isEditingMialibServer() ? "%s.mialib_server.true" : "%s.mialib_server.false").formatted(Mialib.MOD_ID))));
-            }, Supplier::get) {
-                @Override
-                protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-                    super.renderWidget(context, mouseX, mouseY, delta);
-                    context.mialib$drawTexture(serverList.mialib$isEditingMialibServer() ? LOGO_TEXTURE : LOGO_GRAY_TEXTURE, this.getX() + 2, this.getY() + 2, 16, 16, 16, 16);
-                }
+        if (!(this.parent instanceof MultiplayerScreen multiplayerScreen)) return;
+        var serverList = multiplayerScreen.getServerList();
+        serverList.mialib$setEditingMialibServer(serverList.mialib$getMialibServers().contains(multiplayerScreen.getServerList().mialib$getEditTarget()));
+        var button = new ButtonWidget(this.width / 2 + 104, this.height / 4 + 72, 20, 20, Text.empty(), (b) -> {
+            serverList.mialib$setEditingMialibServer(!serverList.mialib$isEditingMialibServer());
+            b.setTooltip(Tooltip.of(Text.translatable((serverList.mialib$isEditingMialibServer() ? "%s.mialib_server.true" : "%s.mialib_server.false").formatted(Mialib.MOD_ID))));
+        }, Supplier::get) {
+            @Override
+            protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+                super.renderWidget(context, mouseX, mouseY, delta);
+                context.mialib$drawTexture(serverList.mialib$isEditingMialibServer() ? LOGO_TEXTURE : LOGO_GRAY_TEXTURE, this.getX() + 2, this.getY() + 2, 16, 16, 16, 16);
+            }
 
-                @Override
-                public void drawMessage(DrawContext context, TextRenderer textRenderer, int color) {}
-            };
-            button.setTooltip(Tooltip.of(Text.translatable((serverList.mialib$isEditingMialibServer() ? "%s.mialib_server.true" : "%s.mialib_server.false").formatted(Mialib.MOD_ID))));
-            this.addDrawableChild(button);
-        }
+            @Override
+            public void drawMessage(DrawContext context, TextRenderer textRenderer, int color) {}
+        };
+        button.setTooltip(Tooltip.of(Text.translatable((serverList.mialib$isEditingMialibServer() ? "%s.mialib_server.true" : "%s.mialib_server.false").formatted(Mialib.MOD_ID))));
+        this.addDrawableChild(button);
     }
 }

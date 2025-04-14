@@ -35,7 +35,7 @@ public @SuppressWarnings("unused") interface MItemStack {
 	}
 
 	static @NotNull ItemStack enchantStack(@NotNull ItemStack stack, @NotNull EnchantmentLevelEntry @NotNull ... enchantmentLevelEntry) {
-		for (var entry : enchantmentLevelEntry) stack.addEnchantment(entry.enchantment, entry.level);
+		for (var entry : enchantmentLevelEntry) stack.addEnchantment(entry.enchantment(), entry.level());
 		return stack;
 	}
 

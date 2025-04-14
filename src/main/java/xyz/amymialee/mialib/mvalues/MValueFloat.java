@@ -77,7 +77,7 @@ public class MValueFloat extends MValueRoundable<Float> {
 
     @Override
     public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<Float> value) {
-        value.value = compound.getFloat("value");
+        value.value = compound.getFloat("value", this.defaultValue);
     }
 
     @Override

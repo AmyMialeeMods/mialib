@@ -1,5 +1,5 @@
-plugins {
-    id 'fabric-loom' version '1.9-SNAPSHOT'
+plugins { // Latest loom at https://modmuss50.me/fabric.html
+    id 'fabric-loom' version '1.10-SNAPSHOT'
     id 'maven-publish'
 }
 

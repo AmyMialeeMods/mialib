@@ -77,7 +77,7 @@ public class MValueDouble extends MValueRoundable<Double> {
 
     @Override
     public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<Double> value) {
-        value.value = compound.getDouble("value");
+        value.value = compound.getDouble("value", this.defaultValue);
     }
 
     @Override

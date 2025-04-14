@@ -44,7 +44,7 @@ public class MValueBoolean extends MValueType<Boolean> {
 
     @Override
     public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<Boolean> value) {
-        value.value = compound.getBoolean("value");
+        value.value = compound.getBoolean("value", this.defaultValue);
     }
 
     @Override

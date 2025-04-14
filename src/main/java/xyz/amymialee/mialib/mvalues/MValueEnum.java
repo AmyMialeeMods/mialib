@@ -48,7 +48,7 @@ public class MValueEnum<T extends Enum<T>> extends MValueType<T> {
 
     @Override
     public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<T> value) {
-        value.value = Enum.valueOf(this.type, compound.getString("value"));
+        value.value = Enum.valueOf(this.type, compound.getString("value", String.valueOf(this.defaultValue)));
     }
 
     @Override

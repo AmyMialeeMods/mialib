@@ -70,10 +70,10 @@ public class HoldingComponent implements AutoSyncedComponent, CommonTickingCompo
 	}
 
 	public @Override void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-		this.attacking = tag.getBoolean("using");
-		this.using = tag.getBoolean("using");
-		this.tickAttacking = tag.getInt("tickAttacking");
-		this.tickUsing = tag.getInt("tickUsing");
+		this.attacking = tag.getBoolean("using", false);
+		this.using = tag.getBoolean("using", false);
+		this.tickAttacking = tag.getInt("tickAttacking", 0);
+		this.tickUsing = tag.getInt("tickUsing", 0);
 	}
 
 	public @Override void writeToNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
