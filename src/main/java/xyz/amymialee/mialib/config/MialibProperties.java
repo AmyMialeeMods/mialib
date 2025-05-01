@@ -29,11 +29,7 @@ public class MialibProperties {
         try (var reader = new BufferedReader(new FileReader(mialibFile))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                for (var property : properties) {
-                    if (line.startsWith(property.key + ":")) {
-                        property.load(line.split(":")[1].trim());
-                    }
-                }
+                for (var property : properties) if (line.startsWith(property.key + ":")) property.load(line.split(":")[1].trim());
             }
         } catch (FileNotFoundException ignored) {
             Mialib.LOGGER.info("Failed to find mialib properties file {}", mialibFile);

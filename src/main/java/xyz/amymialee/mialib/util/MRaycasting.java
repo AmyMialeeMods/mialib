@@ -90,9 +90,7 @@ public @SuppressWarnings("unused") interface MRaycasting {
 		var tMax = Double.MAX_VALUE;
 		for (var axis : Direction.Axis.values()) {
 			if (Math.abs(direction.getComponentAlongAxis(axis)) < 1e-8) {
-				if (start.getComponentAlongAxis(axis) < boxMin.getComponentAlongAxis(axis) || start.getComponentAlongAxis(axis) > boxMax.getComponentAlongAxis(axis)) {
-					return false;
-				}
+				if (start.getComponentAlongAxis(axis) < boxMin.getComponentAlongAxis(axis) || start.getComponentAlongAxis(axis) > boxMax.getComponentAlongAxis(axis)) return false;
 			} else {
 				var ood = 1.0 / direction.getComponentAlongAxis(axis);
 				var t1 = (boxMin.getComponentAlongAxis(axis) - start.getComponentAlongAxis(axis)) * ood;

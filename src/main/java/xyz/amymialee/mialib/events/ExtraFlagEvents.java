@@ -16,13 +16,9 @@ public class ExtraFlagEvents {
                 succeeded = true;
                 continue;
             }
-            if (result != ActionResult.PASS) {
-                return result;
-            }
+            if (result != ActionResult.PASS) return result;
         }
-        if (succeeded) {
-            return ActionResult.SUCCESS;
-        }
+        if (succeeded) return ActionResult.SUCCESS;
         return ActionResult.PASS;
     };
     public static final Event<HaveFlagCallback> SHOULD_BE_INDESTRUCTIBLE = EventFactory.createArrayBacked(HaveFlagCallback.class, callbacks -> (world, entity) -> CALLBACK_RESULT.apply(callbacks, world, entity));

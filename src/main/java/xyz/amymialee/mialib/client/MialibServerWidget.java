@@ -88,9 +88,7 @@ public class MialibServerWidget extends MultiplayerServerListWidget.Entry {
             };
         }
         var i = x + entryWidth - 10 - 5;
-        if (this.statusIconTexture != null) {
-            context.drawGuiTexture(RenderLayer::getGuiTextured, this.statusIconTexture, i, y, 10, 8);
-        }
+        if (this.statusIconTexture != null) context.drawGuiTexture(RenderLayer::getGuiTextured, this.statusIconTexture, i, y, 10, 8);
         var bs = this.server.getFavicon();
         if (!Arrays.equals(bs, this.favicon)) {
             if (this.uploadFavicon(bs)) {

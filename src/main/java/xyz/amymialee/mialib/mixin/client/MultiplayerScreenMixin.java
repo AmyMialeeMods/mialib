@@ -34,10 +34,6 @@ public abstract class MultiplayerScreenMixin extends Screen {
     @Shadow private ButtonWidget buttonDelete;
     @Shadow protected abstract void connect(ServerInfo entry);
 
-    @Shadow
-    @Final
-    private MultiplayerServerListPinger serverListPinger;
-
     protected MultiplayerScreenMixin(Text title) {
         super(title);
     }
