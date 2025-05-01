@@ -1,82 +1,26 @@
 package xyz.amymialee.mialib.mvalues;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.FloatArgumentType;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
-public class MValueInteger extends MValueMinMax<Integer> {
-    public final int min;
-    public final int max;
-
-    public MValueInteger(int defaultValue, int min, int max) {
-        this.defaultValue = defaultValue;
-        this.min = min;
-        this.max = max;
+public class MValueSeconds extends MValueInteger {
+    public MValueSeconds(float defaultValue, float min, float max) {
+        super((int) (defaultValue * 20), (int) (min * 20), (int) (max * 20));
     }
 
     @Override
-    public @NotNull Object getWidget(int x, int y, MValue<Integer> value) {
-        var self = this;
-        return new MValueSliderWidget<>(x, y, value) {
-            @Override
-            public void resetSliderValue() {
-                this.sliderValue = (this.value.get() - self.getMin()) / (self.getMax() - self.getMin() + 0d);
-            }
-
-            @Override
-            protected Integer getValue() {
-                return (int) (self.min + (self.getMax() - self.min) * this.sliderValue);
-            }
-        };
+    public @NotNull String getValueAsString(@NotNull MValue<Integer> value) {
+        return "%.0f%%".formatted(value.get() / 20f);
     }
 
     @Override
     public @NotNull MValueMinMax<Integer> of(Integer defaultValue, Integer min, Integer max) {
-        return new MValueInteger(defaultValue, min, max);
-    }
-
-    @Override
-    public boolean set(@NotNull MValue<Integer> mValue, Integer value) {
-        mValue.value = Math.clamp(value, this.getMin(), this.getMax());
-        return true;
-    }
-
-    @Override
-    public @NotNull NbtCompound writeNbt(@NotNull NbtCompound compound, @NotNull MValue<Integer> value) {
-        compound.putInt("value", value.get());
-        return compound;
-    }
-
-    @Override
-    public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<Integer> value) {
-        value.value = compound.getInt("value", this.defaultValue);
-    }
-
-    @Override
-    public @NotNull JsonElement writeJson(@NotNull MValue<Integer> value) {
-        return new JsonPrimitive(value.get());
-    }
-
-    @Override
-    public void readJson(@NotNull JsonElement json, @NotNull MValue<Integer> value) {
-        value.set(json.getAsInt());
-    }
-
-    @Override
-    public Integer getMin() {
-        return this.min;
-    }
-
-    @Override
-    public Integer getMax() {
-        return this.max;
+        return new MValueSeconds(defaultValue, min, max);
     }
 
     @Override
@@ -84,9 +28,9 @@ public class MValueInteger extends MValueMinMax<Integer> {
         if (value.type instanceof MValueMinMax<Integer> minMax) {
             CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(value.permissionLevel))
                     .then(CommandManager.literal(value.id.toString())
-                            .then(CommandManager.argument("value", IntegerArgumentType.integer(minMax.getMin(), minMax.getMax()))
+                            .then(CommandManager.argument("value", FloatArgumentType.floatArg(minMax.getMin(), minMax.getMax()))
                                     .executes(ctx -> {
-                                        value.set(IntegerArgumentType.getInteger(ctx, "value"));
+                                        value.set((int) (FloatArgumentType.getFloat(ctx, "value") * 20));
                                         MVServerManager.INSTANCE.onChange(value);
                                         ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()), true);
                                         return 1;
@@ -103,9 +47,9 @@ public class MValueInteger extends MValueMinMax<Integer> {
         if (value.type instanceof MValueMinMax<Integer> minMax) {
             ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(value.permissionLevel))
                     .then(ClientCommandManager.literal(value.id.toString())
-                            .then(ClientCommandManager.argument("value", IntegerArgumentType.integer(minMax.getMin(), minMax.getMax()))
+                            .then(ClientCommandManager.argument("value", FloatArgumentType.floatArg(minMax.getMin(), minMax.getMax()))
                                     .executes(ctx -> {
-                                        value.set(IntegerArgumentType.getInteger(ctx, "value"));
+                                        value.set((int) (FloatArgumentType.getFloat(ctx, "value") * 20));
                                         ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()));
                                         return 1;
                                     })
