@@ -15,6 +15,7 @@ import xyz.amymialee.mialib.Mialib;
 import xyz.amymialee.mialib.util.runnables.CachedSupplier;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -27,12 +28,24 @@ public class MValueCategory {
     public final int width;
     public final int height;
 
+    public MValueCategory(Identifier id, @NotNull Item item, Identifier backgroundTexture) {
+        this(id, item.getDefaultStack(), backgroundTexture, 16, 16);
+    }
+
     public MValueCategory(Identifier id, @NotNull Item item, Identifier backgroundTexture, int width, int height) {
         this(id, item.getDefaultStack(), backgroundTexture, width, height);
     }
 
+    public MValueCategory(Identifier id, ItemStack stack, Identifier backgroundTexture) {
+        this(id, new CachedSupplier<>(stack), backgroundTexture, 16, 16);
+    }
+
     public MValueCategory(Identifier id, ItemStack stack, Identifier backgroundTexture, int width, int height) {
         this(id, new CachedSupplier<>(stack), backgroundTexture, width, height);
+    }
+
+    public MValueCategory(Identifier id, Supplier<ItemStack> stackSupplier, Identifier backgroundTexture) {
+        this(id, stackSupplier, backgroundTexture, 16, 16);
     }
 
     public MValueCategory(Identifier id, Supplier<ItemStack> stackSupplier, Identifier backgroundTexture, int width, int height) {
@@ -42,6 +55,7 @@ public class MValueCategory {
         this.width = width;
         this.height = height;
         CATEGORIES.add(this);
+        CATEGORIES.sort(Comparator.comparing(a -> a.id.getPath()));
     }
 
     public void addValue(MValue<?> value) {

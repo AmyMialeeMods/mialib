@@ -44,18 +44,19 @@ public class MValueScreen extends Screen {
             this.addDrawableChild(new ScrollButtonWidget(centreX - WIDTH / 2 + 23 + 11, centreY + HEIGHT / 2 - 5, ScrollButtonWidget.Type.NEXT, (a) -> this.categoryVelocity += a));
             this.addDrawableChild(new ScrollButtonWidget(centreX - WIDTH / 2 + 23, centreY + HEIGHT / 2 - 5, ScrollButtonWidget.Type.PREVIOUS, (a) -> this.categoryVelocity -= a));
         }
-        for (var i = 0; i < categories.size(); i++) {
-            var category = categories.get(i);
+        var j = 0;
+        for (var category : categories) {
             if (MValue.INVISIBLE_CATEGORY == category || category.getValues(this.client.player).isEmpty()) continue;
             if (this.selectedCategory.getValues(this.client.player).isEmpty()) this.selectedCategory = category;
-            var x = centreX + 7 + 3 - WIDTH / 2 + (i % 2 == 0 ? 0 : 25);
-            var y = centreY + 7 + 3 - HEIGHT / 2 + (i / 2) * 25;
+            var x = centreX + 7 + 3 - WIDTH / 2 + (j % 2 == 0 ? 0 : 25);
+            var y = centreY + 7 + 3 - HEIGHT / 2 + (j / 2) * 25;
             this.addDrawableChild(category.getWidget(x, y, category == this.selectedCategory ? null : button -> {
                 this.selectedCategory = category;
                 this.valueScroll = 0;
                 this.valueVelocity = 0;
                 this.clearAndInit();
             }));
+            j++;
         }
         var values = this.selectedCategory.getValues(this.client.player);
         if (values.size() > 16) {
