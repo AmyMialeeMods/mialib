@@ -15,7 +15,7 @@ public class MValueSeconds extends MValueInteger {
 
     @Override
     public @NotNull String getValueAsString(@NotNull MValue<Integer> value) {
-        return "%.0f%%".formatted(value.get() / 20f);
+        return "%.02f".formatted(value.get() / 20f);
     }
 
     @Override
