@@ -27,7 +27,7 @@ public final class MValue<T> {
     public static final MValueFloat FLOAT = new MValueFloat(1f, 0f, 1f);
     public static final MValueLong LONG = new MValueLong(100, 1, 100);
     public static final MValueDouble DOUBLE = new MValueDouble(1d, 0d, 1d);
-    public static final MValuePercent PERCENT = new MValuePercent(1d, 0d, 1d);
+    public static final MValuePercent PERCENT = new MValuePercent(1d);
     public static final MValueSeconds SECONDS = new MValueSeconds(30f, 0f, 60f);
     public final Identifier id;
     public final String translationKey;

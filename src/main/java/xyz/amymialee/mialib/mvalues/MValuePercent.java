@@ -3,8 +3,12 @@ package xyz.amymialee.mialib.mvalues;
 import org.jetbrains.annotations.NotNull;
 
 public class MValuePercent extends MValueDouble {
+    public MValuePercent(double defaultValue) {
+        super(defaultValue, 0, 1, 2);
+    }
+
     public MValuePercent(double defaultValue, double min, double max) {
-        super(defaultValue, min, max, 0);
+        super(defaultValue, min, max, 2);
     }
 
     public MValuePercent(double defaultValue, double min, double max, int decimals) {
@@ -13,7 +17,7 @@ public class MValuePercent extends MValueDouble {
 
     @Override
     public @NotNull String getValueAsString(@NotNull MValue<Double> value) {
-        return "%.02f%%".formatted(value.get() * 100);
+        return "%.0f%%".formatted(value.get() * 100);
     }
 
     public @NotNull MValueMinMax<Double> of(Double defaultValue) {
