@@ -53,12 +53,12 @@ public class MValueDouble extends MValueRoundable<Double> {
 
     @Override
     public @NotNull MValueMinMax<Double> of(Double defaultValue, Double min, Double max) {
-        return new xyz.amymialee.mialib.mvalues.MValueDouble(defaultValue, min, max);
+        return new MValueDouble(defaultValue, min, max);
     }
 
     @Override
     public MValueRoundable<Double> of(Double defaultValue, Double min, Double max, int decimals) {
-        return new xyz.amymialee.mialib.mvalues.MValueDouble(defaultValue, min, max, decimals);
+        return new MValueDouble(defaultValue, min, max, decimals);
     }
 
     @Override
