@@ -149,6 +149,10 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 			return LootTable.builder().pool(LootPool.builder().rolls(ConstantLootNumberProvider.create(1.0F)).with(ItemEntry.builder(item).apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(min, max)))));
 		}
 
+		public RegistryWrapper.WrapperLookup registries() {
+			return this.registries;
+		}
+
 		@Override
 		public String getName() {
 			return this.dataGen.name + " " + super.getName();
@@ -170,6 +174,10 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 
 		public LootTable.Builder makeItemWithRange(ItemConvertible item, int min, int max) {
 			return LootTable.builder().pool(LootPool.builder().rolls(ConstantLootNumberProvider.create(1.0F)).with(ItemEntry.builder(item).apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(min, max)))));
+		}
+
+		public RegistryWrapper.WrapperLookup registries() {
+			return this.registries;
 		}
 
 		@Override
