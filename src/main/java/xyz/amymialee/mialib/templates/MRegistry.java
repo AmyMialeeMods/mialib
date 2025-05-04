@@ -138,7 +138,7 @@ public @SuppressWarnings({"unused", "UnusedReturnValue"}) class MRegistry {
 	public @SuppressWarnings("unchecked") <T extends LivingEntity> EntityType<T> register(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes) {
 		this.register(path, entity);
 		if (attributes != null) FabricDefaultAttributeRegistry.register(entity, attributes);
-		if (entity != null && entity.getBaseClass().isInstance(MobEntity.class)) this.register(path + "_spawn_egg", new Item.Settings(), (s) -> new SpawnEggItem((EntityType<? extends MobEntity>) entity, s), ItemGroups.SPAWN_EGGS);
+		if (entity != null && entity.getBaseClass().isAssignableFrom(MobEntity.class)) this.register(path + "_spawn_egg", new Item.Settings(), (s) -> new SpawnEggItem((EntityType<? extends MobEntity>) entity, s), ItemGroups.SPAWN_EGGS);
 		return entity;
 	}
 
