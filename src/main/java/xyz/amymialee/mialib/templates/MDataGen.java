@@ -62,6 +62,7 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		for (var method : this.getClass().getDeclaredMethods()) set.add(method.getName());
 		if (set.contains("generateAdvancements")) pack.addProvider((dataOutput, future) -> new MAdvancementProvider(this, dataOutput, future));
 		if (set.contains("generateBlockLootTables")) pack.addProvider((dataOutput, future) -> new MBlockLootTableProvider(this, dataOutput, future));
+		if (set.contains("generateEntityLootTables")) pack.addProvider((dataOutput, future) -> new MEntityLootTableProvider(this, dataOutput, future));
 		if (set.contains("generateTranslations")) pack.addProvider((dataOutput, future) -> new MLanguageProvider(this, dataOutput, future));
 		if (set.contains("generateLootTables")) pack.addProvider((dataOutput, future) -> new MLootTableProvider(this, dataOutput, future));
 		if (set.contains("generateBlockStateModels") || set.contains("generateItemModels")) pack.addProvider((dataOutput, future) -> new MModelProvider(this, dataOutput, future));
@@ -81,6 +82,8 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 	protected void generateAdvancements(MAdvancementProvider provider, RegistryWrapper.WrapperLookup registryLookup, Consumer<AdvancementEntry> consumer) {}
 
 	protected void generateBlockLootTables(MBlockLootTableProvider provider) {}
+
+	protected void generateEntityLootTables(MEntityLootTableProvider provider) {}
 
 	protected void generateTranslations(MLanguageProvider provider, RegistryWrapper.WrapperLookup registryLookup, FabricLanguageProvider.TranslationBuilder builder) {}
 
@@ -140,6 +143,29 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		@Override
 		public void generate() {
 			this.dataGen.generateBlockLootTables(this);
+		}
+
+		public LootTable.Builder makeItemWithRange(ItemConvertible item, int min, int max) {
+			return LootTable.builder().pool(LootPool.builder().rolls(ConstantLootNumberProvider.create(1.0F)).with(ItemEntry.builder(item).apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(min, max)))));
+		}
+
+		@Override
+		public String getName() {
+			return this.dataGen.name + " " + super.getName();
+		}
+	}
+
+	protected static class MEntityLootTableProvider extends FabricEntityLootTableProvider {
+		private final MDataGen dataGen;
+
+		public MEntityLootTableProvider(MDataGen gen, FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> future) {
+			super(output, future);
+			this.dataGen = gen;
+		}
+
+		@Override
+		public void generate() {
+			this.dataGen.generateEntityLootTables(this);
 		}
 
 		public LootTable.Builder makeItemWithRange(ItemConvertible item, int min, int max) {
