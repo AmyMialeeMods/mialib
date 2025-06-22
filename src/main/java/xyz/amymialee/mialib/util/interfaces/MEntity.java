@@ -11,10 +11,6 @@ public interface MEntity {
         return false;
     }
 
-    default boolean mialib$canFly() {
-        return false;
-    }
-
     default Vec3d mialib$getBodyPos(double heightScale) {
         return Vec3d.ZERO;
     }

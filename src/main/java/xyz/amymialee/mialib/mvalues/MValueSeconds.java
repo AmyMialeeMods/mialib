@@ -45,7 +45,7 @@ public class MValueSeconds extends MValueInteger {
     @Override
     protected void registerClientCommand(@NotNull MValue<Integer> value) {
         if (value.type instanceof MValueMinMax<Integer> minMax) {
-            ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(value.permissionLevel))
+            ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.getPlayer().hasPermissionLevel(value.permissionLevel))
                     .then(ClientCommandManager.literal(value.id.toString())
                             .then(ClientCommandManager.argument("value", FloatArgumentType.floatArg(minMax.getMin(), minMax.getMax()))
                                     .executes(ctx -> {

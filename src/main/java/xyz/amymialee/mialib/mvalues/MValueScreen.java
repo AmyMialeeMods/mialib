@@ -2,13 +2,13 @@ package xyz.amymialee.mialib.mvalues;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -86,7 +86,6 @@ public class MValueScreen extends Screen {
     @Override
     public void render(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
         if (this.client == null) return;
-        this.renderBackground(context, mouseX, mouseY, delta);
         this.categoryScroll = Math.clamp(this.categoryScroll + this.categoryVelocity, 0, Math.max(0, (MValueCategory.CATEGORIES.size() / 2f + 1) * 25 - 7.75 * 25));
         this.categoryVelocity *= .96f;
         this.valueScroll = Math.clamp(this.valueScroll + this.valueVelocity, 0, Math.max(0, (this.selectedCategory.getValues(this.client.player).size() / 2f + 1) * 21 - 9 * 21));
@@ -99,8 +98,8 @@ public class MValueScreen extends Screen {
             var scrollAmount = this.categoryScroll + this.categoryVelocity * delta;
             context.enableScissor(left + 7, this.height / 2 - 93, left + 60, this.height / 2 + 93);
             for (var x = left + 7; x <= left + 60; x += backWidth) {
-                for (var y = this.height / 2f - 93 - scrollAmount - backHeight; y <= this.height / 2f + 93; y += backHeight) {
-                    context.mialib$drawTexture(DARK_OAK_PLANKS, x, (float) y, backWidth, backHeight, backWidth, backHeight);
+                for (var y = this.height / 2f - 103 - scrollAmount - backHeight; y <= this.height / 2f + 93; y += backHeight) {
+                    context.mialib$drawTexture(RenderPipelines.GUI_TEXTURED, DARK_OAK_PLANKS, x, (float) y, backWidth, backHeight, backWidth, backHeight, backWidth, backHeight);
                 }
             }
             context.disableScissor();
@@ -109,39 +108,37 @@ public class MValueScreen extends Screen {
             var scrollAmount = this.valueScroll + this.valueVelocity * delta;
             context.enableScissor(left + 66, this.height / 2 - 93, right - 7, this.height / 2 + 93);
             for (var x = left + 66; x <= right - 7; x += backWidth) {
-                for (var y = this.height / 2f - 93 - scrollAmount - backHeight; y <= this.height / 2f + 93; y += backHeight) {
-                    context.mialib$drawTexture(this.selectedCategory.backgroundTexture, x, (float) y, backWidth, backHeight, backWidth, backHeight);
+                for (var y = this.height / 2f - 103 - scrollAmount - backHeight; y <= this.height / 2f + 93; y += backHeight) {
+                    context.mialib$drawTexture(RenderPipelines.GUI_TEXTURED, this.selectedCategory.backgroundTexture, x, (float) y, backWidth, backHeight, backWidth, backHeight, backWidth, backHeight);
                 }
             }
             context.disableScissor();
         }
         for (var drawable : this.drawables) {
-            context.getMatrices().push();
+            context.getMatrices().pushMatrix();
             if (drawable instanceof MValueCategory.MValueCategoryWidget widget) {
                 context.enableScissor(left + 7, this.height / 2 - 93, right - 7, this.height / 2 + 93);
                 widget.scroll = this.categoryScroll;
                 widget.velocity = this.categoryVelocity;
-                context.getMatrices().translate(0, -(this.categoryScroll + this.categoryVelocity * delta), 0);
+                context.getMatrices().translate(0, (float) -(this.categoryScroll + this.categoryVelocity * delta));
             } else if (drawable instanceof MValueWidget<?> widget) {
                 context.enableScissor(left + 7, this.height / 2 - 93, right - 7, this.height / 2 + 93);
                 widget.scroll = this.valueScroll;
                 widget.velocity = this.valueVelocity;
-                context.getMatrices().translate(0, -(this.valueScroll + this.valueVelocity * delta), 0);
+                context.getMatrices().translate(0, (float) -(this.valueScroll + this.valueVelocity * delta));
             } else {
                 context.enableScissor(0, 0, this.width, this.height);
-                context.getMatrices().translate(0, 0, 190);
             }
             drawable.render(context, mouseX, mouseY, delta);
             context.disableScissor();
-            context.getMatrices().pop();
+            context.getMatrices().popMatrix();
         }
-        context.getMatrices().push();
-        context.getMatrices().translate(0, 0, 180);
-        context.mialib$drawTexture(WINDOW_TEXTURE, left, this.height / 2f - 100, 370, 200, 370, 200);
+        context.getMatrices().pushMatrix();
+        context.mialib$drawTexture(RenderPipelines.GUI_TEXTURED, WINDOW_TEXTURE, left, this.height / 2f - 100, 370, 200, 370, 200, 370, 200);
         var categoryTitle = Text.translatable(this.selectedCategory.getTranslationKey());
         context.drawText(this.textRenderer, categoryTitle, (int) (this.width / 2f - this.textRenderer.getWidth(categoryTitle) / 2f - WIDTH / 2f + 214.5f), this.height / 2 - 110, 0xFFFFFFFF, true);
         context.drawText(this.textRenderer, Text.translatable("mialib.screen.mvalues"), this.width / 2 - WIDTH / 2, this.height / 2 - 110, 0xFFFFFFFF, true);
-        context.getMatrices().pop();
+        context.getMatrices().popMatrix();
     }
 
     public static class ScrollButtonWidget extends ButtonWidget {
@@ -150,8 +147,7 @@ public class MValueScreen extends Screen {
         private final Type type;
 
         public ScrollButtonWidget(int x, int y, @NotNull Type type, Consumer<Float> action) {
-            super(x, y, 11, 12, type.text, (a) -> {
-            }, ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
+            super(x, y, 11, 12, type.text, (a) -> {}, DEFAULT_NARRATION_SUPPLIER);
             this.action = action;
             this.type = type;
         }
@@ -168,7 +164,7 @@ public class MValueScreen extends Screen {
             }
             var u = this.active && this.isHovered() ? 22 : 0;
             var v = this.active ? 0 : 12;
-            drawContext.drawTexture(RenderLayer::getGuiTextured, SCROLL_BUTTONS, this.getX(), this.getY(), u + (this.type == Type.NEXT ? 11 : 0), v, 11, 12, 256, 256);
+            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, SCROLL_BUTTONS, this.getX(), this.getY(), u + (this.type == Type.NEXT ? 11 : 0), v, 11, 12, 256, 256);
         }
 
         @Override

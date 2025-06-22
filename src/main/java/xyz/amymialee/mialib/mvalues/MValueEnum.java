@@ -84,12 +84,12 @@ public class MValueEnum<T extends Enum<T>> extends MValueType<T> {
     @Override
     protected void registerClientCommand(@NotNull MValue<T> value) {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> {
-            dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(value.permissionLevel)).then(ClientCommandManager.literal(value.id.toString()).executes(ctx -> {
+            dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.getPlayer().hasPermissionLevel(value.permissionLevel)).then(ClientCommandManager.literal(value.id.toString()).executes(ctx -> {
                 ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()));
                 return 1;
             })));
             for (var enumConstant : value.type.defaultValue.getDeclaringClass().getEnumConstants()) {
-                dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(value.permissionLevel)).then(ClientCommandManager.literal(value.id.toString())
+                dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.getPlayer().hasPermissionLevel(value.permissionLevel)).then(ClientCommandManager.literal(value.id.toString())
                         .then(ClientCommandManager.literal(enumConstant.name())
                                 .executes(ctx -> {
                                     value.set(enumConstant);

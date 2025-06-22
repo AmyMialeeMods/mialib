@@ -18,6 +18,7 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
 import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.data.tag.ProvidedTagBuilder;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.fluid.Fluid;
@@ -334,8 +335,9 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		public FabricTagBuilder getOrCreateTagBuilder(TagKey<Block> tag) {
-			return super.getOrCreateTagBuilder(tag);
+		public ProvidedTagBuilder<RegistryKey<Block>, Block> builder(TagKey<Block> tag) {
+			var tagBuilder = this.getTagBuilder(tag);
+			return ProvidedTagBuilder.of(tagBuilder);
 		}
 
 		@Override
@@ -358,8 +360,9 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		public FabricTagBuilder getOrCreateTagBuilder(TagKey<Item> tag) {
-			return super.getOrCreateTagBuilder(tag);
+        public ProvidedTagBuilder<RegistryKey<Item>, Item> builder(TagKey<Item> tag) {
+            var tagBuilder = this.getTagBuilder(tag);
+			return ProvidedTagBuilder.of(tagBuilder);
 		}
 
 		@Override
@@ -382,8 +385,9 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		public FabricTagBuilder getOrCreateTagBuilder(TagKey<Fluid> tag) {
-			return super.getOrCreateTagBuilder(tag);
+		public ProvidedTagBuilder<RegistryKey<Fluid>, Fluid> builder(TagKey<Fluid> tag) {
+			var tagBuilder = this.getTagBuilder(tag);
+			return ProvidedTagBuilder.of(tagBuilder);
 		}
 
 		@Override
@@ -406,8 +410,9 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		public FabricTagProvider<EntityType<?>>.FabricTagBuilder getOrCreateTagBuilder(TagKey<EntityType<?>> tag) {
-			return super.getOrCreateTagBuilder(tag);
+		public ProvidedTagBuilder<RegistryKey<EntityType<?>>, EntityType<?>> builder(TagKey<EntityType<?>> tag) {
+			var tagBuilder = this.getTagBuilder(tag);
+			return ProvidedTagBuilder.of(tagBuilder);
 		}
 
 		@Override
@@ -430,8 +435,9 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		public FabricTagBuilder getOrCreateTagBuilder(TagKey<DamageType> tag) {
-			return super.getOrCreateTagBuilder(tag);
+		public ProvidedTagBuilder<RegistryKey<DamageType>, DamageType> builder(TagKey<DamageType> tag) {
+			var tagBuilder = this.getTagBuilder(tag);
+			return ProvidedTagBuilder.of(tagBuilder);
 		}
 
 		@Override
@@ -454,8 +460,9 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		public FabricTagBuilder getOrCreateTagBuilder(TagKey<FlatLevelGeneratorPreset> tag) {
-			return super.getOrCreateTagBuilder(tag);
+		public ProvidedTagBuilder<RegistryKey<FlatLevelGeneratorPreset>, FlatLevelGeneratorPreset> builder(TagKey<FlatLevelGeneratorPreset> tag) {
+			var tagBuilder = this.getTagBuilder(tag);
+			return ProvidedTagBuilder.of(tagBuilder);
 		}
 
 		@Override
@@ -479,7 +486,6 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 			this.dataGen.generateFlatLevelGeneratorPresets(this, consumer);
 		}
 
-		@SuppressWarnings("UnnecessarilyQualifiedStaticUsage")
         @Override
 		public CompletableFuture<?> run(DataWriter writer) {
 			return this.registriesFuture.thenCompose(lookup -> {

@@ -51,12 +51,13 @@ public class MialibDataGen extends MDataGen {
     }
 
     protected @Override void generateItemTags(MDataGen.@NotNull MItemTagProvider provider, RegistryWrapper.WrapperLookup arg) {
-        provider.getOrCreateTagBuilder(ExtrasModule.UNDESTROYABLE);
-        provider.getOrCreateTagBuilder(ExtrasModule.UNBREAKABLE);
+        provider.builder(ExtrasModule.UNDESTROYABLE);
+        provider.builder(ExtrasModule.UNBREAKABLE);
     }
 
+    @SuppressWarnings("unchecked")
     protected @Override void generateFlatLevelGeneratorPresetTags(@NotNull MFlatLevelGeneratorPresetTagProvider provider, RegistryWrapper.WrapperLookup arg) {
-        provider.getOrCreateTagBuilder(FlatLevelGeneratorPresetTags.VISIBLE).setReplace(false).addOptional(DEV_READY.getValue()).addOptional(BLAST_PROOF.getValue());
+        provider.builder(FlatLevelGeneratorPresetTags.VISIBLE).setReplace(false).addOptional(DEV_READY.getValue()).addOptional(BLAST_PROOF.getValue());
     }
 
     protected @Override void generateFlatLevelGeneratorPresets(MFlatLevelGeneratorPresetProvider provider, @NotNull Consumer<FlatLevelGeneratorPresetData> consumer) {

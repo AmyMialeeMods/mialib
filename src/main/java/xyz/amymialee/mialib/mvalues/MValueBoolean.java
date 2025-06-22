@@ -76,7 +76,7 @@ public class MValueBoolean extends MValueType<Boolean> {
 
     @Override
     protected void registerClientCommand(MValue<Boolean> value) {
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(value.permissionLevel))
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.getPlayer().hasPermissionLevel(value.permissionLevel))
                 .then(ClientCommandManager.literal(value.id.toString())
                         .then(ClientCommandManager.argument("enabled", BoolArgumentType.bool())
                                 .executes(ctx -> {

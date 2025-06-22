@@ -3,13 +3,13 @@ package xyz.amymialee.mialib.client;
 import com.google.common.collect.Lists;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerServerListWidget;
 import net.minecraft.client.gui.screen.world.WorldIcon;
 import net.minecraft.client.network.ServerInfo;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
@@ -57,7 +57,7 @@ public class MialibServerWidget extends MultiplayerServerListWidget.Entry {
             MultiplayerServerListWidget.SERVER_PINGER_THREAD_POOL.submit(() -> {
                 try {
                     this.screen.getServerListPinger().add(this.server, () -> this.client.execute(() -> this.screen.getServerList().saveFile()), () -> {
-                        this.server.setStatus(this.server.protocolVersion == SharedConstants.getGameVersion().getProtocolVersion() ? ServerInfo.Status.SUCCESSFUL : ServerInfo.Status.INCOMPATIBLE);
+                        this.server.setStatus(this.server.protocolVersion == SharedConstants.getGameVersion().protocolVersion() ? ServerInfo.Status.SUCCESSFUL : ServerInfo.Status.INCOMPATIBLE);
                         this.client.execute(this::update);
                     });
                 } catch (UnknownHostException var2) {
@@ -71,11 +71,10 @@ public class MialibServerWidget extends MultiplayerServerListWidget.Entry {
                 }
             });
         }
-        context.drawText(this.client.textRenderer, this.server.name, x + 32 + 3, y + 1, 16777215, false);
+        context.drawTextWithShadow(this.client.textRenderer, this.server.name, x + 32 + 3, y + 1, Colors.WHITE);
         var list = this.client.textRenderer.wrapLines(this.server.label, entryWidth - 32 - 2);
-        for (var i = 0; i < Math.min(list.size(), 2); i++)
-            context.drawText(this.client.textRenderer, list.get(i), x + 32 + 3, y + 12 + 9 * i, -8355712, false);
-        context.drawTexture(RenderLayer::getGuiTextured, this.icon.getTextureId(), x, y, 0.0F, 0.0F, 32, 32, 32, 32);
+        for (var i = 0; i < Math.min(list.size(), 2); i++) context.drawTextWithShadow(this.client.textRenderer, list.get(i), x + 32 + 3, y + 12 + 9 * i, -8355712);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, this.icon.getTextureId(), x, y, 0.0F, 0.0F, 32, 32, 32, 32);
         if (this.server.getStatus() == ServerInfo.Status.PINGING) {
             var i = (int) (Util.getMeasuringTimeMs() / 100L + (index * 2L) & 7L);
             if (i > 4) i = 8 - i;
@@ -88,7 +87,7 @@ public class MialibServerWidget extends MultiplayerServerListWidget.Entry {
             };
         }
         var i = x + entryWidth - 10 - 5;
-        if (this.statusIconTexture != null) context.drawGuiTexture(RenderLayer::getGuiTextured, this.statusIconTexture, i, y, 10, 8);
+        if (this.statusIconTexture != null) context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, this.statusIconTexture, i, y, 10, 8);
         var bs = this.server.getFavicon();
         if (!Arrays.equals(bs, this.favicon)) {
             if (this.uploadFavicon(bs)) {
@@ -101,33 +100,33 @@ public class MialibServerWidget extends MultiplayerServerListWidget.Entry {
         var text = this.server.getStatus() == ServerInfo.Status.INCOMPATIBLE ? this.server.version.copy().formatted(Formatting.RED) : this.server.playerCountLabel;
         var j = this.client.textRenderer.getWidth(text);
         var k = i - j - 5;
-        context.drawText(this.client.textRenderer, text, k, y + 1, Colors.GRAY, false);
+        context.drawTextWithShadow(this.client.textRenderer, text, k, y + 1, Colors.GRAY);
         if (this.statusTooltipText != null && mouseX >= i && mouseX <= i + 10 && mouseY >= y && mouseY <= y + 8) {
-            this.screen.setTooltip(this.statusTooltipText);
+            context.drawTooltip(this.statusTooltipText, mouseX, mouseY);
         } else if (this.playerListSummary != null && mouseX >= k && mouseX <= k + j && mouseY >= y && mouseY <= y - 1 + 9) {
-            this.screen.setTooltip(Lists.transform(this.playerListSummary, Text::asOrderedText));
+            context.drawTooltip(Lists.transform(this.playerListSummary, Text::asOrderedText), mouseX, mouseY);
         }
         if (this.client.options.getTouchscreen().getValue() || hovered) {
             context.fill(x, y, x + 32, y + 32, -1601138544);
             var l = mouseX - x;
             var m = mouseY - y;
             if (l < 32 && l > 16) {
-                context.drawGuiTexture(RenderLayer::getGuiTextured, MultiplayerServerListWidget.JOIN_HIGHLIGHTED_TEXTURE, x, y, 32, 32);
+                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.JOIN_HIGHLIGHTED_TEXTURE, x, y, 32, 32);
             } else {
-                context.drawGuiTexture(RenderLayer::getGuiTextured, MultiplayerServerListWidget.JOIN_TEXTURE, x, y, 32, 32);
+                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.JOIN_TEXTURE, x, y, 32, 32);
             }
             if (index > 0) {
                 if (l < 16 && m < 16) {
-                    context.drawGuiTexture(RenderLayer::getGuiTextured, MultiplayerServerListWidget.MOVE_UP_HIGHLIGHTED_TEXTURE, x, y, 32, 32);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.MOVE_UP_HIGHLIGHTED_TEXTURE, x, y, 32, 32);
                 } else {
-                    context.drawGuiTexture(RenderLayer::getGuiTextured, MultiplayerServerListWidget.MOVE_UP_TEXTURE, x, y, 32, 32);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.MOVE_UP_TEXTURE, x, y, 32, 32);
                 }
             }
             if (index < this.screen.getServerList().mialib$getMialibServers().size() - 1) {
                 if (l < 16 && m > 16) {
-                    context.drawGuiTexture(RenderLayer::getGuiTextured, MultiplayerServerListWidget.MOVE_DOWN_HIGHLIGHTED_TEXTURE, x, y, 32, 32);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.MOVE_DOWN_HIGHLIGHTED_TEXTURE, x, y, 32, 32);
                 } else {
-                    context.drawGuiTexture(RenderLayer::getGuiTextured, MultiplayerServerListWidget.MOVE_DOWN_TEXTURE, x, y, 32, 32);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.MOVE_DOWN_TEXTURE, x, y, 32, 32);
                 }
             }
         }

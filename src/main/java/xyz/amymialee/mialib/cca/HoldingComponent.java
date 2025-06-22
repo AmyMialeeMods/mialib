@@ -1,8 +1,8 @@
 package xyz.amymialee.mialib.cca;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import org.jetbrains.annotations.NotNull;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
@@ -69,21 +69,21 @@ public class HoldingComponent implements AutoSyncedComponent, CommonTickingCompo
 		}
 	}
 
-	public @Override void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-		this.attacking = tag.getBoolean("using", false);
-		this.using = tag.getBoolean("using", false);
-		this.tickAttacking = tag.getInt("tickAttacking", 0);
-		this.tickUsing = tag.getInt("tickUsing", 0);
-	}
-
-	public @Override void writeToNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-		tag.putBoolean("using", this.attacking);
-		tag.putBoolean("using", this.using);
-		tag.putInt("tickAttacking", this.tickAttacking);
-		tag.putInt("tickUsing", this.tickUsing);
-	}
-
 	public @Override boolean isRequiredOnClient() {
 		return false;
+	}
+
+	public @Override void readData(@NotNull ReadView readView) {
+		this.attacking = readView.getBoolean("using", false);
+		this.using = readView.getBoolean("using", false);
+		this.tickAttacking = readView.getInt("tickAttacking", 0);
+		this.tickUsing = readView.getInt("tickUsing", 0);
+	}
+
+	public @Override void writeData(@NotNull WriteView writeView) {
+		writeView.putBoolean("using", this.attacking);
+		writeView.putBoolean("using", this.using);
+		writeView.putInt("tickAttacking", this.tickAttacking);
+		writeView.putInt("tickUsing", this.tickUsing);
 	}
 }

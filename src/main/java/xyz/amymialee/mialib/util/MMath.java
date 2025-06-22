@@ -21,45 +21,29 @@ public @SuppressWarnings("unused") interface MMath {
 
 	static int clampLoop(int value, int min, int max) {
 		var range = max - min + 1;
-		while (value < min) {
-			value += range;
-		}
-		while (value > max) {
-			value -= range;
-		}
+		while (value < min) value += range;
+		while (value > max) value -= range;
 		return value;
 	}
 
 	static long clampLoop(long value, long min, long max) {
 		var range = max - min + 1;
-		while (value < min) {
-			value += range;
-		}
-		while (value > max) {
-			value -= range;
-		}
+		while (value < min) value += range;
+		while (value > max) value -= range;
 		return value;
 	}
 
 	static float clampLoop(float value, float min, float max) {
 		var range = max - min + 1;
-		while (value < min) {
-			value += range;
-		}
-		while (value > max) {
-			value -= range;
-		}
+		while (value < min) value += range;
+		while (value > max) value -= range;
 		return value;
 	}
 
 	static double clampLoop(double value, double min, double max) {
 		var range = max - min + 1;
-		while (value < min) {
-			value += range;
-		}
-		while (value > max) {
-			value -= range;
-		}
+		while (value < min) value += range;
+		while (value > max) value -= range;
 		return value;
 	}
 

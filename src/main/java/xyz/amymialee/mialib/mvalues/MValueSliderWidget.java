@@ -3,12 +3,12 @@ package xyz.amymialee.mialib.mvalues;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.navigation.GuiNavigationType;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.input.KeyCodes;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -74,20 +74,20 @@ public abstract class MValueSliderWidget<T> extends MValueWidget<T> {
                 && mouseX < this.getX() + this.width
                 && mouseY < this.getY() + this.height - scroll;
         var textures = this.value.clientSide ? CLIENT_BUTTON_TEXTURES : BUTTON_TEXTURES;
-        context.drawGuiTexture(RenderLayer::getGuiTextured, textures.get(true, this.hovered), this.getX(), this.getY(), 18, this.height, 0xFFFFFFFF);
-        context.drawGuiTexture(RenderLayer::getGuiTextured, this.getTexture(), this.getX() + 18, this.getY(), this.getWidth() - 18, this.getHeight(), ColorHelper.getWhite(this.alpha));
-        context.drawGuiTexture(RenderLayer::getGuiTextured, this.getHandleTexture(), this.getX() + 18 + (int) (this.sliderValue * (double) (this.width - 8 - 18)), this.getY(), 8, this.getHeight(), ColorHelper.getWhite(this.alpha));
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, textures.get(true, this.hovered), this.getX(), this.getY(), 18, this.height, 0xFFFFFFFF);
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, this.getTexture(), this.getX() + 18, this.getY(), this.getWidth() - 18, this.getHeight(), ColorHelper.getWhite(this.alpha));
+        context.mialib$drawGuiTexture(RenderPipelines.GUI_TEXTURED, this.getHandleTexture(), this.getX() + 18 + (int) (this.sliderValue * (double) (this.width - 8 - 18)), this.getY(), 8, this.getHeight(), ColorHelper.getWhite(this.alpha));
         context.drawItem(this.value.getStack(), this.getX() + 1, this.getY() + 1);
         final Consumer3<Float, Float, Float> moveAndScale = (x, y, s) -> {
-            context.getMatrices().push();
-            context.getMatrices().translate(x, y, 0);
-            context.getMatrices().scale(s, s, 1f);
+            context.getMatrices().pushMatrix();
+            context.getMatrices().translate(x, y);
+            context.getMatrices().scale(s);
         };
         var scale = 0.7f;
         moveAndScale.accept(this.getX() + this.getWidth() - 3f, this.getY() + this.getHeight() / 2f, scale);
         var valueText = Text.literal(this.value.type.getValueAsString(this.value));
         context.drawText(client.textRenderer, valueText, -client.textRenderer.getWidth(valueText), -client.textRenderer.fontHeight / 2, 0xFFFFFFFF, true);
-        context.getMatrices().pop();
+        context.getMatrices().popMatrix();
         moveAndScale.accept(this.getX() + 21f, this.getY() + this.getHeight() / 2f, scale);
         var wrapLines = client.textRenderer.wrapLines(this.getMessage(), 165 - client.textRenderer.getWidth(valueText));
         for (var i = 0; i < wrapLines.size(); i++) {
@@ -95,7 +95,7 @@ public abstract class MValueSliderWidget<T> extends MValueWidget<T> {
             var y = -(wrapLines.size()) * client.textRenderer.fontHeight * .5 + client.textRenderer.fontHeight * i;
             context.drawText(client.textRenderer, text, 0, (int) y, 0xFFFFFFFF, true);
         }
-        context.getMatrices().pop();
+        context.getMatrices().popMatrix();
     }
 
     @Override

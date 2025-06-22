@@ -2,6 +2,7 @@ package xyz.amymialee.mialib.mvalues;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -101,7 +102,7 @@ public class MValueCategory {
                     && mouseY >= this.getY() - scroll
                     && mouseX < this.getX() + this.width
                     && mouseY < this.getY() + this.height - scroll;
-            context.mialib$drawTexture(this.enabled ? SelectionState.SELECTED.texture : (this.hovered ? SelectionState.HIGHLIGHTED : SelectionState.DESELECTED).texture, this.getX(), this.getY(), 22, 22, 22, 22);
+            context.mialib$drawTexture(RenderPipelines.GUI_TEXTURED, this.enabled ? SelectionState.SELECTED.texture : (this.hovered ? SelectionState.HIGHLIGHTED : SelectionState.DESELECTED).texture, this.getX(), this.getY(), 22, 22, 22, 22, 22, 22);
             context.drawItem(this.category.stackSupplier.get(), this.getX() + 3, this.getY() + 3);
         }
 

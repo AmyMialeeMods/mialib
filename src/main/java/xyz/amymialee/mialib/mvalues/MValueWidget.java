@@ -4,12 +4,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -79,19 +79,19 @@ public abstract class MValueWidget<T> extends ClickableWidget {
                 && mouseX < this.getX() + this.width
                 && mouseY < this.getY() + this.height - scroll;
         var textures = this.value.clientSide ? CLIENT_BUTTON_TEXTURES : BUTTON_TEXTURES;
-        context.drawGuiTexture(RenderLayer::getGuiTextured, textures.get(true, this.hovered), this.getX(), this.getY(), 18, this.height, 0xFFFFFFFF);
-        context.drawGuiTexture(RenderLayer::getGuiTextured, textures.get(true, this.hovered), this.getX() + 18, this.getY(), this.width - 18, this.height, 0xFFFFFFFF);
+        context.mialib$drawGuiTexture(RenderPipelines.GUI_TEXTURED, textures.get(true, this.hovered), this.getX(), this.getY(), 18, this.height, 0xFFFFFFFF);
+        context.mialib$drawGuiTexture(RenderPipelines.GUI_TEXTURED, textures.get(true, this.hovered), this.getX() + 18, this.getY(), this.width - 18, this.height, 0xFFFFFFFF);
         context.drawItem(this.value.getStack(), this.getX() + 1, this.getY() + 1);
         final Consumer3<Float, Float, Float> moveAndScale = (x, y, s) -> {
-            context.getMatrices().push();
-            context.getMatrices().translate(x, y, 0);
-            context.getMatrices().scale(s, s, 1f);
+            context.getMatrices().pushMatrix();
+            context.getMatrices().translate(x, y);
+            context.getMatrices().scale(s);
         };
         var scale = 0.7f;
         moveAndScale.accept(this.getX() + this.getWidth() - 3f, this.getY() + this.getHeight() / 2f, scale);
         var valueText = Text.literal(this.value.type.getValueAsString(this.value));
         context.drawText(client.textRenderer, valueText, -client.textRenderer.getWidth(valueText), -client.textRenderer.fontHeight / 2, 0xFFFFFFFF, true);
-        context.getMatrices().pop();
+        context.getMatrices().popMatrix();
         moveAndScale.accept(this.getX() + 21f, this.getY() + this.getHeight() / 2f, scale);
         var wrapLines = client.textRenderer.wrapLines(this.getMessage(), 165 - client.textRenderer.getWidth(valueText));
         for (var i = 0; i < wrapLines.size(); i++) {
@@ -99,7 +99,7 @@ public abstract class MValueWidget<T> extends ClickableWidget {
             var y = -(wrapLines.size()) * client.textRenderer.fontHeight * .5 + client.textRenderer.fontHeight * i;
             context.drawText(client.textRenderer, text, 0, (int) y, 0xFFFFFFFF, true);
         }
-        context.getMatrices().pop();
+        context.getMatrices().popMatrix();
     }
 
     @Override

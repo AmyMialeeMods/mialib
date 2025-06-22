@@ -16,7 +16,7 @@ public class ResourcePackManagerMixin {
     @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableSet;copyOf([Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;"), remap = false)
     private ImmutableSet<ResourcePackProvider> mialib$moreDirs(Object @NotNull [] array, @NotNull Operation<ImmutableSet<ResourcePackProvider>> operation) {
         var universalDir = MDir.getMialibPath("datapacks/universal");
-        var versionDir = MDir.getMialibPath("datapacks/pack_format_" + MinecraftVersion.CURRENT.getResourceVersion(ResourceType.SERVER_DATA));
+        var versionDir = MDir.getMialibPath("datapacks/pack_format_" + MinecraftVersion.CURRENT.packVersion(ResourceType.SERVER_DATA));
         var universalProvider = new FileResourcePackProvider(universalDir, ResourceType.SERVER_DATA, ResourcePackSource.NONE, new SymlinkFinder(path -> true));
         var versionProvider = new FileResourcePackProvider(versionDir, ResourceType.SERVER_DATA, ResourcePackSource.NONE, new SymlinkFinder(path -> true));
         var combined = new ResourcePackProvider[array.length + 2];

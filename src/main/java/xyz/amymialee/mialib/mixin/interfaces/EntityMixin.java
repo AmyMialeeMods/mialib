@@ -12,23 +12,15 @@ public abstract class EntityMixin implements MEntity {
     @Shadow public abstract Vec3d getPos();
     @Shadow public abstract float getHeight();
 
-    @Override
-    public boolean mialib$isIndestructible() {
+    public @Override boolean mialib$isIndestructible() {
         return ExtraFlagsComponent.KEY.get(this).isIndestructible();
     }
 
-    @Override
-    public boolean mialib$isImmortal() {
+    public @Override boolean mialib$isImmortal() {
         return ExtraFlagsComponent.KEY.get(this).isImmortal();
     }
 
-    @Override
-    public boolean mialib$canFly() {
-        return ExtraFlagsComponent.KEY.get(this).canFly();
-    }
-
-    @Override
-    public Vec3d mialib$getBodyPos(double heightScale) {
+    public @Override Vec3d mialib$getBodyPos(double heightScale) {
         return this.getPos().add(0, this.getHeight() * heightScale, 0);
     }
 }
