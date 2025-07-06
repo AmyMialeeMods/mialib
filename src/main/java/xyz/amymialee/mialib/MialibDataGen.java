@@ -48,6 +48,8 @@ public class MialibDataGen extends MDataGen {
         builder.add("%s.mialib_server.false".formatted(Mialib.MOD_ID), "Save to Mialib Server File: §cFalse");
         builder.add("commands.mvalue.query", "MValue %s is currently set to: %s");
         builder.add("commands.mvalue.set", "MValue %s is now set to: %s");
+        builder.add("mialib.screen.mvalues.color_picker.confirm", "Confirm");
+        builder.add("mialib.screen.mvalues.color_picker.reset", "Reset");
     }
 
     protected @Override void generateItemTags(MDataGen.@NotNull MItemTagProvider provider, RegistryWrapper.WrapperLookup arg) {
