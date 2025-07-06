@@ -26,6 +26,8 @@
   "mialib.mialib_server.true": "Save to Mialib Server File: §aTrue",
   "mialib.mvalue.clientside": "[Client Side]",
   "mialib.screen.mvalues": "Mialib Value Editor",
+  "mialib.screen.mvalues.color_picker.confirm": "Confirm",
+  "mialib.screen.mvalues.color_picker.reset": "Reset",
   "mialib.servers": "Mialib Servers",
   "mvalue.mialib.disable_end_portals": "Disable End Portals",
   "mvalue.mialib.disable_end_portals.desc": "Disables end portals",
