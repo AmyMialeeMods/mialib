@@ -99,7 +99,7 @@ public class ColorPickerOverlayScreen extends Screen
 		
 		public ColorPickerWidget(int x, int y, Text title, int startColor, boolean hsv)
 		{
-			super(x, y, 100, 112, title);
+			super(x, y, 100, 116, title);
 			value = startColor;
 			channels.add(red = new ColorChannelSlider(x + 2, y + 36, width - 4, 20, ColorHelper.getRedFloat(startColor),
 					new Vector3f(1, 0, 0), this::onColorChanged));
