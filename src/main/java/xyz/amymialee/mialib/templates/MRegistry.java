@@ -19,7 +19,6 @@ import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.*;
 import net.minecraft.item.consume.ConsumeEffect;
@@ -135,10 +134,10 @@ public @SuppressWarnings({"unused", "UnusedReturnValue"}) class MRegistry {
 		return this.register(path, entity, attributes);
 	}
 
-	public @SuppressWarnings("unchecked") <T extends LivingEntity> EntityType<T> register(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes) {
+	public <T extends LivingEntity> EntityType<T> register(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes) {
 		this.register(path, entity);
 		if (attributes != null) FabricDefaultAttributeRegistry.register(entity, attributes);
-		if (entity != null && entity.getBaseClass().isAssignableFrom(MobEntity.class)) this.register(path + "_spawn_egg", new Item.Settings(), (s) -> new SpawnEggItem((EntityType<? extends MobEntity>) entity, s), ItemGroups.SPAWN_EGGS);
+		if (entity != null) this.register(path + "_spawn_egg", new Item.Settings(), (s) -> new SpawnEggItem(s.spawnEgg(entity)), ItemGroups.SPAWN_EGGS);
 		return entity;
 	}
 

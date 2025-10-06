@@ -43,7 +43,7 @@ public @SuppressWarnings("unused") class Mialib implements ModInitializer, Entit
             var component = ExtraFlagsComponent.KEY.get(entity);
             return component.isIndestructible() || (!(entity instanceof LivingEntity) && component.isImmortal());
         });
-        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, entity, killedEntity) -> {
+        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, entity, killedEntity, damageSource) -> {
             if (entity instanceof LivingEntity livingEntity) livingEntity.getMainHandStack().getItem().mialib$killEntity(world, livingEntity.getMainHandStack(), livingEntity, killedEntity);
         });
         Consumer<MinecraftServer> consumer = server -> {

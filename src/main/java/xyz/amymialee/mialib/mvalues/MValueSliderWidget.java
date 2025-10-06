@@ -4,11 +4,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.navigation.GuiNavigationType;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.input.KeyCodes;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -99,17 +100,17 @@ public abstract class MValueSliderWidget<T> extends MValueWidget<T> {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
-        if (mouseX < this.getX() + 18) {
+    public void onClick(Click click, boolean doubled) {
+        if (click.x() < this.getX() + 18) {
             this.value.send(this.value.type.defaultValue);
             this.resetSliderValue();
         } else {
-            this.setValueFromMouse(mouseX);
+            this.setValueFromMouse(click.x());
         }
     }
 
     @Override
-    public void onRelease(double mouseX, double mouseY) {
+    public void onRelease(Click click) {
         super.playDownSound(MinecraftClient.getInstance().getSoundManager());
         if (this.sliderFocused) this.value.send(this.getValue());
     }
@@ -128,14 +129,14 @@ public abstract class MValueSliderWidget<T> extends MValueWidget<T> {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (KeyCodes.isToggle(keyCode)) {
+    public boolean keyPressed(@NotNull KeyInput input) {
+        if (input.key() == 257 || input.key() == 32 || input.key() == 335) {
             this.sliderFocused = !this.sliderFocused;
             return true;
         }
         if (this.sliderFocused) {
-            var bl = keyCode == GLFW.GLFW_KEY_LEFT;
-            if (bl || keyCode == GLFW.GLFW_KEY_RIGHT) {
+            var bl = input.key() == GLFW.GLFW_KEY_LEFT;
+            if (bl || input.key() == GLFW.GLFW_KEY_RIGHT) {
                 var f = bl ? -1.0F : 1.0F;
                 this.setValue(this.sliderValue + (double) (f / (float) (this.width - 8)));
                 return true;
@@ -157,10 +158,10 @@ public abstract class MValueSliderWidget<T> extends MValueWidget<T> {
     }
 
     @Override
-    protected void onDrag(double mouseX, double mouseY, double deltaX, double deltaY) {
+    protected void onDrag(Click click, double offsetX, double offsetY) {
         if (!this.sliderFocused) return;
-        this.setValueFromMouse(mouseX);
-        super.onDrag(mouseX, mouseY, deltaX, deltaY);
+        this.setValueFromMouse(click.x());
+        super.onDrag(click, offsetX, offsetY);
     }
 
     @Override

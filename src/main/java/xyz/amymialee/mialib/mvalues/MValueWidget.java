@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -20,26 +21,16 @@ import xyz.amymialee.mialib.util.runnables.Consumer3;
 
 @Environment(EnvType.CLIENT)
 public abstract class MValueWidget<T> extends ClickableWidget {
-    public @Environment(EnvType.CLIENT)
-    static final ButtonTextures BUTTON_TEXTURES = new ButtonTextures(Mialib.id("widget/button"), Mialib.id("widget/button_disabled"), Mialib.id("widget/button_highlighted"));
-    public @Environment(EnvType.CLIENT)
-    static final Identifier SLIDER_TEXTURE = Mialib.id("widget/slider");
-    public @Environment(EnvType.CLIENT)
-    static final Identifier SLIDER_HIGHLIGHTED_TEXTURE = Mialib.id("widget/slider_highlighted");
-    public @Environment(EnvType.CLIENT)
-    static final Identifier SLIDER_HANDLE_TEXTURE = Mialib.id("widget/slider_handle");
-    public @Environment(EnvType.CLIENT)
-    static final Identifier SLIDER_HANDLE_HIGHLIGHTED_TEXTURE = Mialib.id("widget/slider_handle_highlighted");
-    public @Environment(EnvType.CLIENT)
-    static final ButtonTextures CLIENT_BUTTON_TEXTURES = new ButtonTextures(Mialib.id("widget/client_button"), Mialib.id("widget/client_button_disabled"), Mialib.id("widget/client_button_highlighted"));
-    public @Environment(EnvType.CLIENT)
-    static final Identifier CLIENT_SLIDER_TEXTURE = Mialib.id("widget/client_slider");
-    public @Environment(EnvType.CLIENT)
-    static final Identifier CLIENT_SLIDER_HIGHLIGHTED_TEXTURE = Mialib.id("widget/client_slider_highlighted");
-    public @Environment(EnvType.CLIENT)
-    static final Identifier CLIENT_SLIDER_HANDLE_TEXTURE = Mialib.id("widget/client_slider_handle");
-    public @Environment(EnvType.CLIENT)
-    static final Identifier CLIENT_SLIDER_HANDLE_HIGHLIGHTED_TEXTURE = Mialib.id("widget/client_slider_handle_highlighted");
+    public @Environment(EnvType.CLIENT) static final ButtonTextures BUTTON_TEXTURES = new ButtonTextures(Mialib.id("widget/button"), Mialib.id("widget/button_disabled"), Mialib.id("widget/button_highlighted"));
+    public @Environment(EnvType.CLIENT) static final Identifier SLIDER_TEXTURE = Mialib.id("widget/slider");
+    public @Environment(EnvType.CLIENT) static final Identifier SLIDER_HIGHLIGHTED_TEXTURE = Mialib.id("widget/slider_highlighted");
+    public @Environment(EnvType.CLIENT) static final Identifier SLIDER_HANDLE_TEXTURE = Mialib.id("widget/slider_handle");
+    public @Environment(EnvType.CLIENT) static final Identifier SLIDER_HANDLE_HIGHLIGHTED_TEXTURE = Mialib.id("widget/slider_handle_highlighted");
+    public @Environment(EnvType.CLIENT) static final ButtonTextures CLIENT_BUTTON_TEXTURES = new ButtonTextures(Mialib.id("widget/client_button"), Mialib.id("widget/client_button_disabled"), Mialib.id("widget/client_button_highlighted"));
+    public @Environment(EnvType.CLIENT) static final Identifier CLIENT_SLIDER_TEXTURE = Mialib.id("widget/client_slider");
+    public @Environment(EnvType.CLIENT) static final Identifier CLIENT_SLIDER_HIGHLIGHTED_TEXTURE = Mialib.id("widget/client_slider_highlighted");
+    public @Environment(EnvType.CLIENT) static final Identifier CLIENT_SLIDER_HANDLE_TEXTURE = Mialib.id("widget/client_slider_handle");
+    public @Environment(EnvType.CLIENT) static final Identifier CLIENT_SLIDER_HANDLE_HIGHLIGHTED_TEXTURE = Mialib.id("widget/client_slider_handle_highlighted");
     public final MValue<T> value;
     public double scroll;
     public double velocity;
@@ -103,7 +94,7 @@ public abstract class MValueWidget<T> extends ClickableWidget {
     }
 
     @Override
-    public abstract void onClick(double mouseX, double mouseY);
+    public abstract void onClick(Click click, boolean doubled);
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {

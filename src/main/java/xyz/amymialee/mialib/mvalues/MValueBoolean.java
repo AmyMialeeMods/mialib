@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.client.gui.Click;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
@@ -20,8 +21,8 @@ public class MValueBoolean extends MValueType<Boolean> {
     public @NotNull Object getWidget(int x, int y, MValue<Boolean> value) {
         return new MValueWidget<>(x, y, value) {
             @Override
-            public void onClick(double mouseX, double mouseY) {
-                if (mouseX < this.getX() + 18) {
+            public void onClick(Click click, boolean doubled) {
+                if (click.x() < this.getX() + 18) {
                     this.value.send(this.value.type.defaultValue);
                 } else {
                     this.value.send(!this.value.get());

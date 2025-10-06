@@ -77,8 +77,8 @@ public class ExtraFlagsComponent implements AutoSyncedComponent {
     }
 
     public void refreshFlags() {
-        this.setIndestructible(ExtraFlagEvents.SHOULD_BE_INDESTRUCTIBLE.invoker().shouldHaveFlag(this.entity.getWorld(), this.entity).isAccepted());
-        this.setImmortal(ExtraFlagEvents.SHOULD_BE_IMMORTAL.invoker().shouldHaveFlag(this.entity.getWorld(), this.entity).isAccepted());
+        this.setIndestructible(ExtraFlagEvents.SHOULD_BE_INDESTRUCTIBLE.invoker().shouldHaveFlag(this.entity.getEntityWorld(), this.entity).isAccepted());
+        this.setImmortal(ExtraFlagEvents.SHOULD_BE_IMMORTAL.invoker().shouldHaveFlag(this.entity.getEntityWorld(), this.entity).isAccepted());
     }
 
     public @Override boolean isRequiredOnClient() {

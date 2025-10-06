@@ -3,9 +3,11 @@ package xyz.amymialee.mialib.mvalues;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.input.AbstractInput;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -107,12 +109,12 @@ public class MValueCategory {
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            return this.scissorContains && super.mouseClicked(mouseX, mouseY + this.scroll, button);
+        public boolean mouseClicked(Click click, boolean doubled) {
+            return this.scissorContains && super.mouseClicked(new Click(click.x(), click.y() + this.scroll, click.buttonInfo()), doubled);
         }
 
         @Override
-        public void onPress() {
+        public void onPress(AbstractInput input) {
             if (this.onPress == null) return;
             this.onPress.onPress(this);
         }

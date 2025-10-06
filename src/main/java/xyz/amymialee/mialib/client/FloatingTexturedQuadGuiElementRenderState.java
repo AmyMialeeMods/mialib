@@ -15,11 +15,11 @@ public record FloatingTexturedQuadGuiElementRenderState(RenderPipeline pipeline,
     }
 
     @Override
-    public void setupVertices(@NotNull VertexConsumer vertices, float depth) {
-        vertices.vertex(this.pose(), this.x1(), this.y1(), depth).texture(this.u1(), this.v1()).color(this.color());
-        vertices.vertex(this.pose(), this.x1(), this.y2(), depth).texture(this.u1(), this.v2()).color(this.color());
-        vertices.vertex(this.pose(), this.x2(), this.y2(), depth).texture(this.u2(), this.v2()).color(this.color());
-        vertices.vertex(this.pose(), this.x2(), this.y1(), depth).texture(this.u2(), this.v1()).color(this.color());
+    public void setupVertices(@NotNull VertexConsumer vertices) {
+        vertices.vertex(this.pose(), this.x1(), this.y1()).texture(this.u1(), this.v1()).color(this.color());
+        vertices.vertex(this.pose(), this.x1(), this.y2()).texture(this.u1(), this.v2()).color(this.color());
+        vertices.vertex(this.pose(), this.x2(), this.y2()).texture(this.u2(), this.v2()).color(this.color());
+        vertices.vertex(this.pose(), this.x2(), this.y1()).texture(this.u2(), this.v1()).color(this.color());
     }
 
     @Nullable

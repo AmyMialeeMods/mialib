@@ -4,11 +4,12 @@ import com.google.common.collect.Lists;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerServerListWidget;
 import net.minecraft.client.gui.screen.world.WorldIcon;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.screen.ScreenTexts;
@@ -48,8 +49,19 @@ public class MialibServerWidget extends MultiplayerServerListWidget.Entry {
         this.update();
     }
 
-    public @Override void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-        index = this.screen.getServerList().mialib$getMialibServers().indexOf(this.server);
+    @Override
+    protected boolean isOfSameType(MultiplayerServerListWidget.Entry entry) {
+        return entry instanceof MialibServerWidget;
+    }
+
+    @Override
+    public void connect() {
+        this.screen.connect(this.server);
+    }
+
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+        var index = this.screen.getServerList().mialib$getMialibServers().indexOf(this.server);
         if (this.server.getStatus() == ServerInfo.Status.INITIAL) {
             this.server.setStatus(ServerInfo.Status.PINGING);
             this.server.label = ScreenTexts.EMPTY;
@@ -71,10 +83,10 @@ public class MialibServerWidget extends MultiplayerServerListWidget.Entry {
                 }
             });
         }
-        context.drawTextWithShadow(this.client.textRenderer, this.server.name, x + 32 + 3, y + 1, Colors.WHITE);
-        var list = this.client.textRenderer.wrapLines(this.server.label, entryWidth - 32 - 2);
-        for (var i = 0; i < Math.min(list.size(), 2); i++) context.drawTextWithShadow(this.client.textRenderer, list.get(i), x + 32 + 3, y + 12 + 9 * i, -8355712);
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, this.icon.getTextureId(), x, y, 0.0F, 0.0F, 32, 32, 32, 32);
+        context.drawTextWithShadow(this.client.textRenderer, this.server.name, this.getX() + 32 + 3, this.getY() + 1, Colors.WHITE);
+        var list = this.client.textRenderer.wrapLines(this.server.label, this.getWidth() - 32 - 2);
+        for (var i = 0; i < Math.min(list.size(), 2); i++) context.drawTextWithShadow(this.client.textRenderer, list.get(i), this.getX() + 32 + 3, this.getY() + 12 + 9 * i, -8355712);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, this.icon.getTextureId(), this.getX(), this.getY(), 0.0F, 0.0F, 32, 32, 32, 32);
         if (this.server.getStatus() == ServerInfo.Status.PINGING) {
             var i = (int) (Util.getMeasuringTimeMs() / 100L + (index * 2L) & 7L);
             if (i > 4) i = 8 - i;
@@ -86,8 +98,8 @@ public class MialibServerWidget extends MultiplayerServerListWidget.Entry {
                 default -> MultiplayerServerListWidget.PINGING_1_TEXTURE;
             };
         }
-        var i = x + entryWidth - 10 - 5;
-        if (this.statusIconTexture != null) context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, this.statusIconTexture, i, y, 10, 8);
+        var i = this.getX() + this.getWidth() - 10 - 5;
+        if (this.statusIconTexture != null) context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, this.statusIconTexture, i, this.getY(), 10, 8);
         var bs = this.server.getFavicon();
         if (!Arrays.equals(bs, this.favicon)) {
             if (this.uploadFavicon(bs)) {
@@ -100,57 +112,59 @@ public class MialibServerWidget extends MultiplayerServerListWidget.Entry {
         var text = this.server.getStatus() == ServerInfo.Status.INCOMPATIBLE ? this.server.version.copy().formatted(Formatting.RED) : this.server.playerCountLabel;
         var j = this.client.textRenderer.getWidth(text);
         var k = i - j - 5;
-        context.drawTextWithShadow(this.client.textRenderer, text, k, y + 1, Colors.GRAY);
-        if (this.statusTooltipText != null && mouseX >= i && mouseX <= i + 10 && mouseY >= y && mouseY <= y + 8) {
+        context.drawTextWithShadow(this.client.textRenderer, text, k, this.getY() + 1, Colors.GRAY);
+        if (this.statusTooltipText != null && mouseX >= i && mouseX <= i + 10 && mouseY >= this.getY() && mouseY <= this.getY() + 8) {
             context.drawTooltip(this.statusTooltipText, mouseX, mouseY);
-        } else if (this.playerListSummary != null && mouseX >= k && mouseX <= k + j && mouseY >= y && mouseY <= y - 1 + 9) {
+        } else if (this.playerListSummary != null && mouseX >= k && mouseX <= k + j && mouseY >= this.getY() && mouseY <= this.getY() - 1 + 9) {
             context.drawTooltip(Lists.transform(this.playerListSummary, Text::asOrderedText), mouseX, mouseY);
         }
         if (this.client.options.getTouchscreen().getValue() || hovered) {
-            context.fill(x, y, x + 32, y + 32, -1601138544);
-            var l = mouseX - x;
-            var m = mouseY - y;
+            context.fill(this.getX(), this.getY(), this.getX() + 32, this.getY() + 32, -1601138544);
+            var l = mouseX - this.getX();
+            var m = mouseY - this.getY();
             if (l < 32 && l > 16) {
-                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.JOIN_HIGHLIGHTED_TEXTURE, x, y, 32, 32);
+                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.JOIN_HIGHLIGHTED_TEXTURE, this.getX(), this.getY(), 32, 32);
             } else {
-                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.JOIN_TEXTURE, x, y, 32, 32);
+                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.JOIN_TEXTURE, this.getX(), this.getY(), 32, 32);
             }
             if (index > 0) {
                 if (l < 16 && m < 16) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.MOVE_UP_HIGHLIGHTED_TEXTURE, x, y, 32, 32);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.MOVE_UP_HIGHLIGHTED_TEXTURE, this.getX(), this.getY(), 32, 32);
                 } else {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.MOVE_UP_TEXTURE, x, y, 32, 32);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.MOVE_UP_TEXTURE, this.getX(), this.getY(), 32, 32);
                 }
             }
             if (index < this.screen.getServerList().mialib$getMialibServers().size() - 1) {
                 if (l < 16 && m > 16) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.MOVE_DOWN_HIGHLIGHTED_TEXTURE, x, y, 32, 32);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.MOVE_DOWN_HIGHLIGHTED_TEXTURE, this.getX(), this.getY(), 32, 32);
                 } else {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.MOVE_DOWN_TEXTURE, x, y, 32, 32);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, MultiplayerServerListWidget.MOVE_DOWN_TEXTURE, this.getX(), this.getY(), 32, 32);
                 }
             }
         }
     }
 
-    public @Override boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (Screen.hasShiftDown()) {
+    @Override
+    public boolean keyPressed(KeyInput input) {
+        if (this.client.isShiftPressed()) {
             var i = this.screen.getServerList().mialib$getMialibServers().indexOf(this.server);
             if (i == -1) return true;
-            if (keyCode == GLFW.GLFW_KEY_DOWN && i < this.screen.getServerList().mialib$getMialibServers().size() - 1 || keyCode == GLFW.GLFW_KEY_UP && i > 0) {
-                this.swapEntries(i, keyCode == GLFW.GLFW_KEY_DOWN ? i + 1 : i - 1);
+            if (input.getKeycode() == GLFW.GLFW_KEY_DOWN && i < this.screen.getServerList().mialib$getMialibServers().size() - 1 || input.getKeycode() == GLFW.GLFW_KEY_UP && i > 0) {
+                this.swapEntries(i, input.getKeycode() == GLFW.GLFW_KEY_DOWN ? i + 1 : i - 1);
                 return true;
             }
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(input);
     }
 
-    public @Override boolean mouseClicked(double mouseX, double mouseY, int button) {
-        var d = mouseX - (double) this.widget.getRowLeft();
-        var e = mouseY - (double) this.widget.getRowTop(this.widget.children().indexOf(this));
+    @Override
+    public boolean mouseClicked(Click click, boolean doubled) {
+        var d = click.x() - (double) this.widget.getRowLeft();
+        var e = click.y() - (double) this.widget.getRowTop(this.widget.children().indexOf(this));
         if (d <= 32.0) {
             if (d < 32.0 && d > 16.0) {
-                this.screen.select(this);
-                this.screen.connect();
+                this.screen.setFocused(this);
+                this.screen.connect(this.server);
                 return true;
             }
             var i = this.screen.getServerList().mialib$getMialibServers().indexOf(this.server);
@@ -163,10 +177,10 @@ public class MialibServerWidget extends MultiplayerServerListWidget.Entry {
                 return true;
             }
         }
-        this.screen.select(this);
-        if (Util.getMeasuringTimeMs() - this.time < 250L) this.screen.connect();
+        this.screen.setFocused(this);
+        if (Util.getMeasuringTimeMs() - this.time < 250L) this.screen.connect(this.server);
         this.time = Util.getMeasuringTimeMs();
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(click, doubled);
     }
 
     public ServerInfo getServer() {
@@ -216,7 +230,6 @@ public class MialibServerWidget extends MultiplayerServerListWidget.Entry {
         var entry = this.screen.serverListWidget.children().stream().filter((e) -> e instanceof MialibServerWidget widget && widget.server == serverInfo).findFirst().orElse(null);
         if (entry == null) return;
         this.screen.serverListWidget.setSelected(entry);
-        this.widget.ensureVisible(entry);
     }
 
     private boolean uploadFavicon(byte @Nullable [] bytes) {

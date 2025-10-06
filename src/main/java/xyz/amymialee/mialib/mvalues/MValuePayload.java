@@ -44,12 +44,10 @@ public record MValuePayload(Identifier id, NbtCompound compound) implements Cust
 			Text text = Text.translatable("chat.type.admin", context.player().getDisplayName(), Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString())).formatted(Formatting.GRAY, Formatting.ITALIC);
 			if (context.server().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK)) {
 				for (var serverPlayerEntity : context.server().getPlayerManager().getPlayerList()) {
-					if (context.server().getPlayerManager().isOperator(serverPlayerEntity.getGameProfile()))
-						serverPlayerEntity.sendMessage(text);
+					if (context.server().getPlayerManager().isOperator(serverPlayerEntity.getPlayerConfigEntry())) serverPlayerEntity.sendMessage(text);
 				}
 			}
-			if (context.server().getGameRules().getBoolean(GameRules.LOG_ADMIN_COMMANDS))
-				context.server().sendMessage(text);
+			if (context.server().getGameRules().getBoolean(GameRules.LOG_ADMIN_COMMANDS)) context.server().sendMessage(text);
         }
 	}
 }

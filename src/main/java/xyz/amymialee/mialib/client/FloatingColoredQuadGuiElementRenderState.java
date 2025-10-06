@@ -15,11 +15,11 @@ public record FloatingColoredQuadGuiElementRenderState(RenderPipeline pipeline, 
     }
 
     @Override
-    public void setupVertices(@NotNull VertexConsumer vertices, float depth) {
-        vertices.vertex(this.pose(), this.x0(), this.y0(), depth).color(this.col1());
-        vertices.vertex(this.pose(), this.x0(), this.y1(), depth).color(this.col2());
-        vertices.vertex(this.pose(), this.x1(), this.y1(), depth).color(this.col2());
-        vertices.vertex(this.pose(), this.x1(), this.y0(), depth).color(this.col1());
+    public void setupVertices(@NotNull VertexConsumer vertices) {
+        vertices.vertex(this.pose(), this.x0(), this.y0()).color(this.col1());
+        vertices.vertex(this.pose(), this.x0(), this.y1()).color(this.col2());
+        vertices.vertex(this.pose(), this.x1(), this.y1()).color(this.col2());
+        vertices.vertex(this.pose(), this.x1(), this.y0()).color(this.col1());
     }
 
     @Nullable

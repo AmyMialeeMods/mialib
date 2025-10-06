@@ -32,7 +32,7 @@ public @SuppressWarnings("unused") interface MRaycasting {
 	}
 
 	static @NotNull List<Entity> raycast(@NotNull PlayerEntity entity, double distance, BiPredicate<PlayerEntity, Entity> filter, int maxHits, double rayRadius) {
-		return raycast(entity.getWorld(), entity.getEyePos(), anglesToVector(entity.getPitch(1.0f), entity.getYaw(1.0f)), distance, (e) -> filter.test(entity, e), rayRadius, maxHits);
+		return raycast(entity.getEntityWorld(), entity.getEyePos(), anglesToVector(entity.getPitch(1.0f), entity.getYaw(1.0f)), distance, (e) -> filter.test(entity, e), rayRadius, maxHits);
 	}
 
 	static @NotNull List<Entity> raycast(@NotNull World world, @NotNull Vec3d startPos, @NotNull Vec3d angle, double distance) {
@@ -54,7 +54,7 @@ public @SuppressWarnings("unused") interface MRaycasting {
 			var intersection = intersects(startPos, endPosition, target, rayRadius);
 			if (intersection) {
 				var visible = false;
-				for (var pos : new Vec3d[]{target.getPos(), target.getPos().add(0, target.getHeight() / 2, 0), target.getPos().add(0, target.getHeight(), 0)}) {
+				for (var pos : new Vec3d[]{target.getEntityPos(), target.getEntityPos().add(0, target.getHeight() / 2, 0), target.getEntityPos().add(0, target.getHeight(), 0)}) {
 					if (world.raycast(new RaycastContext(startPos, pos, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, target)).getType() == HitResult.Type.MISS) {
 						visible = true;
 						break;
@@ -77,8 +77,8 @@ public @SuppressWarnings("unused") interface MRaycasting {
 	}
 
 	static boolean intersects(Vec3d start, @NotNull Vec3d end, @NotNull Entity entity, double rayRadius) {
-		var entityMin = entity.getPos().subtract(entity.getWidth() / 2 + rayRadius, rayRadius, entity.getWidth() / 2 + rayRadius);
-		var entityMax = entity.getPos().add(entity.getWidth() / 2 + rayRadius, entity.getHeight() + rayRadius, entity.getWidth() / 2 + rayRadius);
+		var entityMin = entity.getEntityPos().subtract(entity.getWidth() / 2 + rayRadius, rayRadius, entity.getWidth() / 2 + rayRadius);
+		var entityMax = entity.getEntityPos().add(entity.getWidth() / 2 + rayRadius, entity.getHeight() + rayRadius, entity.getWidth() / 2 + rayRadius);
 		return intersects(start, end, new Box(entityMin, entityMax), rayRadius);
 	}
 

@@ -9,13 +9,11 @@ import net.minecraft.client.gui.screen.multiplayer.AddServerScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerServerListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.network.MultiplayerServerListPinger;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.ServerList;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -108,7 +106,7 @@ public abstract class MultiplayerScreenMixin extends Screen {
         this.selectedEntry = new ServerInfo(serverInfo.name, serverInfo.address, ServerInfo.ServerType.OTHER);
         this.selectedEntry.copyWithSettingsFrom(serverInfo);
         if (this.client == null) return;
-        this.client.setScreen(new AddServerScreen(this, this::editEntry, this.selectedEntry));
+        this.client.setScreen(new AddServerScreen(this, Text.translatable("manageServer.add.title"), this::editEntry, this.selectedEntry));
     }
 
     @Inject(method = "updateButtonActivationStates", at = @At("TAIL"))
@@ -119,7 +117,7 @@ public abstract class MultiplayerScreenMixin extends Screen {
         this.buttonDelete.active = true;
     }
 
-    @Inject(method = "connect()V", at = @At("TAIL"))
+    @Inject(method = "connect", at = @At("TAIL"))
     private void mialib$connect(CallbackInfo ci) {
         var entry = this.serverListWidget.getSelectedOrNull();
         if (!(entry instanceof MialibServerWidget widget)) return;

@@ -9,8 +9,8 @@ import xyz.amymialee.mialib.util.interfaces.MEntity;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements MEntity {
-    @Shadow public abstract Vec3d getPos();
     @Shadow public abstract float getHeight();
+    @Shadow public abstract Vec3d getEntityPos();
 
     public @Override boolean mialib$isIndestructible() {
         return ExtraFlagsComponent.KEY.get(this).isIndestructible();
@@ -21,6 +21,6 @@ public abstract class EntityMixin implements MEntity {
     }
 
     public @Override Vec3d mialib$getBodyPos(double heightScale) {
-        return this.getPos().add(0, this.getHeight() * heightScale, 0);
+        return this.getEntityPos().add(0, this.getHeight() * heightScale, 0);
     }
 }

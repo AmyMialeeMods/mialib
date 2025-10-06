@@ -3,10 +3,7 @@ package xyz.amymialee.mialib.mvalues;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.screen.ScreenTexts;
@@ -168,12 +165,12 @@ public class MValueScreen extends Screen {
         }
 
         @Override
-        public boolean mouseReleased(double mouseX, double mouseY, int button) {
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        public boolean mouseReleased(@NotNull Click click) {
+            if (click.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 this.setFocused(false);
                 return true;
             }
-            return super.mouseReleased(mouseX, mouseY, button);
+            return super.mouseReleased(click);
         }
 
         public enum Type {
