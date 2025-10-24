@@ -6,12 +6,13 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.World;
 
 public @SuppressWarnings("unused") interface MItem {
     default void mialib$killEntity(World world, ItemStack stack, LivingEntity user, LivingEntity victim) {}
 
-    default int mialib$bonusLevels(ItemStack stack, Enchantment enchantment, int level) {
+    default int mialib$bonusLevels(ItemStack stack, RegistryEntry<Enchantment> enchantment, int level) {
         return level;
     }
 
