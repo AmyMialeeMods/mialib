@@ -4,11 +4,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class MValuePercent extends MValueDouble {
     public MValuePercent(double defaultValue) {
-        super(defaultValue, 0, 1, 2);
+        super(defaultValue, 0, 1, 32);
     }
 
     public MValuePercent(double defaultValue, double min, double max) {
-        super(defaultValue, min, max, 2);
+        super(defaultValue, min, max, 32);
     }
 
     public MValuePercent(double defaultValue, double min, double max, int decimals) {
