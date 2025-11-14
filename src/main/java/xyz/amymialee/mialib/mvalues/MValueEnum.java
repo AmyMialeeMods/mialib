@@ -29,7 +29,7 @@ public class MValueEnum<T extends Enum<T>> extends MValueType<T> {
 
             @Override
             protected T getValue() {
-                return constants[(int) ((constants.length - 1) * this.sliderValue)];
+                return constants[(int) Math.clamp(constants.length * this.sliderValue, 0, constants.length - 1)];
             }
         };
     }
