@@ -31,8 +31,6 @@
   "mialib.servers": "Mialib Servers",
   "mvalue.mialib.disable_end_portals": "Disable End Portals",
   "mvalue.mialib.disable_end_portals.desc": "Disables end portals",
-  "mvalue.mialib.disable_piglin_portal_spawning": "Disable Piglin Spawning",
-  "mvalue.mialib.disable_piglin_portal_spawning.desc": "Disables piglins spawning from nether portals",
   "mvaluecategory.mialib.mialib": "MValues",
   "tag.item.mialib.damage_immune": "Undestroyable",
   "tag.item.mialib.unbreakable": "Unbreakable"

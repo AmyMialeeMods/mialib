@@ -14,7 +14,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.Schedule;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -84,6 +83,7 @@ public @SuppressWarnings({"unused", "UnusedReturnValue"}) class MRegistry {
 	private static final Map<Class<?>, Registry<?>> DEFAULT_REGISTRIES = new HashMap<>();
 	private final Map<Class<?>, Registry<?>> registries = new HashMap<>();
 	private final String namespace;
+	private final Map<String, String> translations = new HashMap<>();
 	
 	public MRegistry(String namespace) {
 		this.namespace = namespace;
@@ -98,7 +98,11 @@ public @SuppressWarnings({"unused", "UnusedReturnValue"}) class MRegistry {
 		this.registries.put(clazz, registry);
 	}
 
-	public @SafeVarargs final Block register(String path, AbstractBlock.@NotNull Settings settings, @NotNull Function<AbstractBlock.Settings, Block> function, RegistryKey<ItemGroup> @NotNull ... groups) {
+	public void addToItemGroup(RegistryKey<ItemGroup> group, ItemStack stack) {
+		ItemGroupEvents.modifyEntriesEvent(group).register((entries) -> entries.add(stack));
+	}
+
+	public @SafeVarargs final @NotNull Block register(String path, AbstractBlock.@NotNull Settings settings, @NotNull Function<AbstractBlock.Settings, Block> function, RegistryKey<ItemGroup> @NotNull ... groups) {
 		var key = RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(this.namespace, path));
 		var block = function.apply(settings.registryKey(key));
 		Registry.register(Registries.BLOCK, key, block);
@@ -107,38 +111,33 @@ public @SuppressWarnings({"unused", "UnusedReturnValue"}) class MRegistry {
 			Item.BLOCK_ITEMS.put(block, item);
 			for (var group : groups) this.addToItemGroup(group, item.getDefaultStack());
 		}
+		this.translations.put(block.getTranslationKey(), this.createTranslation(path));
 		return block;
 	}
 
-	public @SafeVarargs final Item register(String path, Item.@NotNull Settings settings, @NotNull Function<Item.Settings, Item> function, RegistryKey<ItemGroup> @NotNull ... groups) {
+	public @SafeVarargs final @NotNull Item register(String path, Item.@NotNull Settings settings, @NotNull Function<Item.Settings, Item> function, RegistryKey<ItemGroup> @NotNull ... groups) {
 		var key = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(this.namespace, path));
 		var item = function.apply(settings.registryKey(key));
 		Registry.register(Registries.ITEM, key, item);
 		for (var group : groups) this.addToItemGroup(group, item.getDefaultStack());
+		this.translations.put(item.getTranslationKey(), this.createTranslation(path));
 		return item;
 	}
 
-	public void addToItemGroup(RegistryKey<ItemGroup> group, ItemStack stack) {
-		ItemGroupEvents.modifyEntriesEvent(group).register((entries) -> entries.add(stack));
-	}
-
-	public <T extends Entity> EntityType<T> register(String path, EntityType.@NotNull Builder<T> builder) {
-		var key = RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(this.namespace, path));
-		var entity = builder.build(key);
+	public <T extends Entity> EntityType<T> register(String path, @NotNull EntityType.Builder<T> builder) {
+		var entity = builder.build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(this.namespace, path)));
+		this.translations.put(entity.getTranslationKey(), this.createTranslation(path));
 		return this.register(path, entity);
 	}
 
-	public <T extends LivingEntity> EntityType<T> register(String path, EntityType.@NotNull Builder<T> builder, @Nullable DefaultAttributeContainer.Builder attributes) {
+	@SuppressWarnings("DataFlowIssue")
+    public <T extends LivingEntity> EntityType<T> register(String path, @NotNull EntityType.Builder<T> builder, @Nullable DefaultAttributeContainer.Builder attributes) {
 		var key = RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(this.namespace, path));
 		var entity = builder.build(key);
-		return this.register(path, entity, attributes);
-	}
-
-	public <T extends LivingEntity> EntityType<T> register(String path, EntityType<T> entity, @Nullable DefaultAttributeContainer.Builder attributes) {
-		this.register(path, entity);
+		this.register(path + "_spawn_egg", new Item.Settings(), (s) -> new SpawnEggItem(s.spawnEgg(entity)), ItemGroups.SPAWN_EGGS);
 		if (attributes != null) FabricDefaultAttributeRegistry.register(entity, attributes);
-		if (entity != null) this.register(path + "_spawn_egg", new Item.Settings(), (s) -> new SpawnEggItem(s.spawnEgg(entity)), ItemGroups.SPAWN_EGGS);
-		return entity;
+        if (entity != null) this.translations.put(entity.getTranslationKey(), this.createTranslation(path));
+        return this.register(path, entity);
 	}
 
 	public SoundEvent registerSound(String name) {
@@ -185,6 +184,16 @@ public @SuppressWarnings({"unused", "UnusedReturnValue"}) class MRegistry {
 		Mialib.LOGGER.error("Failed to register {} to the {} MRegistry!", id, this.namespace, error);
 		throw error;
 	}
+
+	public void setTranslation(String key, String value) {
+		this.translations.put(key, value);
+	}
+
+	public String createTranslation(@NotNull String id) {
+		var words = id.replace("_", " ").split(" ");
+		for (var i = 0; i < words.length; i++) if (!words[i].isEmpty()) words[i] = words[i].substring(0, 1).toUpperCase() + words[i].substring(1);
+		return String.join(" ", words);
+	}
 	
 	static {
 		DEFAULT_REGISTRIES.put(GameEvent.class, Registries.GAME_EVENT);
@@ -214,7 +223,6 @@ public @SuppressWarnings({"unused", "UnusedReturnValue"}) class MRegistry {
 		DEFAULT_REGISTRIES.put(PointOfInterestType.class, Registries.POINT_OF_INTEREST_TYPE);
 		DEFAULT_REGISTRIES.put(MemoryModuleType.class, Registries.MEMORY_MODULE_TYPE);
 		DEFAULT_REGISTRIES.put(SensorType.class, Registries.SENSOR_TYPE);
-		DEFAULT_REGISTRIES.put(Schedule.class, Registries.SCHEDULE);
 		DEFAULT_REGISTRIES.put(Activity.class, Registries.ACTIVITY);
 		DEFAULT_REGISTRIES.put(LootPoolEntryType.class, Registries.LOOT_POOL_ENTRY_TYPE);
 		DEFAULT_REGISTRIES.put(LootFunctionType.class, Registries.LOOT_FUNCTION_TYPE);

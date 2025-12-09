@@ -1,5 +1,5 @@
 plugins { // Latest loom at https://modmuss50.me/fabric.html
-    id 'fabric-loom' version '1.11-SNAPSHOT'
+    id 'fabric-loom' version '1.14-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -11,6 +11,7 @@ version = project.mod_version + '-' + project.minecraft_version
 group = project.maven_group
 
 repositories {
+    mavenLocal()
     maven {
         description = "Maven for Cardinal Components and Player Ability Lib"
         url = "https://maven.ladysnake.org/releases/"
@@ -30,7 +31,6 @@ dependencies {
     modImplementation ("com.terraformersmc:modmenu:${project.modmenu_version}")
     modImplementation include ("org.ladysnake.cardinal-components-api:cardinal-components-base:${project.cca_version}")
     modImplementation include ("org.ladysnake.cardinal-components-api:cardinal-components-entity:${project.cca_version}")
-    modImplementation include ("org.ladysnake.cardinal-components-api:cardinal-components-scoreboard:${project.cca_version}")
 }
 
 loom {
@@ -60,7 +60,7 @@ tasks.withType(JavaCompile).configureEach {
 java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
-    archivesBaseName = project.archives_base_name
+    archives_base_name = project.archives_base_name
     withSourcesJar()
 }
 

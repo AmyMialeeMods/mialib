@@ -7,9 +7,9 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
-import org.ladysnake.cca.api.v3.scoreboard.ScoreboardSyncCallback;
 import xyz.amymialee.mialib.Mialib;
 
 import java.io.FileNotFoundException;
@@ -27,9 +27,10 @@ public record MVServerManager(MinecraftServer server) {
         INSTANCE = this;
         this.server = server;
         this.loadConfig();
-        ScoreboardSyncCallback.EVENT.register((player, tracked) -> {
-            for (var key : MVALUES.values()) ServerPlayNetworking.send(player, new MValuePayload(key.id, key.writeNbt(new NbtCompound())));
-        });
+    }
+
+    public static void syncCallback(ServerPlayerEntity player) {
+        for (var key : MVALUES.values()) ServerPlayNetworking.send(player, new MValuePayload(key.id, key.writeNbt(new NbtCompound())));
     }
 
     public static void create(MinecraftServer server) {

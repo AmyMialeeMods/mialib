@@ -1,7 +1,6 @@
 package xyz.amymialee.mialib.client;
 
 import com.google.common.collect.Lists;
-import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
@@ -24,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import xyz.amymialee.mialib.Mialib;
 
-import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -68,14 +66,14 @@ public class MialibServerWidget extends MultiplayerServerListWidget.Entry {
             this.server.playerCountLabel = ScreenTexts.EMPTY;
             MultiplayerServerListWidget.SERVER_PINGER_THREAD_POOL.submit(() -> {
                 try {
-                    this.screen.getServerListPinger().add(this.server, () -> this.client.execute(() -> this.screen.getServerList().saveFile()), () -> {
-                        this.server.setStatus(this.server.protocolVersion == SharedConstants.getGameVersion().protocolVersion() ? ServerInfo.Status.SUCCESSFUL : ServerInfo.Status.INCOMPATIBLE);
-                        this.client.execute(this::update);
-                    });
-                } catch (UnknownHostException var2) {
-                    this.server.setStatus(ServerInfo.Status.UNREACHABLE);
-                    this.server.label = MultiplayerServerListWidget.CANNOT_RESOLVE_TEXT;
-                    this.client.execute(this::update);
+//                    this.screen.getServerListPinger().add(this.server, () -> this.client.execute(() -> this.screen.getServerList().saveFile()), () -> {
+//                        this.server.setStatus(this.server.protocolVersion == SharedConstants.getGameVersion().protocolVersion() ? ServerInfo.Status.SUCCESSFUL : ServerInfo.Status.INCOMPATIBLE);
+//                        this.client.execute(this::update);
+//                    });
+//                } catch (UnknownHostException var2) {
+//                    this.server.setStatus(ServerInfo.Status.UNREACHABLE);
+//                    this.server.label = MultiplayerServerListWidget.CANNOT_RESOLVE_TEXT;
+//                    this.client.execute(this::update);
                 } catch (Exception var3) {
                     this.server.setStatus(ServerInfo.Status.UNREACHABLE);
                     this.server.label = MultiplayerServerListWidget.CANNOT_CONNECT_TEXT;

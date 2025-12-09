@@ -1,9 +1,11 @@
 package xyz.amymialee.mialib.mvalues;
 
+import net.minecraft.command.permission.PermissionCheck;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.util.runnables.CachedFunction;
@@ -19,7 +21,7 @@ public class MValueBuilder<T> {
     private String translationKey;
     private MValueCategory category = MValue.DEFAULT_CATEGORY;
     private Function<MValue<T>, ItemStack> stackFunction = new CachedFunction<>(Items.DIAMOND.getDefaultStack());
-    private int permissionLevel = 4;
+    private PermissionCheck permissionCheck = CommandManager.GAMEMASTERS_CHECK;
     private boolean clientSide = false;
     private Predicate<PlayerEntity> canChange = (p) -> true;
     private Consumer<MValue<T>> onChange = (value) -> {};
@@ -65,14 +67,14 @@ public class MValueBuilder<T> {
         return this;
     }
 
-    public MValueBuilder<T> permissionLevel(int permissionLevel) {
-        this.permissionLevel = permissionLevel;
+    public MValueBuilder<T> permissionLevel(PermissionCheck permissionLevel) {
+        this.permissionCheck = permissionLevel;
         return this;
     }
 
     public MValueBuilder<T> clientSide() {
         this.clientSide = true;
-        this.permissionLevel = 0;
+        this.permissionCheck = PermissionCheck.AlwaysPass.INSTANCE;
         return this;
     }
 
@@ -87,7 +89,7 @@ public class MValueBuilder<T> {
     }
 
     public MValue<T> build() {
-        var value = new MValue<>(this.id, this.translationKey, this.type, this.stackFunction, this.permissionLevel, this.clientSide, this.canChange, this.onChange);
+        var value = new MValue<>(this.id, this.translationKey, this.type, this.stackFunction, this.permissionCheck, this.clientSide, this.canChange, this.onChange);
         if (this.clientSide) {
             MVClientManager.register(this.category, value);
         } else {

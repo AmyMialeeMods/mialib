@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.GameMenuScreen;
@@ -54,13 +53,10 @@ public class GameMenuScreenMixin extends Screen {
         if (!any) return;
         var button = this.addDrawableChild(new ButtonWidget(ref.get().getX() - 20 - 4, ref.get().getY(), 20, 20, Text.translatable("%s.screen.mvalues".formatted(Mialib.MOD_ID)), (b) -> this.client.setScreen(new MValueScreen()), Supplier::get) {
             @Override
-            protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-                super.renderWidget(context, mouseX, mouseY, delta);
-                context.mialib$drawTexture(RenderPipelines.GUI_TEXTURED, LOGO_TEXTURE, this.getX() + 2, this.getY() + 2, 16, 16, 16, 16, 16, 16);
+            protected void drawIcon(DrawContext context, int mouseX, int mouseY, float delta) {
+                this.drawButton(context);
+                context.drawTexture(RenderPipelines.GUI_TEXTURED, LOGO_TEXTURE, this.getX() + 2, this.getY() + 2, 16, 16, 16, 16, 16, 16);
             }
-
-            @Override
-            public void drawMessage(DrawContext context, TextRenderer textRenderer, int color) {}
         });
         button.setTooltip(Tooltip.of(Text.translatable("%s.screen.mvalues".formatted(Mialib.MOD_ID))));
     }

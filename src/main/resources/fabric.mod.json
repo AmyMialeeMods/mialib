@@ -51,7 +51,6 @@
       "mialib:mvalues"
     ],
     "loom:injected_interfaces": {
-      "net/minecraft/class_332" : ["xyz/amymialee/mialib/util/interfaces/MDrawContext"],
       "net/minecraft/class_1887": ["xyz/amymialee/mialib/util/interfaces/MEnchantment"],
       "net/minecraft/class_1297": ["xyz/amymialee/mialib/util/interfaces/MEntity"],
       "net/minecraft/class_1792": ["xyz/amymialee/mialib/util/interfaces/MItem"],

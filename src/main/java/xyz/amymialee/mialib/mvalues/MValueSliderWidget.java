@@ -77,7 +77,7 @@ public abstract class MValueSliderWidget<T> extends MValueWidget<T> {
         var textures = this.value.clientSide ? CLIENT_BUTTON_TEXTURES : BUTTON_TEXTURES;
         context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, textures.get(true, this.hovered), this.getX(), this.getY(), 18, this.height, 0xFFFFFFFF);
         context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, this.getTexture(), this.getX() + 18, this.getY(), this.getWidth() - 18, this.getHeight(), ColorHelper.getWhite(this.alpha));
-        context.mialib$drawGuiTexture(RenderPipelines.GUI_TEXTURED, this.getHandleTexture(), this.getX() + 18 + (int) (this.sliderValue * (double) (this.width - 8 - 18)), this.getY(), 8, this.getHeight(), ColorHelper.getWhite(this.alpha));
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, this.getHandleTexture(), this.getX() + 18 + (int) (this.sliderValue * (double) (this.width - 8 - 18)), this.getY(), 8, this.getHeight(), ColorHelper.getWhite(this.alpha));
         context.drawItem(this.value.getStack(), this.getX() + 1, this.getY() + 1);
         final Consumer3<Float, Float, Float> moveAndScale = (x, y, s) -> {
             context.getMatrices().pushMatrix();

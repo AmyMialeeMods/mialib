@@ -14,7 +14,7 @@
     "ItemMixin$ItemSettingsMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
-    "NetherPortalBlockMixin",
+    "PlayerManagerMixin",
     "ServerScoreboardMixin",
     "interfaces.EntityMixin",
     "interfaces.ItemEntityMixin",
@@ -33,7 +33,6 @@
     "client.MultiplayerScreenMixin",
     "client.MultiplayerServerListWidgetMixin",
     "client.ResourcePackManagerMixin",
-    "interfaces.DrawContextMixin",
     "interfaces.ServerListMixin"
   ],
   "server": [

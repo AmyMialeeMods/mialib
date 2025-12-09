@@ -53,7 +53,7 @@ public class MValueColor extends MValueType<Integer> {
 
 	@Override
 	protected void registerServerCommand(MValue<Integer> value) {
-		CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(value.permissionLevel))
+		CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(CommandManager.requirePermissionLevel(value.permissionCheck))
 				.then(CommandManager.literal(value.id.toString())
 						.then(CommandManager.argument("value", HexColorArgumentType.hexColor()))
 						.executes(ctx -> {
@@ -70,7 +70,7 @@ public class MValueColor extends MValueType<Integer> {
 
 	@Override
 	protected void registerClientCommand(MValue<Integer> value) {
-		ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.getPlayer().hasPermissionLevel(value.permissionLevel))
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(CommandManager.requirePermissionLevel(value.permissionCheck))
 				.then(ClientCommandManager.literal(value.id.toString())
 						.then(ClientCommandManager.argument("value", HexColorArgumentType.hexColor())
 								.executes(ctx -> {

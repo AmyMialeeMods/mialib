@@ -1,11 +1,9 @@
 package xyz.amymialee.mialib.mixin.client;
 
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.GameOptions;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,7 +15,6 @@ import xyz.amymialee.mialib.networking.AttackingPayload;
 import xyz.amymialee.mialib.networking.UsingPayload;
 
 import java.util.List;
-import java.util.function.Function;
 
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {
@@ -26,9 +23,10 @@ public class MinecraftClientMixin {
 	@Unique private boolean mialib$attacking = false;
 	@Unique private boolean mialib$using = false;
 
-	@WrapWithCondition(method = "createInitScreens", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0))
-	private boolean mialib$skipNarrator(List<Function<Runnable, Screen>> instance, Object e) {
-        return !MialibProperties.skipNarrator.get();
+	@WrapOperation(method = "createInitScreens", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
+	private <E> boolean mialib$skipNarrator(List<E> instance, E e, Operation<Boolean> original) {
+        if (MialibProperties.skipNarrator.get()) return false;
+        return original.call(instance, e);
     }
 
 	@WrapOperation(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V"))

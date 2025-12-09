@@ -96,7 +96,10 @@ public class MValueScreen extends Screen {
             context.enableScissor(left + 7, this.height / 2 - 93, left + 60, this.height / 2 + 93);
             for (var x = left + 7; x <= left + 60; x += backWidth) {
                 for (var y = this.height / 2f - 103 - scrollAmount - backHeight; y <= this.height / 2f + 93; y += backHeight) {
-                    context.mialib$drawTexture(RenderPipelines.GUI_TEXTURED, DARK_OAK_PLANKS, x, (float) y, backWidth, backHeight, backWidth, backHeight, backWidth, backHeight);
+                    context.getMatrices().pushMatrix();
+                    context.getMatrices().translate(0, (float) y);
+                    context.drawTexture(RenderPipelines.GUI_TEXTURED, DARK_OAK_PLANKS, x, 0, backWidth, backHeight, backWidth, backHeight, backWidth, backHeight);
+                    context.getMatrices().popMatrix();
                 }
             }
             context.disableScissor();
@@ -106,7 +109,10 @@ public class MValueScreen extends Screen {
             context.enableScissor(left + 66, this.height / 2 - 93, right - 7, this.height / 2 + 93);
             for (var x = left + 66; x <= right - 7; x += backWidth) {
                 for (var y = this.height / 2f - 103 - scrollAmount - backHeight; y <= this.height / 2f + 93; y += backHeight) {
-                    context.mialib$drawTexture(RenderPipelines.GUI_TEXTURED, this.selectedCategory.backgroundTexture, x, (float) y, backWidth, backHeight, backWidth, backHeight, backWidth, backHeight);
+                    context.getMatrices().pushMatrix();
+                    context.getMatrices().translate(0, (float) y);
+                    context.drawTexture(RenderPipelines.GUI_TEXTURED, this.selectedCategory.backgroundTexture, x, 0, backWidth, backHeight, backWidth, backHeight, backWidth, backHeight);
+                    context.getMatrices().popMatrix();
                 }
             }
             context.disableScissor();
@@ -131,7 +137,7 @@ public class MValueScreen extends Screen {
             context.getMatrices().popMatrix();
         }
         context.getMatrices().pushMatrix();
-        context.mialib$drawTexture(RenderPipelines.GUI_TEXTURED, WINDOW_TEXTURE, left, this.height / 2f - 100, 370, 200, 370, 200, 370, 200);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, WINDOW_TEXTURE, left, this.height / 2 - 100, 370, 200, 370, 200, 370, 200);
         var categoryTitle = Text.translatable(this.selectedCategory.getTranslationKey());
         context.drawText(this.textRenderer, categoryTitle, (int) (this.width / 2f - this.textRenderer.getWidth(categoryTitle) / 2f - WIDTH / 2f + 214.5f), this.height / 2 - 110, 0xFFFFFFFF, true);
         context.drawText(this.textRenderer, Text.translatable("mialib.screen.mvalues"), this.width / 2 - WIDTH / 2, this.height / 2 - 110, 0xFFFFFFFF, true);
@@ -150,7 +156,7 @@ public class MValueScreen extends Screen {
         }
 
         @Override
-        protected void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        protected void drawIcon(DrawContext context, int mouseX, int mouseY, float delta) {
             if (!this.visible) return;
             if (this.isFocused()) {
                 if (this.isHovered()) {
@@ -161,7 +167,7 @@ public class MValueScreen extends Screen {
             }
             var u = this.active && this.isHovered() ? 22 : 0;
             var v = this.active ? 0 : 12;
-            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, SCROLL_BUTTONS, this.getX(), this.getY(), u + (this.type == Type.NEXT ? 11 : 0), v, 11, 12, 256, 256);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, SCROLL_BUTTONS, this.getX(), this.getY(), u + (this.type == Type.NEXT ? 11 : 0), v, 11, 12, 256, 256);
         }
 
         @Override
@@ -174,12 +180,12 @@ public class MValueScreen extends Screen {
         }
 
         public enum Type {
-            NEXT(Text.literal(">")),
-            PREVIOUS(Text.literal("<"));
+            NEXT(net.minecraft.text.Text.literal(">")),
+            PREVIOUS(net.minecraft.text.Text.literal("<"));
 
-            final Text text;
+            final net.minecraft.text.Text text;
 
-            Type(Text text) {
+            Type(net.minecraft.text.Text text) {
                 this.text = text;
             }
         }

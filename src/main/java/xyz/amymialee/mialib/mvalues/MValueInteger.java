@@ -82,7 +82,7 @@ public class MValueInteger extends MValueMinMax<Integer> {
     @Override
     protected void registerServerCommand(@NotNull MValue<Integer> value) {
         if (value.type instanceof MValueMinMax<Integer> minMax) {
-            CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(value.permissionLevel))
+            CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(CommandManager.requirePermissionLevel(value.permissionCheck))
                     .then(CommandManager.literal(value.id.toString())
                             .then(CommandManager.argument("value", IntegerArgumentType.integer(minMax.getMin(), minMax.getMax()))
                                     .executes(ctx -> {
@@ -101,7 +101,7 @@ public class MValueInteger extends MValueMinMax<Integer> {
     @Override
     protected void registerClientCommand(@NotNull MValue<Integer> value) {
         if (value.type instanceof MValueMinMax<Integer> minMax) {
-            ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.getPlayer().hasPermissionLevel(value.permissionLevel))
+            ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(CommandManager.requirePermissionLevel(value.permissionCheck))
                     .then(ClientCommandManager.literal(value.id.toString())
                             .then(ClientCommandManager.argument("value", IntegerArgumentType.integer(minMax.getMin(), minMax.getMax()))
                                     .executes(ctx -> {

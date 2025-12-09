@@ -30,7 +30,7 @@ public abstract class MultiplayerScreenMixin extends Screen {
     @Shadow protected abstract void editEntry(boolean confirmedAction);
     @Shadow private ButtonWidget buttonEdit;
     @Shadow private ButtonWidget buttonDelete;
-    @Shadow protected abstract void connect(ServerInfo entry);
+    @Shadow public abstract void connect(ServerInfo entry);
 
     protected MultiplayerScreenMixin(Text title) {
         super(title);

@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.command.permission.PermissionCheck;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -33,18 +34,18 @@ public final class MValue<T> {
     public final String translationKey;
     public final MValueType<T> type;
     public final Function<MValue<T>, ItemStack> stackFunction;
-    public final int permissionLevel;
+    public final PermissionCheck permissionCheck;
     public final boolean clientSide;
     public final Predicate<PlayerEntity> canChange;
     public final Consumer<MValue<T>> onChange;
     T value;
 
-    public MValue(Identifier id, String translationKey, @NotNull MValueType<T> type, Function<MValue<T>, ItemStack> stackFunction, int permissionLevel, boolean clientSide, Predicate<PlayerEntity> canChange, Consumer<MValue<T>> onChange) {
+    public MValue(Identifier id, String translationKey, @NotNull MValueType<T> type, Function<MValue<T>, ItemStack> stackFunction, PermissionCheck permissionCheck, boolean clientSide, Predicate<PlayerEntity> canChange, Consumer<MValue<T>> onChange) {
         this.id = id;
         this.translationKey = translationKey;
         this.type = type;
         this.stackFunction = stackFunction;
-        this.permissionLevel = permissionLevel;
+        this.permissionCheck = permissionCheck;
         this.clientSide = clientSide;
         this.canChange = canChange;
         this.onChange = onChange;

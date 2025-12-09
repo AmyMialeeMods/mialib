@@ -42,8 +42,8 @@ public class MValueColorWidget extends MValueWidget<Integer> {
 				&& mouseX < this.getX() + this.width
 				&& mouseY < this.getY() + this.height - scroll;
 		var textures = this.value.clientSide ? CLIENT_BUTTON_TEXTURES : BUTTON_TEXTURES;
-		context.mialib$drawGuiTexture(RenderPipelines.GUI_TEXTURED, textures.get(true, this.hovered), this.getX(), this.getY(), 18, this.height, 0xFFFFFFFF);
-		context.mialib$drawGuiTexture(RenderPipelines.GUI_TEXTURED, textures.get(true, this.hovered), this.getX() + 18, this.getY(), this.width - 18, this.height, 0xFFFFFFFF);
+		context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, textures.get(true, this.hovered), this.getX(), this.getY(), 18, this.height, 0xFFFFFFFF);
+		context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, textures.get(true, this.hovered), this.getX() + 18, this.getY(), this.width - 18, this.height, 0xFFFFFFFF);
 		var valueText = Text.literal("#" + StringUtils.leftPad(this.value.type.getValueAsString(this.value), 6, '0'));
 		context.fill(this.getX() + this.width - client.textRenderer.getWidth(valueText) + 6, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1, ColorHelper.withAlpha(255, HexFormat.fromHexDigits(this.value.getValueAsString())));
 		context.drawItem(this.value.getStack(), this.getX() + 1, this.getY() + 1);

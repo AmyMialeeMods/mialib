@@ -10,7 +10,7 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.rule.GameRules;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.Mialib;
 
@@ -38,16 +38,16 @@ public record MValuePayload(Identifier id, NbtCompound compound) implements Cust
 		@Override
 		public void receive(@NotNull MValuePayload payload, ServerPlayNetworking.@NotNull Context context) {
 			var value = MVServerManager.get(payload.id);
-            if (value == null || !context.player().hasPermissionLevel(value.permissionLevel) || !value.canChange.test(context.player())) return;
+            if (value == null || !value.permissionCheck.allows(context.player().getPermissions()) || !value.canChange.test(context.player())) return;
             value.readNbt(payload.compound);
 			MVServerManager.INSTANCE.onChange(value);
 			Text text = Text.translatable("chat.type.admin", context.player().getDisplayName(), Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString())).formatted(Formatting.GRAY, Formatting.ITALIC);
-			if (context.server().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK)) {
+			if (context.player().getEntityWorld().getGameRules().getValue(GameRules.SEND_COMMAND_FEEDBACK)) {
 				for (var serverPlayerEntity : context.server().getPlayerManager().getPlayerList()) {
 					if (context.server().getPlayerManager().isOperator(serverPlayerEntity.getPlayerConfigEntry())) serverPlayerEntity.sendMessage(text);
 				}
 			}
-			if (context.server().getGameRules().getBoolean(GameRules.LOG_ADMIN_COMMANDS)) context.server().sendMessage(text);
+			if (context.player().getEntityWorld().getGameRules().getValue(GameRules.LOG_ADMIN_COMMANDS)) context.server().sendMessage(text);
         }
 	}
 }

@@ -11,7 +11,6 @@ import net.minecraft.client.input.AbstractInput;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.Mialib;
@@ -67,7 +66,7 @@ public class MValueCategory {
 
     public List<MValue<?>> getValues(PlayerEntity player) {
         var list = new ArrayList<>(this.values);
-        list.removeIf((m) -> !player.hasPermissionLevel(m.permissionLevel) || !m.canChange.test(player));
+        list.removeIf((m) -> !m.permissionCheck.allows(player.getPermissions()) || !m.canChange.test(player));
         return list;
     }
 
@@ -89,14 +88,14 @@ public class MValueCategory {
         private boolean scissorContains;
 
         public MValueCategoryWidget(int x, int y, @NotNull MValueCategory value, PressAction consumer) {
-            super(x, y, 24, 24, Text.translatable(value.getTranslationKey()), consumer, DEFAULT_NARRATION_SUPPLIER);
+            super(x, y, 24, 24, net.minecraft.text.Text.translatable(value.getTranslationKey()), consumer, DEFAULT_NARRATION_SUPPLIER);
             this.category = value;
             this.enabled = consumer == null;
             this.setTooltip(Tooltip.of(this.getMessage()));
         }
 
         @Override
-        protected void renderWidget(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
+        protected void drawIcon(DrawContext context, int mouseX, int mouseY, float delta) {
             var scroll = this.scroll + this.velocity * delta;
             this.scissorContains = context.scissorContains(mouseX, mouseY);
             this.hovered = this.scissorContains
@@ -104,7 +103,7 @@ public class MValueCategory {
                     && mouseY >= this.getY() - scroll
                     && mouseX < this.getX() + this.width
                     && mouseY < this.getY() + this.height - scroll;
-            context.mialib$drawTexture(RenderPipelines.GUI_TEXTURED, this.enabled ? SelectionState.SELECTED.texture : (this.hovered ? SelectionState.HIGHLIGHTED : SelectionState.DESELECTED).texture, this.getX(), this.getY(), 22, 22, 22, 22, 22, 22);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, this.enabled ? SelectionState.SELECTED.texture : (this.hovered ? SelectionState.HIGHLIGHTED : SelectionState.DESELECTED).texture, this.getX(), this.getY(), 22, 22, 22, 22, 22, 22);
             context.drawItem(this.category.stackSupplier.get(), this.getX() + 3, this.getY() + 3);
         }
 

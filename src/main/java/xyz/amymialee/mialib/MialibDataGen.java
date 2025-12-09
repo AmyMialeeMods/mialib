@@ -32,13 +32,10 @@ public class MialibDataGen extends MDataGen {
             for (var enabled : new Pair[]{new Pair<>("enabled", "§aenabled"), new Pair<>("disabled", "§cdisabled")}) {
                 builder.add("commands.%s.indestructible.%s.%s".formatted(Mialib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Indestructibility %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
                 builder.add("commands.%s.immortal.%s.%s".formatted(Mialib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Immortality %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
-                builder.add("commands.%s.fly.%s.%s".formatted(Mialib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Fly %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
             }
         }
         builder.add("mialib.screen.mvalues", "Mialib Value Editor");
         builder.add(MValue.DEFAULT_CATEGORY.getTranslationKey(), "MValues");
-        builder.add(ExtrasModule.DISABLE_PIGLIN_PORTAL_SPAWNING.getTranslationKey(), "Disable Piglin Spawning");
-        builder.add(ExtrasModule.DISABLE_PIGLIN_PORTAL_SPAWNING.getDescriptionTranslationKey(), "Disables piglins spawning from nether portals");
         builder.add(ExtrasModule.DISABLE_END_PORTALS.getTranslationKey(), "Disable End Portals");
         builder.add(ExtrasModule.DISABLE_END_PORTALS.getDescriptionTranslationKey(), "Disables end portals");
         builder.add("%s.mvalue.clientside".formatted(Mialib.MOD_ID), "[Client Side]");
@@ -57,7 +54,6 @@ public class MialibDataGen extends MDataGen {
         provider.builder(ExtrasModule.UNBREAKABLE);
     }
 
-    @SuppressWarnings("unchecked")
     protected @Override void generateFlatLevelGeneratorPresetTags(@NotNull MFlatLevelGeneratorPresetTagProvider provider, RegistryWrapper.WrapperLookup arg) {
         provider.builder(FlatLevelGeneratorPresetTags.VISIBLE).setReplace(false).addOptional(DEV_READY).addOptional(BLAST_PROOF);
     }

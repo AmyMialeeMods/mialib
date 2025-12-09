@@ -20,19 +20,18 @@ public interface ExtrasModule {
     TagKey<Item> UNDESTROYABLE = TagKey.of(Registries.ITEM.getKey(), Mialib.id("damage_immune"));
     TagKey<Item> UNBREAKABLE = TagKey.of(Registries.ITEM.getKey(), Mialib.id("unbreakable"));
 
-    MValue<Boolean> DISABLE_PIGLIN_PORTAL_SPAWNING = MValue.of(Mialib.id("disable_piglin_portal_spawning"), MValue.BOOLEAN_FALSE).item((v) -> v.get() ? Items.ROTTEN_FLESH : Items.GOLD_NUGGET).build();
     MValue<Boolean> DISABLE_END_PORTALS = MValue.of(Mialib.id("disable_end_portals"), MValue.BOOLEAN_FALSE).item((v) -> v.get() ? Items.END_STONE_BRICK_SLAB : Items.END_PORTAL_FRAME).build();
 
     static void init() {
         CommandRegistrationCallback.EVENT.register((dispatcher, reg, env) -> {
-            dispatcher.register(CommandManager.literal("indestructible").requires(source -> source.hasPermissionLevel(4))
+            dispatcher.register(CommandManager.literal("indestructible").requires(CommandManager.requirePermissionLevel(CommandManager.GAMEMASTERS_CHECK))
                     .then(CommandManager.argument("enabled", BoolArgumentType.bool())
                             .then(CommandManager.argument("targets", EntityArgumentType.entities())
                                     .executes(ctx -> executeIndestructible(ctx.getSource(), BoolArgumentType.getBool(ctx, "enabled"), EntityArgumentType.getEntities(ctx, "targets").toArray(new Entity[0])))
                             ).executes(ctx -> executeIndestructible(ctx.getSource(), BoolArgumentType.getBool(ctx, "enabled"), ctx.getSource().getPlayer()))
                     ).executes(ctx -> ctx.getSource().getPlayer() == null ? 0 : executeIndestructible(ctx.getSource(), !ExtraFlagsComponent.KEY.get(ctx.getSource().getPlayer()).hasIndestructibleCommand(), ctx.getSource().getPlayer()))
             );
-            dispatcher.register(CommandManager.literal("immortal").requires(source -> source.hasPermissionLevel(4))
+            dispatcher.register(CommandManager.literal("immortal").requires(CommandManager.requirePermissionLevel(CommandManager.GAMEMASTERS_CHECK))
                     .then(CommandManager.argument("enabled", BoolArgumentType.bool())
                             .then(CommandManager.argument("targets", EntityArgumentType.entities())
                                     .executes(ctx -> executeImmortal(ctx.getSource(), BoolArgumentType.getBool(ctx, "enabled"), EntityArgumentType.getEntities(ctx, "targets").toArray(new Entity[0])))

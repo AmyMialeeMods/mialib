@@ -103,7 +103,7 @@ public class MValueFloat extends MValueRoundable<Float> {
     @Override
     protected void registerServerCommand(@NotNull MValue<Float> value) {
         if (value.type instanceof MValueMinMax<Float> minMax) {
-            CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(value.permissionLevel))
+            CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(CommandManager.requirePermissionLevel(value.permissionCheck))
                     .then(CommandManager.literal(value.id.toString())
                             .then(CommandManager.argument("value", FloatArgumentType.floatArg(minMax.getMin(), minMax.getMax()))
                                     .executes(ctx -> {
@@ -122,7 +122,7 @@ public class MValueFloat extends MValueRoundable<Float> {
     @Override
     protected void registerClientCommand(@NotNull MValue<Float> value) {
         if (value.type instanceof MValueMinMax<Float> minMax) {
-            ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.getPlayer().hasPermissionLevel(value.permissionLevel))
+            ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(CommandManager.requirePermissionLevel(value.permissionCheck))
                     .then(ClientCommandManager.literal(value.id.toString())
                             .then(ClientCommandManager.argument("value", FloatArgumentType.floatArg(minMax.getMin(), minMax.getMax()))
                                     .executes(ctx -> {

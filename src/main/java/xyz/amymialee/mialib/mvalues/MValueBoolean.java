@@ -60,7 +60,7 @@ public class MValueBoolean extends MValueType<Boolean> {
 
     @Override
     protected void registerServerCommand(MValue<Boolean> value) {
-        CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(source -> source.hasPermissionLevel(value.permissionLevel))
+        CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(CommandManager.requirePermissionLevel(value.permissionCheck))
                 .then(CommandManager.literal(value.id.toString())
                         .then(CommandManager.argument("enabled", BoolArgumentType.bool())
                                 .executes(ctx -> {
@@ -77,7 +77,7 @@ public class MValueBoolean extends MValueType<Boolean> {
 
     @Override
     protected void registerClientCommand(MValue<Boolean> value) {
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(source -> source.getPlayer().hasPermissionLevel(value.permissionLevel))
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(CommandManager.requirePermissionLevel(value.permissionCheck))
                 .then(ClientCommandManager.literal(value.id.toString())
                         .then(ClientCommandManager.argument("enabled", BoolArgumentType.bool())
                                 .executes(ctx -> {

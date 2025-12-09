@@ -70,8 +70,8 @@ public abstract class MValueWidget<T> extends ClickableWidget {
                 && mouseX < this.getX() + this.width
                 && mouseY < this.getY() + this.height - scroll;
         var textures = this.value.clientSide ? CLIENT_BUTTON_TEXTURES : BUTTON_TEXTURES;
-        context.mialib$drawGuiTexture(RenderPipelines.GUI_TEXTURED, textures.get(true, this.hovered), this.getX(), this.getY(), 18, this.height, 0xFFFFFFFF);
-        context.mialib$drawGuiTexture(RenderPipelines.GUI_TEXTURED, textures.get(true, this.hovered), this.getX() + 18, this.getY(), this.width - 18, this.height, 0xFFFFFFFF);
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, textures.get(true, this.hovered), this.getX(), this.getY(), 18, this.height, 0xFFFFFFFF);
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, textures.get(true, this.hovered), this.getX() + 18, this.getY(), this.width - 18, this.height, 0xFFFFFFFF);
         context.drawItem(this.value.getStack(), this.getX() + 1, this.getY() + 1);
         final Consumer3<Float, Float, Float> moveAndScale = (x, y, s) -> {
             context.getMatrices().pushMatrix();
