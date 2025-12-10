@@ -19,17 +19,17 @@ import xyz.amymialee.mialib.Mialib;
 
 @Mixin(AddServerScreen.class)
 public class AddServerScreenMixin extends Screen {
-    @Unique private static final Identifier LOGO_TEXTURE = Mialib.id("textures/gui/logo.png");
-    @Unique private static final Identifier LOGO_GRAY_TEXTURE = Mialib.id("textures/gui/logo_gray.png");
-
-    @Shadow @Final private Screen parent;
+//    @Unique private static final Identifier LOGO_TEXTURE = Mialib.id("textures/gui/logo.png");
+//    @Unique private static final Identifier LOGO_GRAY_TEXTURE = Mialib.id("textures/gui/logo_gray.png");
+//
+//    @Shadow @Final private Screen parent;
 
     protected AddServerScreenMixin(Text title) {
         super(title);
     }
 
-    @Inject(method = "init", at = @At("TAIL"))
-    private void mialib$serverButton(CallbackInfo ci, @Share("button") @NotNull LocalRef<ButtonWidget> ref) {
+//    @Inject(method = "init", at = @At("TAIL"))
+//    private void mialib$serverButton(CallbackInfo ci, @Share("button") @NotNull LocalRef<ButtonWidget> ref) {
 //        if (!(this.parent instanceof MultiplayerScreen multiplayerScreen)) return;
 //        var serverList = multiplayerScreen.getServerList();
 //        serverList.mialib$setEditingMialibServer(serverList.mialib$getMialibServers().contains(multiplayerScreen.getServerList().mialib$getEditTarget()));
@@ -48,5 +48,5 @@ public class AddServerScreenMixin extends Screen {
 //        };
 //        button.setTooltip(Tooltip.of(Text.translatable((serverList.mialib$isEditingMialibServer() ? "%s.mialib_server.true" : "%s.mialib_server.false").formatted(Mialib.MOD_ID))));
 //        this.addDrawableChild(button);
-    }
+//    }
 }

@@ -20,23 +20,23 @@ import java.util.Collection;
 
 @Mixin(MultiplayerServerListWidget.class)
 public class MultiplayerServerListWidgetMixin extends AlwaysSelectedEntryListWidget<MultiplayerServerListWidget.Entry> {
-    private @Shadow @Final MultiplayerScreen screen;
+//    private @Shadow @Final MultiplayerScreen screen;
 
-    @Unique private ServerList servers;
+//    @Unique private ServerList servers;
 
     public MultiplayerServerListWidgetMixin(MinecraftClient minecraftClient, int i, int j, int k, int l) {
         super(minecraftClient, i, j, k, l);
     }
 
-    @Inject(method = "setServers", at = @At("HEAD"))
-    private void mialib$serverlist(ServerList serverList, CallbackInfo ci) {
-        this.servers = serverList;
-    }
+//    @Inject(method = "setServers", at = @At("HEAD"))
+//    private void mialib$serverlist(ServerList serverList, CallbackInfo ci) {
+//        this.servers = serverList;
+//    }
 
-    @WrapOperation(method = "updateEntries", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget;replaceEntries(Ljava/util/Collection;)V")) @SuppressWarnings("unchecked")
-    private <E extends EntryListWidget.Entry<E>> void mialib$mialibservers(MultiplayerServerListWidget instance, Collection<E> collection, Operation<Void> original) {
+//    @WrapOperation(method = "updateEntries", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/multiplayer/MultiplayerServerListWidget;replaceEntries(Ljava/util/Collection;)V")) @SuppressWarnings("unchecked")
+//    private <E extends EntryListWidget.Entry<E>> void mialib$mialibservers(MultiplayerServerListWidget instance, Collection<E> collection, Operation<Void> original) {
 //        ((List<MultiplayerServerListWidget.Entry>) collection).add(new MialibServerSpacerWidget());
 //        if (this.servers != null) this.servers.mialib$getMialibServers().forEach(server -> ((List<MultiplayerServerListWidget.Entry>) collection).add(new MialibServerWidget(instance, this.screen, server)));
 //        original.call(instance, collection);
-    }
+//    }
 }
