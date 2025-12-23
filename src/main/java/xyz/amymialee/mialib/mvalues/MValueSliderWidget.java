@@ -34,14 +34,12 @@ public abstract class MValueSliderWidget<T> extends MValueWidget<T> {
     public abstract void resetSliderValue();
 
     private Identifier getTexture() {
-        if (this.value.clientSide)
-            return this.isFocused() && !this.sliderFocused ? CLIENT_SLIDER_HIGHLIGHTED_TEXTURE : CLIENT_SLIDER_TEXTURE;
+        if (this.value.clientSide) return this.isFocused() && !this.sliderFocused ? CLIENT_SLIDER_HIGHLIGHTED_TEXTURE : CLIENT_SLIDER_TEXTURE;
         return this.isFocused() && !this.sliderFocused ? SLIDER_HIGHLIGHTED_TEXTURE : SLIDER_TEXTURE;
     }
 
     private Identifier getHandleTexture() {
-        if (this.value.clientSide)
-            return !this.hovered && !this.sliderFocused ? CLIENT_SLIDER_HANDLE_TEXTURE : CLIENT_SLIDER_HANDLE_HIGHLIGHTED_TEXTURE;
+        if (this.value.clientSide) return !this.hovered && !this.sliderFocused ? CLIENT_SLIDER_HANDLE_TEXTURE : CLIENT_SLIDER_HANDLE_HIGHLIGHTED_TEXTURE;
         return !this.hovered && !this.sliderFocused ? SLIDER_HANDLE_TEXTURE : SLIDER_HANDLE_HIGHLIGHTED_TEXTURE;
     }
 
