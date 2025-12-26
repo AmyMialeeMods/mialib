@@ -74,14 +74,14 @@ public class HoldingComponent implements AutoSyncedComponent, CommonTickingCompo
 	}
 
 	public @Override void readData(@NotNull ReadView readView) {
-		this.attacking = readView.getBoolean("using", false);
+		this.attacking = readView.getBoolean("attacking", false);
 		this.using = readView.getBoolean("using", false);
 		this.tickAttacking = readView.getInt("tickAttacking", 0);
 		this.tickUsing = readView.getInt("tickUsing", 0);
 	}
 
 	public @Override void writeData(@NotNull WriteView writeView) {
-		writeView.putBoolean("using", this.attacking);
+		writeView.putBoolean("attacking", this.attacking);
 		writeView.putBoolean("using", this.using);
 		writeView.putInt("tickAttacking", this.tickAttacking);
 		writeView.putInt("tickUsing", this.tickUsing);
