@@ -94,7 +94,7 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 
 	protected void generateItemModels(MModelProvider provider, ItemModelGenerator generator) {}
 
-	protected void generateRecipes(MRecipeProvider provider, RegistryWrapper.WrapperLookup registryLookup, RecipeExporter exporter) {}
+	protected void generateRecipes(MRecipeProvider provider, RecipeGenerator recipeGenerator, RegistryWrapper.WrapperLookup registryLookup, RecipeExporter exporter) {}
 
 	protected void generateDamageTypes(MDamageTypeProvider provider, RegistryWrapper.WrapperLookup registries, FabricDynamicRegistryProvider.@NotNull Entries entries) {}
 
@@ -291,7 +291,7 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 			return new RecipeGenerator(registryLookup, exporter) {
 				@Override
 				public void generate() {
-					MRecipeProvider.this.dataGen.generateRecipes(MRecipeProvider.this, this.registries, this.exporter);
+					MRecipeProvider.this.dataGen.generateRecipes(MRecipeProvider.this, this, this.registries, this.exporter);
 				}
 			};
 		}
