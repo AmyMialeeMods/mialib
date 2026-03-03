@@ -42,6 +42,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.FlatLevelGeneratorPreset;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -123,12 +124,12 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		public void generateAdvancement(RegistryWrapper.WrapperLookup registryLookup, Consumer<AdvancementEntry> consumer) {
+		public void generateAdvancement(RegistryWrapper.@NonNull WrapperLookup registryLookup, @NonNull Consumer<AdvancementEntry> consumer) {
 			this.dataGen.generateAdvancements(this, registryLookup, consumer);
 		}
 
 		@Override
-		public String getName() {
+		public @NonNull String getName() {
 			return this.dataGen.name + " " + super.getName();
 		}
 	}
@@ -155,7 +156,7 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		public String getName() {
+		public @NonNull String getName() {
 			return this.dataGen.name + " " + super.getName();
 		}
 	}
@@ -182,7 +183,7 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		public String getName() {
+		public @NonNull String getName() {
 			return this.dataGen.name + " " + super.getName();
 		}
 	}
@@ -196,7 +197,7 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder) {
+		public void generateTranslations(RegistryWrapper.@NonNull WrapperLookup registryLookup, @NonNull TranslationBuilder translationBuilder) {
 			this.dataGen.generateTranslations(this, registryLookup, translationBuilder);
 		}
 
@@ -225,7 +226,7 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		public String getName() {
+		public @NonNull String getName() {
 			return this.dataGen.name + " " + super.getName();
 		}
 	}
@@ -248,7 +249,7 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		public String getName() {
+		public @NonNull String getName() {
 			return this.dataGen.name + " " + super.getName();
 		}
 	}
@@ -263,12 +264,12 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		public void generateBlockStateModels(BlockStateModelGenerator generator) {
+		public void generateBlockStateModels(@NonNull BlockStateModelGenerator generator) {
 			this.dataGen.generateBlockStateModels(this, generator);
 		}
 
 		@Override
-		public void generateItemModels(ItemModelGenerator generator) {
+		public void generateItemModels(@NonNull ItemModelGenerator generator) {
 			this.dataGen.generateItemModels(this, generator);
 		}
 
@@ -287,7 +288,7 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		protected RecipeGenerator getRecipeGenerator(RegistryWrapper.WrapperLookup registryLookup, RecipeExporter exporter) {
+		protected @NonNull RecipeGenerator getRecipeGenerator(RegistryWrapper.@NonNull WrapperLookup registryLookup, @NonNull RecipeExporter exporter) {
 			return new RecipeGenerator(registryLookup, exporter) {
 				@Override
 				public void generate() {
@@ -311,7 +312,7 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		protected void configure(RegistryWrapper.WrapperLookup registries, @NotNull Entries entries) {
+		protected void configure(RegistryWrapper.@NonNull WrapperLookup registries, @NotNull Entries entries) {
 			this.dataGen.generateDamageTypes(this, registries, entries);
 		}
 
@@ -330,12 +331,12 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		protected void configure(RegistryWrapper.WrapperLookup arg) {
+		protected void configure(RegistryWrapper.@NonNull WrapperLookup arg) {
 			this.dataGen.generateBlockTags(this, arg);
 		}
 
 		@Override
-		public ProvidedTagBuilder<RegistryKey<Block>, Block> builder(TagKey<Block> tag) {
+		public @NonNull ProvidedTagBuilder<RegistryKey<Block>, Block> builder(@NonNull TagKey<Block> tag) {
 			var tagBuilder = this.getTagBuilder(tag);
 			return ProvidedTagBuilder.of(tagBuilder);
 		}
@@ -355,12 +356,12 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		protected void configure(RegistryWrapper.WrapperLookup arg) {
+		protected void configure(RegistryWrapper.@NonNull WrapperLookup arg) {
 			this.dataGen.generateItemTags(this, arg);
 		}
 
 		@Override
-        public ProvidedTagBuilder<RegistryKey<Item>, Item> builder(TagKey<Item> tag) {
+        public @NonNull ProvidedTagBuilder<RegistryKey<Item>, Item> builder(@NonNull TagKey<Item> tag) {
             var tagBuilder = this.getTagBuilder(tag);
 			return ProvidedTagBuilder.of(tagBuilder);
 		}
@@ -380,12 +381,12 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		protected void configure(RegistryWrapper.WrapperLookup arg) {
+		protected void configure(RegistryWrapper.@NonNull WrapperLookup arg) {
 			this.dataGen.generateFluidTags(this, arg);
 		}
 
 		@Override
-		public ProvidedTagBuilder<RegistryKey<Fluid>, Fluid> builder(TagKey<Fluid> tag) {
+		public @NonNull ProvidedTagBuilder<RegistryKey<Fluid>, Fluid> builder(@NonNull TagKey<Fluid> tag) {
 			var tagBuilder = this.getTagBuilder(tag);
 			return ProvidedTagBuilder.of(tagBuilder);
 		}
@@ -405,12 +406,12 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		protected void configure(RegistryWrapper.WrapperLookup arg) {
+		protected void configure(RegistryWrapper.@NonNull WrapperLookup arg) {
 			this.dataGen.generateEntityTypeTags(this, arg);
 		}
 
 		@Override
-		public ProvidedTagBuilder<RegistryKey<EntityType<?>>, EntityType<?>> builder(TagKey<EntityType<?>> tag) {
+		public @NonNull ProvidedTagBuilder<RegistryKey<EntityType<?>>, EntityType<?>> builder(@NonNull TagKey<EntityType<?>> tag) {
 			var tagBuilder = this.getTagBuilder(tag);
 			return ProvidedTagBuilder.of(tagBuilder);
 		}
@@ -430,12 +431,12 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		protected void configure(RegistryWrapper.WrapperLookup arg) {
+		protected void configure(RegistryWrapper.@NonNull WrapperLookup arg) {
 			this.dataGen.generateDamageTypeTags(this, arg);
 		}
 
 		@Override
-		public ProvidedTagBuilder<RegistryKey<DamageType>, DamageType> builder(TagKey<DamageType> tag) {
+		public @NonNull ProvidedTagBuilder<RegistryKey<DamageType>, DamageType> builder(@NonNull TagKey<DamageType> tag) {
 			var tagBuilder = this.getTagBuilder(tag);
 			return ProvidedTagBuilder.of(tagBuilder);
 		}
@@ -455,12 +456,12 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
-		protected void configure(RegistryWrapper.WrapperLookup arg) {
+		protected void configure(RegistryWrapper.@NonNull WrapperLookup arg) {
 			this.dataGen.generateFlatLevelGeneratorPresetTags(this, arg);
 		}
 
 		@Override
-		public ProvidedTagBuilder<RegistryKey<FlatLevelGeneratorPreset>, FlatLevelGeneratorPreset> builder(TagKey<FlatLevelGeneratorPreset> tag) {
+		public @NonNull ProvidedTagBuilder<RegistryKey<FlatLevelGeneratorPreset>, FlatLevelGeneratorPreset> builder(@NonNull TagKey<FlatLevelGeneratorPreset> tag) {
 			var tagBuilder = this.getTagBuilder(tag);
 			return ProvidedTagBuilder.of(tagBuilder);
 		}
