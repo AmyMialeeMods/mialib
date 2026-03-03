@@ -14,12 +14,9 @@ public interface MDir {
     }
 
     static @NotNull File getMialibFile(String fileName) {
-        String workingDirectory;
         if (System.getProperty("os.name").toUpperCase().contains("WIN")) {
-            workingDirectory = System.getenv("AppData");
-        } else {
-            workingDirectory = System.getProperty("user.home") + "/Library/Application Support";
+            return new File(System.getenv("AppData"), ".mialib/" + fileName);
         }
-        return new File(workingDirectory, ".mialib/" + fileName);
+        return new File(System.getProperty("user.home") + "/.local/share", "mialib/" + fileName);
     }
 }
