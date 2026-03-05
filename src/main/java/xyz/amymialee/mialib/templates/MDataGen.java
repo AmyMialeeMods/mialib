@@ -331,6 +331,11 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
+		public @NonNull ProvidedTagBuilder<Block, Block> valueLookupBuilder(@NonNull TagKey<Block> tag) {
+			return super.valueLookupBuilder(tag);
+		}
+
+		@Override
 		protected void configure(RegistryWrapper.@NonNull WrapperLookup arg) {
 			this.dataGen.generateBlockTags(this, arg);
 		}
@@ -353,6 +358,11 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		public MItemTagProvider(MDataGen gen, FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
 			super(output, registriesFuture);
 			this.dataGen = gen;
+		}
+
+		@Override
+		public @NonNull ProvidedTagBuilder<Item, Item> valueLookupBuilder(@NonNull TagKey<Item> tag) {
+			return super.valueLookupBuilder(tag);
 		}
 
 		@Override
@@ -381,6 +391,11 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		}
 
 		@Override
+		public @NonNull ProvidedTagBuilder<Fluid, Fluid> valueLookupBuilder(@NonNull TagKey<Fluid> tag) {
+			return super.valueLookupBuilder(tag);
+		}
+
+		@Override
 		protected void configure(RegistryWrapper.@NonNull WrapperLookup arg) {
 			this.dataGen.generateFluidTags(this, arg);
 		}
@@ -403,6 +418,11 @@ public @SuppressWarnings("unused") abstract class MDataGen implements DataGenera
 		public MEntityTypeTagProvider(MDataGen gen, FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
 			super(output, registriesFuture);
 			this.dataGen = gen;
+		}
+
+		@Override
+		public @NonNull ProvidedTagBuilder<EntityType<?>, EntityType<?>> valueLookupBuilder(@NonNull TagKey<EntityType<?>> tag) {
+			return super.valueLookupBuilder(tag);
 		}
 
 		@Override
