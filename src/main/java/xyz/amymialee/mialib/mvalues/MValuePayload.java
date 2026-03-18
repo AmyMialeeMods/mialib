@@ -26,7 +26,7 @@ public record MValuePayload(Identifier id, NbtCompound compound) implements Cust
 	public static class ClientReceiver implements ClientPlayNetworking.PlayPayloadHandler<MValuePayload> {
 		@Override
 		public void receive(@NotNull MValuePayload payload, ClientPlayNetworking.@NotNull Context context) {
-			var value = MVServerManager.get(payload.id);
+			var value = MVServerManager.INSTANCE.get(payload.id);
             if (value == null) return;
             value.readNbt(payload.compound);
             if (!(context.client().currentScreen instanceof MValueScreen screen)) return;
@@ -37,7 +37,7 @@ public record MValuePayload(Identifier id, NbtCompound compound) implements Cust
 	public static class ServerReceiver implements ServerPlayNetworking.PlayPayloadHandler<MValuePayload> {
 		@Override
 		public void receive(@NotNull MValuePayload payload, ServerPlayNetworking.@NotNull Context context) {
-			var value = MVServerManager.get(payload.id);
+			var value = MVServerManager.INSTANCE.get(payload.id);
             if (value == null || !value.permissionCheck.allows(context.player().getPermissions()) || !value.canChange.test(context.player())) return;
             value.readNbt(payload.compound);
 			MVServerManager.INSTANCE.onChange(value);

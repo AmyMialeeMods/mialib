@@ -1,24 +1,35 @@
 package xyz.amymialee.mialib.mvalues;
 
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.lwjgl.glfw.GLFW;
 import xyz.amymialee.mialib.Mialib;
 
+import java.awt.*;
+import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class MValueScreen extends Screen {
     public static final Identifier WINDOW_TEXTURE = Mialib.id("textures/gui/mvalue/mvalue_screen.png");
     public static final Identifier DARK_OAK_PLANKS = Identifier.ofVanilla("textures/block/dark_oak_planks.png");
+    private static final Identifier LOGO_TEXTURE = Mialib.id("textures/gui/logo.png");
+    private static final Identifier CROWN_SILVER = Mialib.id("textures/gui/crown_silver.png");
+    private static final Identifier CROWN_GOLD = Mialib.id("textures/gui/crown_gold.png");
+    private static final Identifier CROWN_AMETHYST = Mialib.id("textures/gui/crown_amethyst.png");
     public static final int WIDTH = 370;
     public static final int HEIGHT = 200;
     private MValueCategory selectedCategory = MValue.DEFAULT_CATEGORY;
@@ -29,6 +40,37 @@ public class MValueScreen extends Screen {
 
     public MValueScreen() {
         super(Text.empty());
+    }
+
+    public static @NonNull ButtonWidget getMValuesButton(MinecraftClient client, @NonNull LocalRef<ButtonWidget> ref, boolean any) {
+        var button = new ButtonWidget(ref.get().getX() - 20 - 4, ref.get().getY(), 20, 20, Text.translatable("%s.screen.mvalues".formatted(Mialib.MOD_ID)),
+                any ? (b) -> client.setScreen(new MValueScreen()) : (b) -> {}, Supplier::get) {
+            @Override
+            protected void drawIcon(DrawContext context, int mouseX, int mouseY, float delta) {
+                this.drawButton(context);
+                context.drawTexture(RenderPipelines.GUI_TEXTURED, LOGO_TEXTURE, this.getX() + 2, this.getY() + 2, 0, 0, 16, 16, 16, 16);
+//                if (client.player == null) return;
+//                var crown = getCrown(client.player.getUuid());
+//                if (crown == null) return;
+//                var sine = (float) (Math.sin(System.currentTimeMillis() / 1200d));
+//                context.getMatrices().pushMatrix();
+//                context.getMatrices().translate(0, 1 * sine - 12);
+//                context.drawTexture(RenderPipelines.GUI_TEXTURED, crown, this.getX(), this.getY(), 0, 0, 20, 20, 20, 20);
+//                context.getMatrices().popMatrix();
+            }
+        };
+        var tooltip = Text.translatable("%s.screen.mvalues".formatted(Mialib.MOD_ID));
+        if (!any) tooltip.append(Text.literal("\n").append(Text.translatable("%s.mvalue.nonefound".formatted(Mialib.MOD_ID)).withColor(new Color(0xBD6868).getRGB())));
+        button.setTooltip(Tooltip.of(tooltip));
+        return button;
+    }
+
+    public static Identifier getCrown(UUID uuid) {
+        if (uuid == null) return null;
+        if (Mialib.isSupporterTier3(uuid)) return CROWN_AMETHYST;
+        if (Mialib.isSupporterTier2(uuid)) return CROWN_GOLD;
+        if (Mialib.isSupporterTier1(uuid)) return CROWN_SILVER;
+        return null;
     }
 
     @Override

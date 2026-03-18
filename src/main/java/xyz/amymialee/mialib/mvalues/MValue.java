@@ -74,7 +74,7 @@ public final class MValue<T> {
 
     public @NotNull Text getDescription() {
         var description = Text.translatable(this.getDescriptionTranslationKey());
-        if (this.clientSide) description = description.append(Text.literal("\n").append(Text.translatable("%s.mvalue.clientside".formatted(Mialib.MOD_ID)).withColor(0xBD6898)));
+        if (this.clientSide) description.append(Text.literal("\n").append(Text.translatable("%s.mvalue.clientside".formatted(Mialib.MOD_ID)).withColor(0xBD6898)));
         return description;
     }
 

@@ -1,5 +1,6 @@
 package xyz.amymialee.mialib;
 
+import dev.upcraft.datasync.api.util.Entitlements;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -22,6 +23,7 @@ import xyz.amymialee.mialib.cca.ExtraFlagsComponent;
 import xyz.amymialee.mialib.cca.HoldingComponent;
 import xyz.amymialee.mialib.events.MialibEvents;
 import xyz.amymialee.mialib.modules.ExtrasModule;
+import xyz.amymialee.mialib.mvalues.MVManager;
 import xyz.amymialee.mialib.mvalues.MValuePayload;
 import xyz.amymialee.mialib.networking.AttackingPayload;
 import xyz.amymialee.mialib.networking.FloatyPayload;
@@ -29,6 +31,7 @@ import xyz.amymialee.mialib.networking.UsingPayload;
 import xyz.amymialee.mialib.util.interfaces.MEnchantment;
 
 import java.util.Random;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public @SuppressWarnings("unused") class Mialib implements ModInitializer, EntityComponentInitializer {
@@ -36,6 +39,10 @@ public @SuppressWarnings("unused") class Mialib implements ModInitializer, Entit
     public static final String MOD_NAME = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow().getMetadata().getName();
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
     public static final Random RANDOM = new Random();
+    public static MVManager INSTANCE;
+    private static final Identifier TIER1_ID = Identifier.of("amymialee", "tier1");
+    private static final Identifier TIER2_ID = Identifier.of("amymialee", "tier2");
+    private static final Identifier TIER3_ID = Identifier.of("amymialee", "tier3");
 
     public @Override void onInitialize() {
         ExtrasModule.init();
@@ -66,6 +73,18 @@ public @SuppressWarnings("unused") class Mialib implements ModInitializer, Entit
     public @Override void registerEntityComponentFactories(@NotNull EntityComponentFactoryRegistry registry) {
         registry.beginRegistration(PlayerEntity.class, HoldingComponent.KEY).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(HoldingComponent::new);
         registry.beginRegistration(Entity.class, ExtraFlagsComponent.KEY).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(ExtraFlagsComponent::new);
+    }
+
+    public static boolean isSupporterTier1(UUID uuid) {
+        return Entitlements.getOrEmpty(uuid).keys().contains(TIER1_ID);
+    }
+
+    public static boolean isSupporterTier2(UUID uuid) {
+        return Entitlements.getOrEmpty(uuid).keys().contains(TIER2_ID);
+    }
+
+    public static boolean isSupporterTier3(UUID uuid) {
+        return Entitlements.getOrEmpty(uuid).keys().contains(TIER3_ID);
     }
 
     public static @NotNull Identifier id(String path) {

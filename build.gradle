@@ -1,5 +1,5 @@
 plugins { // Latest loom at https://modmuss50.me/fabric.html
-    id 'fabric-loom' version '1.14-SNAPSHOT'
+    id 'fabric-loom' version '1.15-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -20,6 +20,7 @@ repositories {
         description = "Maven for ModMenu and EMI"
         url = "https://maven.terraformersmc.com/releases/"
     }
+    maven { url = "https://maven.uuid.gg/releases" }
 }
 
 dependencies {
@@ -31,6 +32,7 @@ dependencies {
     modImplementation ("com.terraformersmc:modmenu:${project.modmenu_version}")
     modImplementation include ("org.ladysnake.cardinal-components-api:cardinal-components-base:${project.cca_version}")
     modImplementation include ("org.ladysnake.cardinal-components-api:cardinal-components-entity:${project.cca_version}")
+    modImplementation include ("dev.upcraft.datasync:datasync-minecraft-1.21.9-fabric:${project.datasync_version}")
 }
 
 loom {

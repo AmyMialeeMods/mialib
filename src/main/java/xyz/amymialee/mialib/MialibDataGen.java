@@ -34,7 +34,8 @@ public class MialibDataGen extends MDataGen {
                 builder.add("commands.%s.immortal.%s.%s".formatted(Mialib.MOD_ID, enabled.getLeft(), single.getLeft()), "§7Immortality %s§7 for %s".formatted(enabled.getRight(), single.getRight()));
             }
         }
-        builder.add("mialib.screen.mvalues", "Mialib Value Editor");
+        builder.add("%s.screen.mvalues".formatted(Mialib.MOD_ID), "Mialib Value Editor");
+        builder.add("%s.mvalue.nonefound".formatted(Mialib.MOD_ID), "No (Available) Configs Found");
         builder.add(MValue.DEFAULT_CATEGORY.getTranslationKey(), "MValues");
         builder.add(ExtrasModule.DISABLE_END_PORTALS.getTranslationKey(), "Disable End Portals");
         builder.add(ExtrasModule.DISABLE_END_PORTALS.getDescriptionTranslationKey(), "Disables end portals");
@@ -45,8 +46,8 @@ public class MialibDataGen extends MDataGen {
         builder.add("%s.mialib_server.false".formatted(Mialib.MOD_ID), "Save to Mialib Server File: §cFalse");
         builder.add("commands.mvalue.query", "MValue %s is currently set to: %s");
         builder.add("commands.mvalue.set", "MValue %s is now set to: %s");
-        builder.add("mialib.screen.mvalues.color_picker.confirm", "Confirm");
-        builder.add("mialib.screen.mvalues.color_picker.reset", "Reset");
+        builder.add("%s.screen.mvalues.color_picker.confirm".formatted(Mialib.MOD_ID), "Confirm");
+        builder.add("%s.screen.mvalues.color_picker.reset".formatted(Mialib.MOD_ID), "Reset");
     }
 
     protected @Override void generateItemTags(MDataGen.@NotNull MItemTagProvider provider, RegistryWrapper.WrapperLookup arg) {

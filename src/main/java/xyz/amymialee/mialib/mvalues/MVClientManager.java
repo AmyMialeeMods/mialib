@@ -1,26 +1,22 @@
 package xyz.amymialee.mialib.mvalues;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.Mialib;
 
-import java.io.FileNotFoundException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-public record MVClientManager() {
+public final class MVClientManager extends MVManager {
     public static final Map<Identifier, MValue<?>> MVALUES = new HashMap<>();
     public static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve("mvalues-client.json");
     public static MVClientManager INSTANCE;
 
-    public MVClientManager {
+    public MVClientManager() {
         INSTANCE = this;
+        MVManager.INSTANCE = this;
         this.loadConfig();
     }
 
@@ -29,7 +25,8 @@ public record MVClientManager() {
         new MVClientManager();
     }
 
-    public static MValue<?> get(Identifier id) {
+    @Override
+    public MValue<?> get(Identifier id) {
         return MVALUES.get(id);
     }
 
@@ -42,38 +39,18 @@ public record MVClientManager() {
         category.addValue(mValue);
     }
 
+    @Override
     public <T> void onChange(@NotNull MValue<T> value) {
         this.saveConfig();
     }
 
+    @Override
     public void saveConfig() {
-        try {
-            var gson = new GsonBuilder().setPrettyPrinting().create();
-            var json = new JsonObject();
-            for (var entry : MVALUES.entrySet()) json.add(entry.getKey().toString(), entry.getValue().writeJson());
-            Files.writeString(PATH, gson.toJson(json));
-        } catch (Exception e) {
-            Mialib.LOGGER.info(e.toString());
-        }
+        saveConfig(MVALUES, PATH);
     }
 
-    private void loadConfig() {
-        try {
-            var data = new Gson().fromJson(Files.readString(PATH), JsonObject.class);
-            for (var entry : MVALUES.entrySet()) {
-                if (!data.has(entry.getKey().toString())) continue;
-                try {
-                    entry.getValue().readJson(data.get(entry.getKey().toString()));
-                } catch (Exception e) {
-                    Mialib.LOGGER.info("Error loading mvalue data for {}", entry.getKey().toString());
-                    Mialib.LOGGER.info(e.toString());
-                }
-            }
-        } catch (FileNotFoundException e) {
-            Mialib.LOGGER.info("MValue data not found.");
-        } catch (Exception e) {
-            Mialib.LOGGER.info("Error loading mvalue data.");
-            Mialib.LOGGER.info(e.toString());
-        }
+    @Override
+    protected void loadConfig() {
+        loadConfig(PATH, MVALUES);
     }
 }

@@ -13,6 +13,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,8 +27,6 @@ import java.util.function.Supplier;
 
 @Mixin(GameMenuScreen.class)
 public class GameMenuScreenMixin extends Screen {
-    @Unique private static final Identifier LOGO_TEXTURE = Mialib.id("textures/gui/logo.png");
-
     protected GameMenuScreenMixin(Text title) {
         super(title);
     }
@@ -43,21 +42,12 @@ public class GameMenuScreenMixin extends Screen {
     private void mialib$mvalues(CallbackInfo ci, @Share("button") @NotNull LocalRef<ButtonWidget> ref) {
         if (this.client == null || this.client.player == null) return;
         var any = false;
-        var categories = MValueCategory.CATEGORIES;
-        for (var category : categories) {
+        for (var category : MValueCategory.CATEGORIES) {
             if (!category.getValues(this.client.player).isEmpty()) {
                 any = true;
                 break;
             }
         }
-        if (!any) return;
-        var button = this.addDrawableChild(new ButtonWidget(ref.get().getX() - 20 - 4, ref.get().getY(), 20, 20, Text.translatable("%s.screen.mvalues".formatted(Mialib.MOD_ID)), (b) -> this.client.setScreen(new MValueScreen()), Supplier::get) {
-            @Override
-            protected void drawIcon(DrawContext context, int mouseX, int mouseY, float delta) {
-                this.drawButton(context);
-                context.drawTexture(RenderPipelines.GUI_TEXTURED, LOGO_TEXTURE, this.getX() + 2, this.getY() + 2, 16, 16, 16, 16, 16, 16);
-            }
-        });
-        button.setTooltip(Tooltip.of(Text.translatable("%s.screen.mvalues".formatted(Mialib.MOD_ID))));
+        this.addDrawableChild(MValueScreen.getMValuesButton(this.client, ref, any));
     }
 }
