@@ -26,7 +26,7 @@ public record MValuePayload(Identifier id, NbtCompound compound) implements Cust
 	public static class ClientReceiver implements ClientPlayNetworking.PlayPayloadHandler<MValuePayload> {
 		@Override
 		public void receive(@NotNull MValuePayload payload, ClientPlayNetworking.@NotNull Context context) {
-			var value = MVServerManager.INSTANCE.get(payload.id);
+			var value = MVClientManager.INSTANCE.get(payload.id);
             if (value == null) return;
             value.readNbt(payload.compound);
             if (!(context.client().currentScreen instanceof MValueScreen screen)) return;
