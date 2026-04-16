@@ -3,14 +3,13 @@ package xyz.amymialee.mialib.mvalues;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.mialib.Mialib;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Map;
+
+import net.minecraft.resources.Identifier;
 
 public abstract class MVManager {
     public static MVManager INSTANCE;
@@ -23,25 +22,21 @@ public abstract class MVManager {
 
     public abstract <T> void onChange(@NotNull MValue<T> value);
 
-    public abstract void saveConfig();
-
-    protected abstract void loadConfig();
-
-    protected static void saveConfig(Map<Identifier, MValue<?>> mvalues, Path path) {
+    public static void saveConfig() {
         try {
             var gson = new GsonBuilder().setPrettyPrinting().create();
             var json = new JsonObject();
-            for (var entry : mvalues.entrySet()) json.add(entry.getKey().toString(), entry.getValue().writeJson());
-            Files.writeString(path, gson.toJson(json));
+            for (var entry : MVServerManager.MVALUES.entrySet()) json.add(entry.getKey().toString(), entry.getValue().writeJson());
+            Files.writeString(MVServerManager.PATH, gson.toJson(json));
         } catch (Exception e) {
             Mialib.LOGGER.info(e.toString());
         }
     }
 
-    protected static void loadConfig(Path path, Map<Identifier, MValue<?>> mvalues) {
+    public static void loadConfig() {
         try {
-            var data = new Gson().fromJson(Files.readString(path), JsonObject.class);
-            for (var entry : mvalues.entrySet()) {
+            var data = new Gson().fromJson(Files.readString(MVServerManager.PATH), JsonObject.class);
+            for (var entry : MVServerManager.MVALUES.entrySet()) {
                 if (!data.has(entry.getKey().toString())) continue;
                 try {
                     entry.getValue().readJson(data.get(entry.getKey().toString()));

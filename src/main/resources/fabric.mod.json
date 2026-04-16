@@ -8,13 +8,8 @@
   "authors": [
     "AmyMialee"
   ],
-  "contributors": [],
   "contact": {
-    "email": "mialib@amymialee.xyz",
-    "homepage": "https://www.amymialee.xyz/",
-    "irc": "",
-    "sources": "https://github.com/AmyMialeeMods/mialib",
-    "issues": "https://github.com/AmyMialeeMods/mialib/issues"
+    "homepage": "https://www.amymialee.dev/"
   },
   "license": "All-Rights-Reserved",
   "icon": "assets/mialib/icon.png",
@@ -22,16 +17,7 @@
   "accessWidener" : "mialib.accesswidener",
   "environment": "*",
   "entrypoints": {
-    "client": [
-      "xyz.amymialee.mialib.MialibClient"
-    ],
     "main": [
-      "xyz.amymialee.mialib.Mialib"
-    ],
-    "fabric-datagen": [
-      "xyz.amymialee.mialib.MialibDataGen"
-    ],
-    "cardinal-components-entity": [
       "xyz.amymialee.mialib.Mialib"
     ]
   },
@@ -40,30 +26,15 @@
   ],
 
   "depends": {
-    "fabric": "*"
+    "fabric-api": "*"
   },
 
   "custom": {
-    "cardinal-components": [
-      "mialib:identifier_cooldown",
-      "mialib:holding",
-      "mialib:extra_flags",
-      "mialib:mvalues"
-    ],
-    "loom:injected_interfaces": {
-      "net/minecraft/class_1887": ["xyz/amymialee/mialib/util/interfaces/MEnchantment"],
-      "net/minecraft/class_1297": ["xyz/amymialee/mialib/util/interfaces/MEntity"],
-      "net/minecraft/class_1792": ["xyz/amymialee/mialib/util/interfaces/MItem"],
-      "net/minecraft/class_1542": ["xyz/amymialee/mialib/util/interfaces/MItemEntity"],
-      "net/minecraft/class_1761": ["xyz/amymialee/mialib/util/interfaces/MItemGroup"],
-      "net/minecraft/class_1799": ["xyz/amymialee/mialib/util/interfaces/MItemStack"],
-      "net/minecraft/class_1657": ["xyz/amymialee/mialib/util/interfaces/MPlayerEntity"],
-      "net/minecraft/class_641" : ["xyz/amymialee/mialib/util/interfaces/MServerList"],
-      "net/minecraft/class_2561": ["xyz/amymialee/mialib/util/interfaces/MText"]
-    },
     "modmenu": {
       "links": {
-        "modmenu.discord": "https://discord.gg/P4dUsxv6An"
+        "modmenu.website": "https://amymialee.dev",
+        "modmenu.patreon": "https://www.patreon.com/cw/AmyMialee",
+        "modmenu.discord": "https://discord.gg/aEghXGbm3J"
       }
     }
   }

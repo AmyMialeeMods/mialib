@@ -2,43 +2,14 @@
   "required": true,
   "minVersion": "0.8",
   "package": "xyz.amymialee.mialib.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "EnchantmentHelperMixin",
-    "EnchantmentMixin",
-    "EnchantmentMixin$BuilderMixin",
     "EndPortalBlockMixin",
-    "EntityMixin",
-    "ItemEntityMixin",
-    "ItemMixin",
-    "ItemMixin$ItemSettingsMixin",
-    "ItemStackMixin",
-    "LivingEntityMixin",
-    "PlayerManagerMixin",
-    "ServerScoreboardMixin",
-    "interfaces.EntityMixin",
-    "interfaces.ItemEntityMixin",
-    "interfaces.ItemGroupMixin",
-    "interfaces.ItemStackMixin",
-    "interfaces.PlayerEntityMixin",
-    "interfaces.TextMixin"
+    "ServerScoreboardMixin"
   ],
   "client": [
-    "client.AddServerScreenMixin",
-    "client.ClientPlayNetworkHandlerMixin",
-    "client.DrawContextMixin",
-    "client.GameMenuScreenMixin",
-    "client.GameOptionsMixin",
-    "client.MinecraftClientMixin",
-    "client.MultiplayerScreenMixin",
-    "client.MultiplayerServerListWidgetMixin",
-    "client.ResourcePackManagerMixin",
-    "interfaces.ServerListMixin"
   ],
   "server": [
-    "server.EulaReaderMixin",
-    "server.ResourcePackManagerMixin",
-    "server.ServerPropertiesHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

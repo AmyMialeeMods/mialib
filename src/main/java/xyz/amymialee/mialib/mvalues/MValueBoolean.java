@@ -3,32 +3,15 @@ package xyz.amymialee.mialib.mvalues;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.mojang.brigadier.arguments.BoolArgumentType;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.client.gui.Click;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.text.Text;
+import net.minecraft.commands.Commands;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 public class MValueBoolean extends MValueType<Boolean> {
     public MValueBoolean(boolean defaultValue) {
         this.defaultValue = defaultValue;
-    }
-
-    @Override
-    public @NotNull Object getWidget(int x, int y, MValue<Boolean> value) {
-        return new MValueWidget<>(x, y, value) {
-            @Override
-            public void onClick(Click click, boolean doubled) {
-                if (click.x() < this.getX() + 18) {
-                    this.value.send(this.value.type.defaultValue);
-                } else {
-                    this.value.send(!this.value.get());
-                }
-            }
-        };
     }
 
     @Override
@@ -38,14 +21,14 @@ public class MValueBoolean extends MValueType<Boolean> {
     }
 
     @Override
-    public @NotNull NbtCompound writeNbt(@NotNull NbtCompound compound, @NotNull MValue<Boolean> value) {
+    public @NotNull CompoundTag writeNbt(@NotNull CompoundTag compound, @NotNull MValue<Boolean> value) {
         compound.putBoolean("value", value.get());
         return compound;
     }
 
     @Override
-    public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<Boolean> value) {
-        value.value = compound.getBoolean("value", this.defaultValue);
+    public void readNbt(@NotNull CompoundTag compound, @NotNull MValue<Boolean> value) {
+        value.value = compound.getBooleanOr("value", this.defaultValue);
     }
 
     @Override
@@ -60,33 +43,17 @@ public class MValueBoolean extends MValueType<Boolean> {
 
     @Override
     protected void registerServerCommand(MValue<Boolean> value) {
-        CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(CommandManager.requirePermissionLevel(value.permissionCheck))
-                .then(CommandManager.literal(value.id.toString())
-                        .then(CommandManager.argument("enabled", BoolArgumentType.bool())
+        CommandRegistrationCallback.EVENT.register((dispatcher, _, _) -> dispatcher.register(Commands.literal("mvalue").requires(Commands.hasPermission(value.permissionCheck))
+                .then(Commands.literal(value.id.toString())
+                        .then(Commands.argument("enabled", BoolArgumentType.bool())
                                 .executes(ctx -> {
                                     value.set(BoolArgumentType.getBool(ctx, "enabled"));
                                     MVServerManager.INSTANCE.onChange(value);
-                                    ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()), true);
+                                    ctx.getSource().sendSuccess(() -> Component.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()), true);
                                     return 1;
                                 })
                         ).executes(ctx -> {
-                            ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()), false);
-                            return 1;
-                        }))));
-    }
-
-    @Override
-    protected void registerClientCommand(MValue<Boolean> value) {
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(CommandManager.requirePermissionLevel(value.permissionCheck))
-                .then(ClientCommandManager.literal(value.id.toString())
-                        .then(ClientCommandManager.argument("enabled", BoolArgumentType.bool())
-                                .executes(ctx -> {
-                                    value.set(BoolArgumentType.getBool(ctx, "enabled"));
-                                    ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()));
-                                    return 1;
-                                })
-                        ).executes(ctx -> {
-                            ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()));
+                            ctx.getSource().sendSuccess(() -> Component.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()), false);
                             return 1;
                         }))));
     }

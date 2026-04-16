@@ -3,12 +3,10 @@ package xyz.amymialee.mialib.mvalues;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.text.Text;
+import net.minecraft.commands.Commands;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 public class MValueInteger extends MValueMinMax<Integer> {
@@ -19,22 +17,6 @@ public class MValueInteger extends MValueMinMax<Integer> {
         this.defaultValue = defaultValue;
         this.min = min;
         this.max = max;
-    }
-
-    @Override
-    public @NotNull Object getWidget(int x, int y, MValue<Integer> value) {
-        var self = this;
-        return new MValueSliderWidget<>(x, y, value) {
-            @Override
-            public void resetSliderValue() {
-                this.sliderValue = (this.value.get() - self.getMin()) / (self.getMax() - self.getMin() + 0d);
-            }
-
-            @Override
-            protected Integer getValue() {
-                return (int) (self.min + (self.getMax() - self.min) * this.sliderValue);
-            }
-        };
     }
 
     @Override
@@ -49,14 +31,14 @@ public class MValueInteger extends MValueMinMax<Integer> {
     }
 
     @Override
-    public @NotNull NbtCompound writeNbt(@NotNull NbtCompound compound, @NotNull MValue<Integer> value) {
+    public @NotNull CompoundTag writeNbt(@NotNull CompoundTag compound, @NotNull MValue<Integer> value) {
         compound.putInt("value", value.get());
         return compound;
     }
 
     @Override
-    public void readNbt(@NotNull NbtCompound compound, @NotNull MValue<Integer> value) {
-        value.value = compound.getInt("value", this.defaultValue);
+    public void readNbt(@NotNull CompoundTag compound, @NotNull MValue<Integer> value) {
+        value.value = compound.getIntOr("value", this.defaultValue);
     }
 
     @Override
@@ -82,35 +64,17 @@ public class MValueInteger extends MValueMinMax<Integer> {
     @Override
     protected void registerServerCommand(@NotNull MValue<Integer> value) {
         if (value.type instanceof MValueMinMax<Integer> minMax) {
-            CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> dispatcher.register(CommandManager.literal("mvalue").requires(CommandManager.requirePermissionLevel(value.permissionCheck))
-                    .then(CommandManager.literal(value.id.toString())
-                            .then(CommandManager.argument("value", IntegerArgumentType.integer(minMax.getMin(), minMax.getMax()))
+            CommandRegistrationCallback.EVENT.register((dispatcher, _, _) -> dispatcher.register(Commands.literal("mvalue").requires(Commands.hasPermission(value.permissionCheck))
+                    .then(Commands.literal(value.id.toString())
+                            .then(Commands.argument("value", IntegerArgumentType.integer(minMax.getMin(), minMax.getMax()))
                                     .executes(ctx -> {
                                         value.set(IntegerArgumentType.getInteger(ctx, "value"));
                                         MVServerManager.INSTANCE.onChange(value);
-                                        ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()), true);
+                                        ctx.getSource().sendSuccess(() -> Component.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()), true);
                                         return 1;
                                     })
                             ).executes(ctx -> {
-                                ctx.getSource().sendFeedback(() -> Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()), false);
-                                return 1;
-                            }))));
-        }
-    }
-
-    @Override
-    protected void registerClientCommand(@NotNull MValue<Integer> value) {
-        if (value.type instanceof MValueMinMax<Integer> minMax) {
-            ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(ClientCommandManager.literal("mvalue").requires(CommandManager.requirePermissionLevel(value.permissionCheck))
-                    .then(ClientCommandManager.literal(value.id.toString())
-                            .then(ClientCommandManager.argument("value", IntegerArgumentType.integer(minMax.getMin(), minMax.getMax()))
-                                    .executes(ctx -> {
-                                        value.set(IntegerArgumentType.getInteger(ctx, "value"));
-                                        ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.set", value.getText(), value.getValueAsString()));
-                                        return 1;
-                                    })
-                            ).executes(ctx -> {
-                                ctx.getSource().sendFeedback(Text.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()));
+                                ctx.getSource().sendSuccess(() -> Component.translatable("commands.mvalue.query", value.getText(), value.getValueAsString()), false);
                                 return 1;
                             }))));
         }
